@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Faça seu Pedido — Sobre As Ondas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=DM+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- ===== FIREBASE (guarda os pedidos na nuvem, em tempo real) ===== -->
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+<!-- gera o QR Code do Pix direto no navegador -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<style>
+  :root{
+    --navy: #16304f;
+    --navy-deep: #0e2138;
+    --cream: #f6f0e2;
+    --coral: #d8503c;
+    --sand: #e7dcc2;
+    --ink: #1c2530;
+    --green: #4a8a5f;
+    --amber: #c8862e;
+    --azul-escuro: #1B4B57;
+    --terracota: #E8734A;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background: var(--cream);
+    font-family:'DM Sans', sans-serif;
+    color: var(--ink);
+    min-height:100vh;
+  }
+
+  /* ===== NAVBAR DO SITE (mesma linguagem visual da landing) ===== */
+  .navbar{
+    position: fixed;
+    top: 16px; left:0; right:0;
+    z-index: 200;
+  }
+  .nav-container{
+    max-width: 1200px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 999px;
+    padding: 12px 20px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
+  .logo{
+    font-family:'Playfair Display', serif;
+    font-style:italic;
+    font-weight:700;
+    font-size: 18px;
+    color: var(--azul-escuro);
+    white-space:nowrap;
+  }
+  .logo span{ color: var(--terracota); }
+  .site-nav{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    justify-content:center;
+  }
+  .site-nav a{
+    text-decoration:none;
+    background: var(--azul-escuro);
+    color:#fff;
+    padding: 7px 14px;
+    border-radius: 999px;
+    font-family:'Poppins', sans-serif;
+    font-size: 11px;
+    font-weight:600;
+    letter-spacing:.4px;
+  }
+  .site-nav a.current{ background: var(--terracota); }
+
+  .page-spacer{ height: 90px; }
+
+  /* ===== APP DE PEDIDOS ===== */
+  .phone-wrap{
+    display:flex;
+    justify-content:center;
+    padding-bottom: 40px;
+  }
+  .phone{
+    width:100%;
+    max-width:460px;
+    min-height:70vh;
+    background: var(--cream);
+    position:relative;
+    border-radius: 18px;
+    overflow:hidden;
+    box-shadow: 0 20px 50px rgba(14,33,56,0.12);
+  }
+
+  .top-bar{
+    background: var(--navy-deep);
+    padding: 18px 20px 0;
+  }
+  .top-bar-title{
+    color: var(--cream);
+    font-family:'Caveat', cursive;
+    font-size: 30px;
+    font-weight:700;
+  }
+  .top-bar-sub{
+    color: var(--sand);
+    font-size: 12.5px;
+    margin-top: -4px;
+    margin-bottom: 14px;
+  }
+
+  .tabs{
+    display:flex;
+    gap: 6px;
+    padding-bottom: 0;
+  }
+  .tab{
+    flex:1;
+    text-align:center;
+    padding: 12px 6px;
+    font-size: 14px;
+    font-weight:600;
+    color: var(--sand);
+    background: rgba(255,255,255,0.06);
+    border-radius: 10px 10px 0 0;
+    cursor:pointer;
+  }
+  .tab.active{
+    background: var(--cream);
+    color: var(--navy-deep);
+  }
+  .tab.hidden{ display:none; }
+
+  .view{
+    display:none;
+    padding: 18px 18px 10px;
+  }
+  .view.active{ display:block; }
+
+  /* CLIENTE */
+  .mesa-input{
+    background:#fff;
+    border-radius: 12px;
+    padding: 12px 14px;
+    display:flex;
+    align-items:center;
+    gap: 10px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(22,48,79,0.06);
+  }
+  .mesa-input svg{width:18px; height:18px; color: var(--navy); flex-shrink:0;}
+  .mesa-input input{
+    border:none; outline:none;
+    font-family:'DM Sans', sans-serif;
+    font-size: 14.5px;
+    width:100%;
+    color: var(--navy-deep);
+  }
+
+  .cat-title{
+    font-size: 13px;
+    font-weight:700;
+    letter-spacing: 1px;
+    color: var(--coral);
+    text-transform:uppercase;
+    margin: 16px 0 8px;
+  }
+
+  .menu-item{
+    background:#fff;
+    border-radius: 12px;
+    padding: 12px 14px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom: 8px;
+    box-shadow: 0 1px 6px rgba(22,48,79,0.05);
+  }
+  .item-name{ font-weight:600; font-size:14.5px; color: var(--navy-deep); }
+  .item-price{ font-size:12.5px; color:#8a8175; margin-top:2px; }
+  .qty-control{
+    display:flex; align-items:center; gap:10px;
+  }
+  .qty-btn{
+    width:26px; height:26px;
+    border-radius:50%;
+    border: 1.5px solid var(--sand);
+    background:#fff;
+    color: var(--navy);
+    font-size:16px;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    user-select:none;
+  }
+  .qty-num{ font-weight:600; min-width:14px; text-align:center; font-size:14px; }
+
+  .cart-bar{
+    position:sticky;
+    bottom: 0;
+    background: var(--coral);
+    color:#fff;
+    border-radius: 14px;
+    padding: 14px 18px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-top: 18px;
+    box-shadow: 0 8px 18px rgba(216,80,60,0.3);
+    cursor:pointer;
+    font-weight:700;
+    font-size: 15px;
+  }
+
+  /* EQUIPE */
+  .col-title{
+    font-size: 12.5px;
+    font-weight:700;
+    letter-spacing: 1px;
+    text-transform:uppercase;
+    margin-bottom: 10px;
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .dot{ width:8px; height:8px; border-radius:50%; }
+  .board{
+    display:flex;
+    flex-direction:column;
+    gap: 22px;
+  }
+  .order-card{
+    background:#fff;
+    border-radius: 12px;
+    padding: 13px 14px;
+    box-shadow: 0 2px 8px rgba(22,48,79,0.07);
+    margin-bottom: 10px;
+    border-left: 4px solid var(--sand);
+  }
+  .order-card.recebido{ border-left-color: var(--coral); }
+  .order-card.preparando{ border-left-color: var(--amber); }
+  .order-card.pronto{ border-left-color: var(--green); }
+  .order-card.aguardando_pagamento{ border-left-color: #a9432f; }
+
+  .order-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    margin-bottom: 6px;
+  }
+  .order-mesa{ font-weight:700; font-size:14.5px; color: var(--navy-deep); }
+  .order-time{ font-size:11px; color:#a39a8d; }
+  .order-items{
+    font-size: 13px;
+    color: #57503f;
+    line-height:1.5;
+    margin-bottom: 10px;
+  }
+  .order-actions{
+    display:flex;
+    gap:8px;
+  }
+  .status-btn{
+    flex:1;
+    text-align:center;
+    padding: 8px 4px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight:600;
+    cursor:pointer;
+    border: 1px solid transparent;
+  }
+  .status-btn.next{
+    background: var(--navy);
+    color:#fff;
+  }
+  .status-btn.done{
+    background: transparent;
+    color: var(--green);
+    border-color: var(--green);
+  }
+  .trash-btn{
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    border-radius: 8px;
+    border: 1px solid rgba(216,80,60,0.3);
+    color: var(--coral);
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    transition: background 0.15s ease;
+  }
+  .trash-btn:hover{ background: rgba(216,80,60,0.1); }
+  .trash-btn svg{ width:16px; height:16px; }
+
+  .empty-msg{
+    font-size: 13px;
+    color: #a39a8d;
+    font-style:italic;
+    padding: 6px 2px 4px;
+  }
+
+  .footer-note{
+    text-align:center;
+    font-size: 12px;
+    color: #9a9186;
+    margin-top: 20px;
+    padding: 0 30px 10px;
+    line-height:1.5;
+  }
+  .staff-access{
+    text-align:center;
+    font-size: 11.5px;
+    color: #b5ab9d;
+    padding-bottom: 20px;
+    cursor:pointer;
+    text-decoration: underline;
+  }
+
+  .modal-bg{
+    display:none;
+    position:fixed; inset:0;
+    background: rgba(14,33,56,0.5);
+    align-items:flex-end;
+    justify-content:center;
+    z-index: 300;
+  }
+  .modal-bg.show{ display:flex; }
+  .modal{
+    background: var(--cream);
+    width:100%; max-width:460px;
+    border-radius: 18px 18px 0 0;
+    padding: 20px 20px 26px;
+    max-height:80vh;
+    overflow-y:auto;
+  }
+  .modal h3{ font-size:18px; color:var(--navy-deep); margin-bottom:14px; }
+  .modal-row{
+    display:flex; justify-content:space-between;
+    font-size: 14px; padding: 7px 0;
+    border-bottom: 1px dashed rgba(22,48,79,0.12);
+  }
+  .modal-total{
+    display:flex; justify-content:space-between;
+    font-weight:700; font-size:16px;
+    padding-top:12px;
+  }
+  .confirm-btn{
+    margin-top:16px;
+    background: var(--coral);
+    color:#fff;
+    text-align:center;
+    padding:14px;
+    border-radius: 12px;
+    font-weight:700;
+    cursor:pointer;
+  }
+  .close-modal{
+    text-align:center;
+    font-size:13px;
+    color:#8a8175;
+    margin-top:12px;
+    cursor:pointer;
+  }
+
+  /* ===== PAGAMENTO ===== */
+  .pay-methods{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-top:16px;
+  }
+  .pay-btn{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    background:#fff;
+    border: 1.5px solid var(--sand);
+    border-radius: 12px;
+    padding: 13px 14px;
+    cursor:pointer;
+    font-weight:600;
+    font-size: 14.5px;
+    color: var(--navy-deep);
+  }
+  .pay-btn:active{ background: var(--sand); }
+  .pay-btn .pay-icon{
+    width:34px; height:34px;
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:16px;
+    flex-shrink:0;
+  }
+  .pay-btn .pay-sub{
+    font-size:11.5px;
+    font-weight:400;
+    color:#8a8175;
+    margin-top:1px;
+  }
+  .pay-icon.pix{ background:#e3f5ea; color:#1a9e5c; }
+  .pay-icon.credito{ background:#eef1fb; color:#3752c9; }
+  .pay-icon.debito{ background:#fdf0e6; color:var(--amber); }
+  .pay-icon.retirada{ background:#f3ece0; color:var(--navy); }
+
+  .pay-back{
+    text-align:center;
+    font-size:13px;
+    color:#8a8175;
+    margin-top:14px;
+    cursor:pointer;
+  }
+
+  .pix-box{
+    background:#fff;
+    border-radius: 14px;
+    padding: 18px;
+    text-align:center;
+    margin-top:14px;
+  }
+  .pix-box #pixQr{
+    display:flex;
+    justify-content:center;
+    margin: 6px 0 14px;
+  }
+  .pix-valor{
+    font-size: 20px;
+    font-weight:700;
+    color: var(--navy-deep);
+    margin-bottom: 4px;
+  }
+  .pix-label{
+    font-size:12px;
+    color:#8a8175;
+    margin-bottom:14px;
+  }
+  .pix-copia{
+    background: var(--cream);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 11px;
+    word-break: break-all;
+    color:#57503f;
+    text-align:left;
+    margin-bottom: 10px;
+    max-height: 70px;
+    overflow-y:auto;
+  }
+  .pix-copiar-btn{
+    background: var(--navy);
+    color:#fff;
+    border-radius: 10px;
+    padding: 11px;
+    font-weight:600;
+    font-size: 13.5px;
+    cursor:pointer;
+    margin-bottom: 8px;
+  }
+  .pix-copiar-btn.copiado{ background: var(--green); }
+  .pix-aviso{
+    font-size:12px;
+    color:#8a8175;
+    line-height:1.5;
+    margin: 10px 0 16px;
+  }
+
+  .telefone-box{ margin-top:14px; }
+  .telefone-box label{
+    display:block;
+    font-size:13px;
+    font-weight:600;
+    color: var(--navy-deep);
+    margin-bottom:8px;
+  }
+  .telefone-box input{
+    width:100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1.5px solid var(--sand);
+    font-family:'DM Sans', sans-serif;
+    font-size: 14.5px;
+    outline:none;
+  }
+  .telefone-aviso{
+    font-size:12px;
+    color:#8a8175;
+    margin-top:10px;
+    line-height:1.5;
+  }
+
+  .mp-box{
+    text-align:center;
+    margin-top: 14px;
+    padding: 18px;
+    background:#fff;
+    border-radius:14px;
+  }
+  .mp-box .pix-valor{ margin-bottom:10px; }
+  .mp-aviso{
+    font-size:12.5px;
+    color:#8a8175;
+    line-height:1.5;
+    margin-bottom:16px;
+  }
+  .spinner{
+    width:22px; height:22px;
+    border:3px solid var(--sand);
+    border-top-color: var(--coral);
+    border-radius:50%;
+    margin: 0 auto 10px;
+    animation: spin .8s linear infinite;
+  }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  .erro-pagamento{
+    color:#c0392b;
+    font-size:12.5px;
+    margin-top:10px;
+    display:none;
+  }
+
+  /* modal de senha */
+  .senha-modal input{
+    width:100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1.5px solid var(--sand);
+    font-family:'DM Sans', sans-serif;
+    font-size: 14.5px;
+    margin-bottom: 10px;
+  }
+  .senha-erro{
+    color: var(--coral);
+    font-size: 12.5px;
+    margin-bottom: 8px;
+    display:none;
+  }
+
+  /* ===== RESERVAS (painel da equipe) ===== */
+  .reserva-card{
+    background:#fff;
+    border-radius: 12px;
+    padding: 13px 14px;
+    box-shadow: 0 2px 8px rgba(22,48,79,0.07);
+    margin-bottom: 10px;
+    border-left: 4px solid var(--coral);
+  }
+  .reserva-card.confirmada{ border-left-color: var(--green); }
+  .reserva-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    margin-bottom: 6px;
+  }
+  .reserva-data{ font-weight:700; font-size:14.5px; color: var(--navy-deep); }
+  .reserva-horario{ font-size:12.5px; color:#a39a8d; }
+  .reserva-info{
+    font-size: 13px;
+    color: #57503f;
+    line-height:1.5;
+    margin-bottom: 10px;
+  }
+
+  /* ===== ACOMPANHAR PEDIDO (tela do cliente) ===== */
+  .track-mesa{
+    font-size: 13.5px;
+    color: #8a8175;
+    margin-bottom: 18px;
+  }
+  .track-mesa b{ color: var(--navy-deep); }
+  .track-steps{
+    display:flex;
+    align-items:center;
+    margin-bottom: 22px;
+  }
+  .track-step{
+    flex:1;
+    text-align:center;
+  }
+  .track-step .circle{
+    width:34px; height:34px;
+    border-radius:50%;
+    background: var(--sand);
+    color: var(--navy-deep);
+    display:flex; align-items:center; justify-content:center;
+    font-weight:700;
+    font-size:14px;
+    margin: 0 auto 6px;
+    transition: background .25s ease, color .25s ease;
+  }
+  .track-step.done .circle{
+    background: var(--green);
+    color:#fff;
+  }
+  .track-step.current .circle{
+    background: var(--coral);
+    color:#fff;
+  }
+  .track-step .label{
+    font-size: 11.5px;
+    font-weight:600;
+    color:#a39a8d;
+  }
+  .track-step.done .label,
+  .track-step.current .label{
+    color: var(--navy-deep);
+  }
+  .track-line{
+    flex:0.6;
+    height: 2px;
+    background: var(--sand);
+    margin-bottom: 24px;
+  }
+  .track-line.done{ background: var(--green); }
+  .track-items{
+    font-size: 13.5px;
+    color: #57503f;
+    line-height:1.6;
+    background:#fff;
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+  }
+  .track-msg{
+    text-align:center;
+    font-size: 14px;
+    font-weight:600;
+    color: var(--navy-deep);
+    margin-bottom: 6px;
+  }
+  .track-sub{
+    text-align:center;
+    font-size: 12.5px;
+    color: #8a8175;
+    margin-bottom: 18px;
+  }
+
+  @media (max-width: 480px){
+    .phone{ border-radius: 0; }
+    .page-spacer{ height: 110px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header class="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="logo">Sobre As Ondas <span>〰</span></a>
+    <nav class="site-nav">
+      <a href="index.html">Início</a>
+      <a href="cardapio.html">Cardápio</a>
+      <a href="reserva.html">Reserva</a>
+      <a href="endereco.html">Endereço</a>
+      <a href="pedidos.html" class="current">Faça Pedido</a>
+    </nav>
+  </div>
+</header>
+<div class="page-spacer"></div>
+
+<div class="phone-wrap">
+<div class="phone">
+  <div class="top-bar">
+    <div class="top-bar-title">Sobre as Ondas</div>
+    <div class="top-bar-sub">faça seu pedido direto da sua mesa</div>
+    <div class="tabs">
+      <div class="tab active" id="tabCliente" onclick="switchTab('cliente')">Fazer Pedido</div>
+      <div class="tab" id="tabMeusPedidos" onclick="switchTab('meusPedidos')">Seus Pedidos</div>
+      <div class="tab hidden" id="tabEquipe" onclick="switchTab('equipe')">Painel da Equipe</div>
+      <div class="tab hidden" id="tabReservas" onclick="switchTab('reservas')">Reservas</div>
+    </div>
+  </div>
+
+  <!-- VISÃO CLIENTE -->
+  <div class="view active" id="viewCliente">
+
+    <div class="mesa-input">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      <input type="text" id="mesaNumero" placeholder="Número da mesa (ex: 7)">
+    </div>
+
+    <div class="cat-title">Petiscos</div>
+    <div id="menuPetiscos"></div>
+
+    <div class="cat-title">Pastéis (unid)</div>
+    <div id="menuPasteis"></div>
+
+    <div class="cat-title">Outros</div>
+    <div id="menuOutros"></div>
+
+    <div class="cart-bar" onclick="openCart()">
+      <span id="cartSummary">Carrinho vazio</span>
+      <span id="cartTotal"></span>
+    </div>
+  </div>
+
+  <!-- VISÃO "SEUS PEDIDOS" (cliente acompanha em tempo real) -->
+  <div class="view" id="viewMeusPedidos">
+    <div id="listaMeusPedidos"></div>
+  </div>
+
+  <!-- VISÃO EQUIPE -->
+  <div class="view" id="viewEquipe">
+
+    <div id="secaoPagamentoPendente" style="display:none; margin-bottom:22px;">
+      <div class="col-title" style="color:#a9432f;"><span class="dot" style="background:#a9432f;"></span> Pagamento pendente</div>
+      <div id="colPagamentoPendente"></div>
+    </div>
+
+    <div class="board">
+      <div>
+        <div class="col-title" style="color:var(--coral);"><span class="dot" style="background:var(--coral);"></span> Recebido</div>
+        <div id="colRecebido"></div>
+      </div>
+      <div>
+        <div class="col-title" style="color:var(--amber);"><span class="dot" style="background:var(--amber);"></span> Preparando</div>
+        <div id="colPreparando"></div>
+      </div>
+      <div>
+        <div class="col-title" style="color:var(--green);"><span class="dot" style="background:var(--green);"></span> Pronto</div>
+        <div id="colPronto"></div>
+      </div>
+    </div>
+    <div class="staff-access" style="margin-top:20px;" onclick="auth.signOut()">Sair da conta da equipe</div>
+  </div>
+
+  <!-- VISÃO RESERVAS (equipe) -->
+  <div class="view" id="viewReservas">
+    <div class="col-title" style="color:var(--navy);"><span class="dot" style="background:var(--navy);"></span> Reservas</div>
+    <div id="listaReservas"></div>
+    <div class="staff-access" style="margin-top:20px;" onclick="auth.signOut()">Sair da conta da equipe</div>
+  </div>
+
+  <div class="footer-note">
+    Os pedidos são enviados em tempo real para a equipe.
+  </div>
+  <div class="staff-access" onclick="abrirLoginEquipe()">Acesso da equipe</div>
+</div>
+</div>
+
+<!-- MODAL CARRINHO -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+
+    <!-- ETAPA 1: itens do pedido -->
+    <div id="stepItens">
+      <h3>Confirmar pedido</h3>
+      <div id="modalItems"></div>
+      <div class="modal-total"><span>Total</span><span id="modalTotalValue">R$ 0</span></div>
+      <div class="confirm-btn" onclick="irParaPagamento()">Continuar para pagamento</div>
+      <div class="close-modal" onclick="closeCart()">Voltar ao cardápio</div>
+    </div>
+
+    <!-- ETAPA 2: escolher forma de pagamento -->
+    <div id="stepMetodo" style="display:none;">
+      <h3>Como você vai pagar?</h3>
+      <div class="pay-methods">
+        <div class="pay-btn" onclick="escolherMetodo('pix')">
+          <div class="pay-icon pix">💠</div>
+          <div>
+            <div>Pix</div>
+            <div class="pay-sub">Pagamento na hora, aprovação imediata</div>
+          </div>
+        </div>
+        <div class="pay-btn" onclick="escolherMetodo('credito')">
+          <div class="pay-icon credito">💳</div>
+          <div>
+            <div>Cartão de crédito</div>
+            <div class="pay-sub">Você será levado ao checkout do Mercado Pago</div>
+          </div>
+        </div>
+        <div class="pay-btn" onclick="escolherMetodo('debito')">
+          <div class="pay-icon debito">💳</div>
+          <div>
+            <div>Cartão de débito</div>
+            <div class="pay-sub">Você será levado ao checkout do Mercado Pago</div>
+          </div>
+        </div>
+        <div class="pay-btn" onclick="escolherMetodo('retirada')">
+          <div class="pay-icon retirada">📞</div>
+          <div>
+            <div>Pagar na retirada</div>
+            <div class="pay-sub">Deixe seu telefone, a gente liga quando ficar pronto</div>
+          </div>
+        </div>
+      </div>
+      <div class="pay-back" onclick="voltarParaItens()">Voltar</div>
+    </div>
+
+    <!-- ETAPA 3A: pagamento via Pix -->
+    <div id="stepPix" style="display:none;">
+      <h3>Pagar com Pix</h3>
+      <div class="pix-box">
+        <div class="pix-valor" id="pixValor">R$ 0</div>
+        <div class="pix-label">Escaneie o QR Code ou copie o código abaixo</div>
+        <div id="pixQr"></div>
+        <div class="pix-copia" id="pixCopiaCola"></div>
+        <div class="pix-copiar-btn" id="pixCopiarBtn" onclick="copiarPix()">Copiar código Pix</div>
+      </div>
+      <div class="pix-aviso">Depois de pagar, toque no botão abaixo para enviarmos seu pedido para a cozinha. A equipe confirma o recebimento do Pix.</div>
+      <div class="confirm-btn" onclick="confirmarPedido('pix')">Já paguei, enviar pedido</div>
+      <div class="pay-back" onclick="voltarParaMetodo()">Escolher outra forma de pagamento</div>
+    </div>
+
+    <!-- ETAPA 3B: pagamento via Mercado Pago (cartão) -->
+    <div id="stepCartao" style="display:none;">
+      <h3 id="cartaoTitulo">Pagar com cartão</h3>
+      <div class="mp-box">
+        <div class="pix-valor" id="cartaoValor">R$ 0</div>
+        <div class="mp-aviso" id="cartaoAviso">Você será redirecionado para o ambiente seguro do Mercado Pago para finalizar o pagamento. Depois de pagar, você volta automaticamente para cá.</div>
+        <div id="cartaoCarregando" style="display:none;">
+          <div class="spinner"></div>
+          <div class="mp-aviso" style="margin-bottom:0;">Preparando pagamento...</div>
+        </div>
+        <div class="confirm-btn" id="cartaoBtnIr" onclick="pagarComMercadoPago()">Ir para pagamento</div>
+        <div class="erro-pagamento" id="cartaoErro">Não foi possível iniciar o pagamento. Tenta de novo em instantes.</div>
+      </div>
+      <div class="pay-back" onclick="voltarParaMetodo()">Escolher outra forma de pagamento</div>
+    </div>
+
+    <!-- ETAPA 3C: pagar na retirada / deixar telefone -->
+    <div id="stepRetirada" style="display:none;">
+      <h3>Pagar na retirada</h3>
+      <div class="telefone-box">
+        <label for="telefoneInput">Seu telefone (com DDD)</label>
+        <input type="tel" id="telefoneInput" placeholder="Ex: (21) 99119-2065">
+        <div class="telefone-aviso">Você paga direto com a equipe, na entrega ou retirada. Vamos te ligar assim que o pedido estiver pronto.</div>
+      </div>
+      <div class="confirm-btn" onclick="confirmarPedido('retirada')">Enviar pedido</div>
+      <div class="pay-back" onclick="voltarParaMetodo()">Escolher outra forma de pagamento</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL LOGIN EQUIPE -->
+<div class="modal-bg" id="modalLogin">
+  <div class="modal senha-modal">
+    <h3>Acesso da equipe</h3>
+    <div class="senha-erro" id="senhaErro">E-mail ou senha incorretos, tenta de novo.</div>
+    <input type="email" id="emailInput" placeholder="E-mail da equipe" autocomplete="username">
+    <input type="password" id="senhaInput" placeholder="Digite a senha" autocomplete="current-password">
+    <div class="confirm-btn" onclick="conferirSenha()">Entrar</div>
+    <div class="close-modal" onclick="fecharLoginEquipe()">Cancelar</div>
+  </div>
+</div>
+
+<script>
+  // =====================================================================
+  // FIREBASE — cole aqui embaixo o firebaseConfig que o console te deu
+  // =====================================================================
+  const firebaseConfig = {
+    apiKey: "AIzaSyBurg6f5wq9SghAfrt_04xR5Hts5h50njQ",
+    authDomain: "sobre-as-ondas.firebaseapp.com",
+    projectId: "sobre-as-ondas",
+    storageBucket: "sobre-as-ondas.firebasestorage.app",
+    messagingSenderId: "422483775660",
+    appId: "1:422483775660:web:6eb59eb42293cc1df38f09"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+  const auth = firebase.auth();
+  const pedidosRef = db.collection('pedidos');
+  const reservasRef = db.collection('reservas');
+
+  // =====================================================================
+  // LOGIN DA EQUIPE (Firebase Authentication)
+  // Crie o(s) usuário(s) da equipe em: Firebase Console > Authentication >
+  // Sign-in method > ative "E-mail/senha" > aba "Users" > Add user.
+  // =====================================================================
+  function abrirLoginEquipe(){
+    document.getElementById('emailInput').value = '';
+    document.getElementById('senhaInput').value = '';
+    document.getElementById('senhaErro').style.display = 'none';
+    document.getElementById('modalLogin').classList.add('show');
+  }
+  function fecharLoginEquipe(){
+    document.getElementById('modalLogin').classList.remove('show');
+  }
+  function conferirSenha(){
+    const email = document.getElementById('emailInput').value.trim();
+    const senha = document.getElementById('senhaInput').value;
+    document.getElementById('senhaErro').style.display = 'none';
+
+    auth.signInWithEmailAndPassword(email, senha)
+      .then(() => {
+        fecharLoginEquipe();
+        switchTab('equipe');
+      })
+      .catch(() => {
+        document.getElementById('senhaErro').style.display = 'block';
+      });
+  }
+
+  let pararDeOuvirPedidos = null;
+  let pararDeOuvirReservas = null;
+
+  // Só passa a ouvir os pedidos e reservas em tempo real DEPOIS que a
+  // equipe faz login. Antes disso, nenhum dado (nome de cliente, telefone,
+  // etc.) é baixado no navegador de quem só está fazendo um pedido.
+  auth.onAuthStateChanged(function(user){
+    if(user){
+      document.getElementById('tabEquipe').classList.remove('hidden');
+      document.getElementById('tabReservas').classList.remove('hidden');
+
+      if(!pararDeOuvirPedidos){
+        pararDeOuvirPedidos = pedidosRef.orderBy('criadoEm', 'asc').onSnapshot(snapshot => {
+          orders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          renderBoard();
+        }, err => {
+          console.error('Erro ao ler pedidos do Firebase:', err);
+        });
+      }
+
+      if(!pararDeOuvirReservas){
+        pararDeOuvirReservas = reservasRef.orderBy('data', 'asc').onSnapshot(snapshot => {
+          reservations = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          renderReservas();
+        }, err => {
+          console.error('Erro ao ler reservas do Firebase:', err);
+        });
+      }
+    } else {
+      document.getElementById('tabEquipe').classList.add('hidden');
+      document.getElementById('tabReservas').classList.add('hidden');
+      if(document.getElementById('viewEquipe').classList.contains('active') ||
+         document.getElementById('viewReservas').classList.contains('active')){
+        switchTab('cliente');
+      }
+      if(pararDeOuvirPedidos){
+        pararDeOuvirPedidos();
+        pararDeOuvirPedidos = null;
+      }
+      if(pararDeOuvirReservas){
+        pararDeOuvirReservas();
+        pararDeOuvirReservas = null;
+      }
+      orders = [];
+      reservations = [];
+    }
+  });
+
+  // =====================================================================
+  // CARDÁPIO / CARRINHO
+  // =====================================================================
+  const menu = {
+    petiscos: [
+      {id:'p1', name:'Aipim Frito', price:30},
+      {id:'p2', name:'Batata Frita', price:30},
+      {id:'p3', name:'Batata Maluca', price:55},
+      {id:'p4', name:'Bolinho de Bacalhau', price:50},
+      {id:'p5', name:'Camarão Alho e Óleo', price:55},
+      {id:'p6', name:'Carne de Sol', price:50},
+      {id:'p7', name:'Isca de Peixe', price:100},
+      {id:'p8', name:'Isca de frango', price:75},
+      {id:'p9', name:'Churrasco misto', price:100},
+      {id:'p10', name:'Frango à passarinho', price:95},
+      {id:'p11', name:'Manjubinha', price:95},
+      {id:'p12', name:'Sardinha', price:95},
+      {id:'p13', name:'Corvina', price:95},
+      {id:'p14', name:'Lula à dore', price:95},
+    ],
+    pasteis: [
+      {id:'a1', name:'Camarão', price:12},
+      {id:'a2', name:'Queijo', price:10},
+      {id:'a3', name:'Calabresa', price:10},
+      {id:'a4', name:'Frango c/Catupiry', price:10},
+    ],
+    outros: [
+      {id:'o1', name:'Azeitona', price:21},
+      {id:'o2', name:'Queijo Coalho', price:15},
+      {id:'o3', name:'Saláminho', price:35},
+    ],
+    bebidas:[
+      {id:'b1', name:'Água', price:5},
+    ],
+    drinks: [
+      {id:'d1', name:'Caipirinha', prince:18},
+      {id:'d2', name:'Caipirinha vodka', prince:22},
+      {id:'d3', name:'Gin tropical', prince:25},
+    ]
+  };
+
+  function formatarDataHora(data){
+    const dataStr = data.toLocaleDateString('pt-BR', {day:'2-digit', month:'2-digit'});
+    const horaStr = data.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+    return `${dataStr} · ${horaStr}`;
+  }
+
+  let cart = {};
+  let orders = [];
+  let reservations = [];
+  let metodoEscolhido = null;
+  let mpCheckoutUrl = null;
+
+  // =====================================================================
+  // CONFIGURAÇÃO DE PAGAMENTO — edite aqui
+  // =====================================================================
+  const PIX_CHAVE = "+5521980401317";   // chave pix do restaurante (telefone, com +55 obrigatório)
+  const PIX_NOME  = "SOBRE AS ONDAS";   // nome do recebedor (sem acento, max 25 letras)
+  const PIX_CIDADE = "RIO DE JANEIRO";  // cidade do recebedor (sem acento, max 15 letras) — ajuste se necessário
+
+  // URL da Cloud Function que cria o pagamento no Mercado Pago.
+  const MP_FUNCTION_URL = "/.netlify/functions/criarPagamento";
+
+  function renderMenu(list, containerId){
+    const el = document.getElementById(containerId);
+    el.innerHTML = list.map(item => `
+      <div class="menu-item">
+        <div>
+          <div class="item-name">${item.name}</div>
+          <div class="item-price">R$ ${item.price}</div>
+        </div>
+        <div class="qty-control">
+          <div class="qty-btn" onclick="changeQty('${item.id}', -1)">−</div>
+          <div class="qty-num" id="qty-${item.id}">${cart[item.id]?.qty || 0}</div>
+          <div class="qty-btn" onclick="changeQty('${item.id}', 1)">+</div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function allItems(){
+    return [...menu.petiscos, ...menu.pasteis, ...menu.outros];
+  }
+
+  function changeQty(id, delta){
+    const item = allItems().find(i => i.id === id);
+    if(!cart[id]) cart[id] = {qty:0, name:item.name, price:item.price};
+    cart[id].qty = Math.max(0, cart[id].qty + delta);
+    if(cart[id].qty === 0) delete cart[id];
+    document.getElementById('qty-' + id).textContent = cart[id]?.qty || 0;
+    updateCartBar();
+  }
+
+  function updateCartBar(){
+    const ids = Object.keys(cart);
+    const totalQty = ids.reduce((s,id) => s + cart[id].qty, 0);
+    const totalPrice = ids.reduce((s,id) => s + cart[id].qty * cart[id].price, 0);
+    document.getElementById('cartSummary').textContent = totalQty === 0 ? 'Carrinho vazio' : `${totalQty} ${totalQty === 1 ? 'item' : 'itens'} no carrinho`;
+    document.getElementById('cartTotal').textContent = totalQty === 0 ? '' : `R$ ${totalPrice}`;
+  }
+
+  function cartTotal(){
+    return Object.values(cart).reduce((s, it) => s + it.qty * it.price, 0);
+  }
+
+  function openCart(){
+    const ids = Object.keys(cart);
+    if(ids.length === 0){ return; }
+    const modalItems = document.getElementById('modalItems');
+    let total = 0;
+    modalItems.innerHTML = ids.map(id => {
+      const it = cart[id];
+      total += it.qty * it.price;
+      return `<div class="modal-row"><span>${it.qty}x ${it.name}</span><span>R$ ${it.qty * it.price}</span></div>`;
+    }).join('');
+    document.getElementById('modalTotalValue').textContent = 'R$ ' + total;
+    mostrarEtapa('stepItens');
+    document.getElementById('modalBg').classList.add('show');
+  }
+
+  function closeCart(){
+    document.getElementById('modalBg').classList.remove('show');
+  }
+
+  // ===== CONTROLE DAS ETAPAS DO MODAL =====
+  function mostrarEtapa(id){
+    ['stepItens','stepMetodo','stepPix','stepCartao','stepRetirada'].forEach(s => {
+      document.getElementById(s).style.display = (s === id) ? 'block' : 'none';
+    });
+  }
+
+  function irParaPagamento(){
+    if(Object.keys(cart).length === 0) return;
+    mostrarEtapa('stepMetodo');
+  }
+
+  function voltarParaItens(){
+    mostrarEtapa('stepItens');
+  }
+
+  function voltarParaMetodo(){
+    mostrarEtapa('stepMetodo');
+  }
+
+  function escolherMetodo(metodo){
+    metodoEscolhido = metodo;
+    const total = cartTotal();
+
+    if(metodo === 'pix'){
+      montarPix(total);
+      mostrarEtapa('stepPix');
+    } else if(metodo === 'credito' || metodo === 'debito'){
+      document.getElementById('cartaoTitulo').textContent = metodo === 'credito' ? 'Pagar com cartão de crédito' : 'Pagar com cartão de débito';
+      document.getElementById('cartaoValor').textContent = 'R$ ' + total;
+      document.getElementById('cartaoErro').style.display = 'none';
+      document.getElementById('cartaoBtnIr').style.display = 'block';
+      document.getElementById('cartaoCarregando').style.display = 'none';
+      mostrarEtapa('stepCartao');
+    } else if(metodo === 'retirada'){
+      mostrarEtapa('stepRetirada');
+    }
+  }
+
+  // =====================================================================
+  // PIX — geração real do payload (BR Code) direto no navegador
+  // =====================================================================
+  function crc16(payload){
+    let polinomio = 0x1021;
+    let resultado = 0xFFFF;
+    for(let i = 0; i < payload.length; i++){
+      resultado ^= (payload.charCodeAt(i) << 8);
+      for(let j = 0; j < 8; j++){
+        if((resultado & 0x8000) !== 0){
+          resultado = (resultado << 1) ^ polinomio;
+        } else {
+          resultado <<= 1;
+        }
+        resultado &= 0xFFFF;
+      }
+    }
+    return resultado.toString(16).toUpperCase().padStart(4, '0');
+  }
+
+  function campoEMV(id, valor){
+    const tamanho = String(valor.length).padStart(2, '0');
+    return id + tamanho + valor;
+  }
+
+  function gerarPayloadPix(valor, txid){
+    const valorFormatado = valor.toFixed(2);
+    const gui = campoEMV('00', 'BR.GOV.BCB.PIX');
+    const chave = campoEMV('01', PIX_CHAVE);
+    const merchantAccountInfo = campoEMV('26', gui + chave);
+
+    const txidCampo = campoEMV('05', txid.substring(0, 25));
+    const adicional = campoEMV('62', txidCampo);
+
+    let payload =
+      campoEMV('00', '01') +
+      campoEMV('01', '12') +
+      merchantAccountInfo +
+      campoEMV('52', '0000') +
+      campoEMV('53', '986') +
+      campoEMV('54', valorFormatado) +
+      campoEMV('58', 'BR') +
+      campoEMV('59', PIX_NOME.substring(0, 25)) +
+      campoEMV('60', PIX_CIDADE.substring(0, 15)) +
+      adicional +
+      '6304';
+
+    return payload + crc16(payload);
+  }
+
+  function montarPix(total){
+    const txid = 'PED' + Date.now().toString().slice(-10);
+    const payload = gerarPayloadPix(total, txid);
+
+    document.getElementById('pixValor').textContent = 'R$ ' + total;
+    document.getElementById('pixCopiaCola').textContent = payload;
+    document.getElementById('pixCopiarBtn').textContent = 'Copiar código Pix';
+    document.getElementById('pixCopiarBtn').classList.remove('copiado');
+
+    const qrEl = document.getElementById('pixQr');
+    qrEl.innerHTML = '';
+    new QRCode(qrEl, { text: payload, width: 180, height: 180 });
+  }
+
+  function copiarPix(){
+    const texto = document.getElementById('pixCopiaCola').textContent;
+    navigator.clipboard.writeText(texto).then(() => {
+      const btn = document.getElementById('pixCopiarBtn');
+      btn.textContent = 'Copiado!';
+      btn.classList.add('copiado');
+      setTimeout(() => { btn.textContent = 'Copiar código Pix'; btn.classList.remove('copiado'); }, 2500);
+    });
+  }
+
+  // =====================================================================
+  // CARTÃO — cria a cobrança no Mercado Pago (Cloud Function) e redireciona
+  // =====================================================================
+  async function pagarComMercadoPago(){
+    const mesa = document.getElementById('mesaNumero').value.trim() || '?';
+    const items = Object.values(cart).map(it => ({ name: it.name, qty: it.qty, price: it.price }));
+    if(items.length === 0) return;
+
+    document.getElementById('cartaoBtnIr').style.display = 'none';
+    document.getElementById('cartaoErro').style.display = 'none';
+    document.getElementById('cartaoCarregando').style.display = 'block';
+
+    try{
+      // 1) cria o pedido no Firestore como "aguardando pagamento" — só entra
+      //    na fila da cozinha depois que o Mercado Pago confirmar o pagamento
+      const pedidoDoc = await pedidosRef.add({
+        mesa: mesa,
+        items: items.map(it => `${it.qty}x ${it.name}`),
+        total: cartTotal(),
+        status: 'aguardando_pagamento',
+        paymentMethod: metodoEscolhido,
+        paymentStatus: 'aguardando_pagamento',
+        time: formatarDataHora(new Date()),
+        criadoEm: firebase.firestore.FieldValue.serverTimestamp()
+      });
+
+      adicionarMeuPedido(pedidoDoc.id);
+
+      // 2) pede pra Cloud Function criar a cobrança no Mercado Pago
+      const resp = await fetch(MP_FUNCTION_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items: items, mesa: mesa, pedidoId: pedidoDoc.id, metodo: metodoEscolhido })
+      });
+      if(!resp.ok) throw new Error('Falha ao criar pagamento');
+      const data = await resp.json();
+      if(!data.init_point) throw new Error('Sem link de pagamento');
+
+      // 3) redireciona pro checkout do Mercado Pago
+      window.location.href = data.init_point;
+
+    } catch(err){
+      console.error(err);
+      document.getElementById('cartaoCarregando').style.display = 'none';
+      document.getElementById('cartaoBtnIr').style.display = 'block';
+      document.getElementById('cartaoErro').style.display = 'block';
+    }
+  }
+
+  // ===== ENVIA O PEDIDO PRO FIREBASE (Pix e Pagar na retirada) =====
+  function confirmarPedido(metodo){
+    const mesa = document.getElementById('mesaNumero').value.trim() || '?';
+    const items = Object.values(cart).map(it => `${it.qty}x ${it.name}`);
+    if(items.length === 0) return;
+
+    let telefone = '';
+    if(metodo === 'retirada'){
+      telefone = document.getElementById('telefoneInput').value.trim();
+      if(!telefone){
+        alert('Deixa seu telefone pra gente poder te chamar quando o pedido ficar pronto.');
+        return;
+      }
+    }
+
+    const dadosPedido = {
+      mesa: mesa,
+      items: items,
+      total: cartTotal(),
+      status: metodo === 'pix' ? 'aguardando_pagamento' : 'recebido',
+      paymentMethod: metodo,
+      paymentStatus: metodo === 'pix' ? 'aguardando_confirmacao' : 'pagar_na_retirada',
+      time: formatarDataHora(new Date()),
+      criadoEm: firebase.firestore.FieldValue.serverTimestamp()
+    };
+    if(telefone) dadosPedido.telefone = telefone;
+
+    pedidosRef.add(dadosPedido).then((docRef) => {
+      cart = {};
+      metodoEscolhido = null;
+      renderMenu(menu.petiscos, 'menuPetiscos');
+      renderMenu(menu.pasteis, 'menuPasteis');
+      renderMenu(menu.outros, 'menuOutros');
+      updateCartBar();
+      closeCart();
+      adicionarMeuPedido(docRef.id);
+      switchTab('meusPedidos');
+    }).catch(err => {
+      alert('Não foi possível enviar o pedido. Confere sua conexão e tenta de novo.');
+      console.error(err);
+    });
+  }
+
+  // ===== Ao voltar do checkout do Mercado Pago, confere o status na URL =====
+  (function tratarRetornoMercadoPago(){
+    const params = new URLSearchParams(window.location.search);
+    const pago = params.get('pago');
+    const pedidoId = params.get('pedido');
+    if(pago && pedidoId){
+      if(pago === '1'){
+        pedidosRef.doc(pedidoId).update({ status: 'recebido', paymentStatus: 'aprovado' })
+          .catch(err => console.error('Erro ao liberar pedido pra cozinha:', err));
+        adicionarMeuPedido(pedidoId);
+        switchTab('meusPedidos');
+      } else if(pago === 'pendente'){
+        adicionarMeuPedido(pedidoId);
+        switchTab('meusPedidos');
+      } else {
+        alert('O pagamento não foi concluído. Se quiser, tenta de novo pelo cardápio.');
+      }
+      // limpa os parâmetros da URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  })();
+
+  // ===== EQUIPE: avança status do pedido no Firebase =====
+  function excluirPedido(id, event){
+    if(event) event.stopPropagation();
+    if(confirm('Remover este pedido da lista? Essa ação não pode ser desfeita.')){
+      pedidosRef.doc(id).delete();
+    }
+  }
+
+  function advanceStatus(id){
+    const order = orders.find(o => o.id === id);
+    if(!order) return;
+    let novoStatus = order.status;
+    if(order.status === 'recebido') novoStatus = 'preparando';
+    else if(order.status === 'preparando') novoStatus = 'pronto';
+    pedidosRef.doc(id).update({ status: novoStatus });
+  }
+
+  // Só a equipe confirma manualmente que o Pix caiu na conta (conferindo
+  // no app do banco). Antes disso, o pedido fica represado e não aparece
+  // na fila da cozinha — evita pedido "furado" entrar sem pagamento real.
+  function confirmarPagamento(id){
+    pedidosRef.doc(id).update({ status: 'recebido', paymentStatus: 'aprovado' });
+  }
+
+  function renderBoard(){
+    const cols = {recebido: [], preparando: [], pronto: []};
+    const pendentes = [];
+    orders.forEach(o => {
+      if(o.status === 'aguardando_pagamento') pendentes.push(o);
+      else if(cols[o.status]) cols[o.status].push(o);
+    });
+
+    const nextLabel = {recebido:'Iniciar preparo', preparando:'Marcar como pronto'};
+
+    const metodoLabel = {
+      pix: '💠 Pix',
+      credito: '💳 Crédito (Mercado Pago)',
+      debito: '💳 Débito (Mercado Pago)',
+      retirada: '📞 Pagar na retirada'
+    };
+    const statusPagLabel = {
+      aguardando_confirmacao: 'confirmar recebimento',
+      aguardando_pagamento: 'aguardando pagamento',
+      pagar_na_retirada: 'cobrar na entrega',
+      aprovado: 'pago ✓'
+    };
+
+    function cardHtml(o){
+      const btn = o.status === 'pronto'
+        ? `<div class="status-btn done">Pronto</div>`
+        : `<div class="status-btn next" onclick="advanceStatus('${o.id}')">${nextLabel[o.status]}</div>`;
+      const pagamentoInfo = o.paymentMethod
+        ? `<div class="order-items" style="margin-bottom:4px;"><strong>${metodoLabel[o.paymentMethod] || o.paymentMethod}</strong>${statusPagLabel[o.paymentStatus] ? ' · ' + statusPagLabel[o.paymentStatus] : ''}${o.telefone ? ' · 📱 ' + o.telefone : ''}</div>`
+        : '';
+      return `
+        <div class="order-card ${o.status}">
+          <div class="order-top">
+            <div class="order-mesa">Mesa ${o.mesa}</div>
+            <div class="order-time">${o.time || ''}</div>
+          </div>
+          ${pagamentoInfo}
+          <div class="order-items">${o.items.join(', ')}</div>
+          <div class="order-actions">
+            ${btn}
+            <div class="trash-btn" onclick="excluirPedido('${o.id}', event)" title="Remover pedido">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14z"/><path d="M10 11v6M14 11v6"/></svg>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function cardHtmlPendente(o){
+      const pagamentoInfo = o.paymentMethod
+        ? `<div class="order-items" style="margin-bottom:4px;"><strong>${metodoLabel[o.paymentMethod] || o.paymentMethod}</strong>${o.telefone ? ' · 📱 ' + o.telefone : ''}</div>`
+        : '';
+      return `
+        <div class="order-card aguardando_pagamento">
+          <div class="order-top">
+            <div class="order-mesa">Mesa ${o.mesa}</div>
+            <div class="order-time">${o.time || ''}</div>
+          </div>
+          ${pagamentoInfo}
+          <div class="order-items">${o.items.join(', ')} · <strong>Total R$ ${o.total}</strong></div>
+          <div class="order-actions">
+            <div class="status-btn next" onclick="confirmarPagamento('${o.id}')">Confirmar pagamento recebido</div>
+            <div class="trash-btn" onclick="excluirPedido('${o.id}', event)" title="Remover pedido">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14z"/><path d="M10 11v6M14 11v6"/></svg>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    const secaoPendente = document.getElementById('secaoPagamentoPendente');
+    secaoPendente.style.display = pendentes.length ? 'block' : 'none';
+    document.getElementById('colPagamentoPendente').innerHTML = pendentes.map(cardHtmlPendente).join('');
+
+    document.getElementById('colRecebido').innerHTML = cols.recebido.length ? cols.recebido.map(cardHtml).join('') : '<div class="empty-msg">Nenhum pedido novo</div>';
+    document.getElementById('colPreparando').innerHTML = cols.preparando.length ? cols.preparando.map(cardHtml).join('') : '<div class="empty-msg">Nada em preparo</div>';
+    document.getElementById('colPronto').innerHTML = cols.pronto.length ? cols.pronto.map(cardHtml).join('') : '<div class="empty-msg">Nada pronto ainda</div>';
+  }
+
+  // ===== EQUIPE: reservas =====
+  function excluirReserva(id, event){
+    if(event) event.stopPropagation();
+    if(confirm('Remover esta reserva da lista? Essa ação não pode ser desfeita.')){
+      reservasRef.doc(id).delete();
+    }
+  }
+
+  function confirmarReserva(id){
+    reservasRef.doc(id).update({ status: 'confirmada' });
+  }
+
+  function formatarDataReserva(dataStr){
+    if(!dataStr) return '';
+    const [ano, mes, dia] = dataStr.split('-');
+    return `${dia}/${mes}/${ano}`;
+  }
+
+  function renderReservas(){
+    const lista = document.getElementById('listaReservas');
+    if(reservations.length === 0){
+      lista.innerHTML = '<div class="empty-msg">Nenhuma reserva ainda</div>';
+      return;
+    }
+
+    lista.innerHTML = reservations.map(r => {
+      const status = r.status || 'nova';
+      const btn = status === 'confirmada'
+        ? `<div class="status-btn done">Confirmada</div>`
+        : `<div class="status-btn next" onclick="confirmarReserva('${r.id}')">Confirmar reserva</div>`;
+      return `
+        <div class="reserva-card ${status}">
+          <div class="reserva-top">
+            <div class="reserva-data">${formatarDataReserva(r.data)}</div>
+            <div class="reserva-horario">${r.horario || ''}</div>
+          </div>
+          <div class="reserva-info">
+            ${r.pessoas || ''}${r.observacao ? ' · ' + r.observacao : ''}
+          </div>
+          <div class="order-actions">
+            ${btn}
+            <div class="trash-btn" onclick="excluirReserva('${r.id}', event)" title="Remover reserva">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14z"/><path d="M10 11v6M14 11v6"/></svg>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // =====================================================================
+  // "SEUS PEDIDOS" — lista, no navegador do cliente, de todos os pedidos
+  // que ele já fez, com status em tempo real. Funciona sem login porque
+  // a regra do Firestore permite "get" de um documento específico por
+  // qualquer pessoa; só a LISTAGEM de todos os pedidos exige login da
+  // equipe. O ID de cada pedido funciona como um código que só quem fez
+  // o pedido tem (fica salvo no localStorage deste navegador).
+  // =====================================================================
+  let meusPedidosIds = [];
+  let meusPedidosData = {};
+  let meusPedidosListeners = {};
+
+  function carregarMeusPedidosLocal(){
+    try{
+      meusPedidosIds = JSON.parse(localStorage.getItem('meusPedidos') || '[]');
+    } catch(e){
+      meusPedidosIds = [];
+    }
+    meusPedidosIds.forEach(escutarPedido);
+    renderMeusPedidos();
+  }
+
+  function salvarMeusPedidosLocal(){
+    localStorage.setItem('meusPedidos', JSON.stringify(meusPedidosIds));
+  }
+
+  function adicionarMeuPedido(id){
+    if(meusPedidosIds.includes(id)) return;
+    meusPedidosIds.unshift(id);
+    salvarMeusPedidosLocal();
+    escutarPedido(id);
+  }
+
+  function escutarPedido(id){
+    if(meusPedidosListeners[id]) return;
+    meusPedidosListeners[id] = pedidosRef.doc(id).onSnapshot(function(doc){
+      if(doc.exists){
+        meusPedidosData[id] = doc.data();
+      } else {
+        removerMeuPedidoLocal(id);
+      }
+      renderMeusPedidos();
+    }, function(err){
+      console.error('Erro ao acompanhar pedido:', err);
+    });
+  }
+
+  function removerMeuPedidoLocal(id){
+    meusPedidosIds = meusPedidosIds.filter(pid => pid !== id);
+    delete meusPedidosData[id];
+    if(meusPedidosListeners[id]){ meusPedidosListeners[id](); delete meusPedidosListeners[id]; }
+    salvarMeusPedidosLocal();
+    renderMeusPedidos();
+  }
+
+  const statusPedidoLabel = {
+    aguardando_pagamento: ['Aguardando confirmação do pagamento', 'Assim que confirmarmos, seu pedido segue pra cozinha.'],
+    recebido: ['Recebemos seu pedido!', 'A equipe já foi avisada.'],
+    preparando: ['Está sendo preparado', 'Não deve demorar :)'],
+    pronto: ['Pronto!', 'Pode retirar ou aguardar na mesa.']
+  };
+
+  function stepsHtml(status){
+    const ordem = ['recebido', 'preparando', 'pronto'];
+    const atual = ordem.indexOf(status);
+    function stepClass(idx){
+      if(atual < 0) return '';
+      if(idx < atual) return 'done';
+      if(idx === atual) return 'current';
+      return '';
+    }
+    function lineClass(threshold){
+      return atual >= threshold ? 'done' : '';
+    }
+    return `
+      <div class="track-steps">
+        <div class="track-step ${stepClass(0)}"><div class="circle">1</div><div class="label">Recebido</div></div>
+        <div class="track-line ${lineClass(1)}"></div>
+        <div class="track-step ${stepClass(1)}"><div class="circle">2</div><div class="label">Preparando</div></div>
+        <div class="track-line ${lineClass(2)}"></div>
+        <div class="track-step ${stepClass(2)}"><div class="circle">3</div><div class="label">Pronto</div></div>
+      </div>
+    `;
+  }
+
+  function renderMeusPedidos(){
+    const container = document.getElementById('listaMeusPedidos');
+    if(meusPedidosIds.length === 0){
+      container.innerHTML = '<div class="empty-msg" style="padding:20px 4px;">Você ainda não fez nenhum pedido por aqui.</div>';
+      return;
+    }
+
+    container.innerHTML = meusPedidosIds.map(id => {
+      const pedido = meusPedidosData[id];
+      if(!pedido){
+        return `<div class="order-card"><div class="empty-msg">Carregando...</div></div>`;
+      }
+      const [msg, sub] = statusPedidoLabel[pedido.status] || statusPedidoLabel.aguardando_pagamento;
+      return `
+        <div class="order-card">
+          <div class="order-top">
+            <div class="order-mesa">Mesa ${pedido.mesa || '-'}</div>
+            <div class="order-time">${pedido.time || ''}</div>
+          </div>
+          ${stepsHtml(pedido.status)}
+          <div class="track-msg" style="margin-top:2px;">${msg}</div>
+          <div class="track-sub">${sub}</div>
+          <div class="track-items">${(pedido.items || []).join(', ')}</div>
+          <div class="pay-back" onclick="removerMeuPedidoLocal('${id}')">Remover da lista</div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  carregarMeusPedidosLocal();
+
+  function switchTab(tab){
+    document.getElementById('viewCliente').classList.toggle('active', tab === 'cliente');
+    document.getElementById('viewMeusPedidos').classList.toggle('active', tab === 'meusPedidos');
+    document.getElementById('viewEquipe').classList.toggle('active', tab === 'equipe');
+    document.getElementById('viewReservas').classList.toggle('active', tab === 'reservas');
+    document.getElementById('tabCliente').classList.toggle('active', tab === 'cliente');
+    document.getElementById('tabMeusPedidos').classList.toggle('active', tab === 'meusPedidos');
+    document.getElementById('tabEquipe').classList.toggle('active', tab === 'equipe');
+    document.getElementById('tabReservas').classList.toggle('active', tab === 'reservas');
+  }
+
+  renderMenu(menu.petiscos, 'menuPetiscos');
+  renderMenu(menu.pasteis, 'menuPasteis');
+  renderMenu(menu.outros, 'menuOutros');
+</script>
+
+</body>
+</html>

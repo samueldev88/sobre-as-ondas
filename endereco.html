@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Endereço — Sobre As Ondas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=DM+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --navy: #16304f;
+    --navy-deep: #0e2138;
+    --cream: #f6f0e2;
+    --coral: #d8503c;
+    --sand: #e7dcc2;
+    --ink: #1c2530;
+    --green: #4a8a5f;
+    --amber: #c8862e;
+    --azul-escuro: #1B4B57;
+    --terracota: #E8734A;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background: var(--cream);
+    font-family:'DM Sans', sans-serif;
+    color: var(--ink);
+    min-height:100vh;
+  }
+
+  /* ===== NAVBAR (mesma linguagem visual das outras páginas) ===== */
+  .navbar{
+    position: fixed;
+    top: 16px; left:0; right:0;
+    z-index: 200;
+  }
+  .nav-container{
+    max-width: 1200px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 999px;
+    padding: 12px 20px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
+  .logo{
+    font-family:'Playfair Display', serif;
+    font-style:italic;
+    font-weight:700;
+    font-size: 18px;
+    color: var(--azul-escuro);
+    white-space:nowrap;
+  }
+  .logo span{ color: var(--terracota); }
+  .site-nav{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    justify-content:center;
+  }
+  .site-nav a{
+    text-decoration:none;
+    background: var(--azul-escuro);
+    color:#fff;
+    padding: 7px 14px;
+    border-radius: 999px;
+    font-family:'Poppins', sans-serif;
+    font-size: 11px;
+    font-weight:600;
+    letter-spacing:.4px;
+  }
+  .site-nav a.current{ background: var(--terracota); }
+
+  /*
+    A navbar é "fixed", então não ocupa espaço no fluxo normal da página.
+    Este espaçador existe só pra empurrar o conteúdo pra baixo dela.
+    Só que em telas estreitas o .nav-container quebra em duas linhas
+    (por causa do flex-wrap), ficando mais alto do que os 90px fixos
+    que existiam antes — por isso o título "Como chegar" ficava
+    escondido atrás da navbar. Agora a altura é calculada via JS
+    (ver ajustarEspacoNavbar) e este valor fixo serve só como
+    fallback antes do JS rodar.
+  */
+  .page-spacer{ height: 130px; }
+
+  /* ===== CONTEÚDO DA PÁGINA ===== */
+  .content-wrap{
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 0 20px 60px;
+  }
+  .page-title{
+    font-family:'Playfair Display', serif;
+    font-style:italic;
+    font-weight:700;
+    font-size: 34px;
+    color: var(--navy-deep);
+    margin-bottom: 6px;
+  }
+  .page-subtitle{
+    font-family:'Poppins', sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+    opacity: .75;
+    margin-bottom: 28px;
+  }
+
+  .card{
+    background:#fff;
+    border-radius: 18px;
+    box-shadow: 0 15px 40px rgba(14,33,56,0.10);
+    overflow:hidden;
+    margin-bottom: 20px;
+  }
+  .map-frame{
+    width:100%;
+    height: 320px;
+    border: 0;
+    display:block;
+    object-fit: cover;
+  }
+  .card-body{
+    padding: 22px 24px;
+  }
+  .endereco-linha{
+    display:flex;
+    gap: 12px;
+    align-items:flex-start;
+    margin-bottom: 14px;
+  }
+  .endereco-linha svg{
+    flex-shrink:0;
+    width: 22px; height:22px;
+    color: var(--coral);
+    margin-top: 2px;
+  }
+  .endereco-texto{
+    font-family:'Poppins', sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  .endereco-texto strong{
+    display:block;
+    font-size: 16px;
+    margin-bottom: 2px;
+  }
+  .btn-maps{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    text-decoration:none;
+    background: var(--coral);
+    color:#fff;
+    font-family:'Poppins', sans-serif;
+    font-weight:600;
+    font-size: 14px;
+    padding: 12px 22px;
+    border-radius: 999px;
+    margin-top: 6px;
+  }
+
+  .horarios{
+    display:flex;
+    justify-content:space-between;
+    font-family:'Poppins', sans-serif;
+    font-size: 14px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--sand);
+  }
+  .horarios:last-child{ border-bottom:none; }
+  .horarios span:first-child{ font-weight:600; }
+  .horarios span:last-child{ opacity:.8; }
+
+  @media (max-width: 480px){
+    .page-title{ font-size: 26px; }
+    .map-frame{ height: 240px; }
+  }
+
+  /* ===== MODAL DE CONFIRMAÇÃO (sair do site) ===== */
+  .confirm-overlay{
+    position:fixed;
+    inset:0;
+    background: rgba(14,33,56,0.55);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index: 500;
+    padding: 24px;
+  }
+  .confirm-overlay.show{ display:flex; }
+  .confirm-card{
+    background:#f6f0e2;
+    border-radius: 18px;
+    max-width: 340px;
+    width:100%;
+    padding: 26px 24px 22px;
+    text-align:center;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+  }
+  .confirm-text{
+    font-family:'DM Sans', sans-serif;
+    font-size: 15.5px;
+    color: var(--navy-deep);
+    line-height:1.5;
+    margin-bottom: 20px;
+  }
+  .confirm-actions{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap: 22px;
+  }
+  .confirm-cancel{
+    background:none;
+    border:none;
+    font-family:'DM Sans', sans-serif;
+    font-weight:600;
+    font-size: 14.5px;
+    color: var(--navy-deep);
+    cursor:pointer;
+  }
+  .confirm-ok{
+    background: var(--coral);
+    color:#fff;
+    border:none;
+    font-family:'DM Sans', sans-serif;
+    font-weight:700;
+    font-size: 14.5px;
+    padding: 11px 20px;
+    border-radius: 999px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header class="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="logo">Sobre As Ondas <span>〰</span></a>
+    <nav class="site-nav">
+      <a href="index.html">Início</a>
+      <a href="cardapio.html">Cardápio</a>
+      <a href="reserva.html">Reserva</a>
+      <a href="endereco.html" class="current">Endereço</a>
+      <a href="pedidos.html">Faça Pedido</a>
+    </nav>
+  </div>
+</header>
+<div class="page-spacer" id="pageSpacer"></div>
+
+<div class="content-wrap">
+  <div class="page-title">Como chegar</div>
+  <div class="page-subtitle">Estamos na Ciclovia, Recreio dos Bandeirantes — Ponto de referencia: Açai do surf. <div></div>Venha ter uma experiencia inesquecivel!</div>
+
+  <div class="card">
+    <img
+      class="map-frame"
+      src="quiosque.jpeg"
+      alt="Foto do Quiosque Sobre As Ondas">
+    <div class="card-body">
+      <div class="endereco-linha">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <div class="endereco-texto">
+          <strong>Sobre As Ondas</strong>
+          Ciclovia — Recreio dos Bandeirantes<br>
+          Rio de Janeiro — RJ, 22795-589
+        </div>
+      </div>
+      <a class="btn-maps" href="https://maps.app.goo.gl/8wwsM96paA4DqXTY7?g_st=ic" target="_blank" rel="noopener" onclick="return confirmarSaida(event, 'https://maps.app.goo.gl/8wwsM96paA4DqXTY7?g_st=ic', 'Você vai sair do nosso site e ir para o Google Maps. Deseja continuar?')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Abrir no Google Maps
+      </a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <div class="endereco-texto" style="margin-bottom:10px;"><strong>Horário de funcionamento</strong></div>
+      <div class="horarios"><span>Todos os dias</span><span>Aberto 24 horas</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DE CONFIRMAÇÃO -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-card">
+    <div class="confirm-text" id="confirmText">Você vai sair do nosso site. Deseja continuar?</div>
+    <div class="confirm-actions">
+      <button class="confirm-cancel" onclick="fecharConfirm()">Cancelar</button>
+      <button class="confirm-ok" id="confirmOkBtn">Sim, continuar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let _urlPendente = null;
+
+  function confirmarSaida(event, url, mensagem){
+    event.preventDefault();
+    _urlPendente = url;
+    document.getElementById('confirmText').textContent = mensagem;
+    document.getElementById('confirmOverlay').classList.add('show');
+    return false;
+  }
+
+  function fecharConfirm(){
+    document.getElementById('confirmOverlay').classList.remove('show');
+    _urlPendente = null;
+  }
+
+  document.getElementById('confirmOkBtn').addEventListener('click', function(){
+    if(_urlPendente){
+      window.open(_urlPendente, '_blank', 'noopener');
+    }
+    fecharConfirm();
+  });
+
+  document.getElementById('confirmOverlay').addEventListener('click', function(e){
+    if(e.target === this) fecharConfirm();
+  });
+
+  // Ajusta a altura do espaçador para ser sempre igual à altura real
+  // da navbar + a margem de 16px do topo + uma folga de segurança.
+  // Isso resolve o problema de o texto "Como chegar" ficar escondido
+  // atrás da navbar quando ela quebra em duas linhas em telas estreitas.
+  function ajustarEspacoNavbar(){
+    const navContainer = document.querySelector('.nav-container');
+    const spacer = document.getElementById('pageSpacer');
+    if(!navContainer || !spacer) return;
+    const alturaNavbar = navContainer.offsetHeight;
+    spacer.style.height = (alturaNavbar + 16 + 24) + 'px';
+  }
+
+  window.addEventListener('load', ajustarEspacoNavbar);
+  window.addEventListener('resize', ajustarEspacoNavbar);
+  // As fontes carregando depois podem mudar a altura da navbar,
+  // então recalculamos de novo quando elas terminarem de carregar.
+  if(document.fonts && document.fonts.ready){
+    document.fonts.ready.then(ajustarEspacoNavbar);
+  }
+</script>
+
+</body>
+</html>

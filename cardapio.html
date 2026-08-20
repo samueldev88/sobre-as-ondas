@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sobre As Ondas — Quiosque</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="#" class="logo">Sobre As Ondas <span class="wave">〰</span></a>
+
+      <nav class="nav-links" id="navLinks">
+        <a href="#inicio" data-i18n="nav_inicio">INÍCIO</a>
+        <a href="#cardapio" data-i18n="nav_cardapio">CARDÁPIO</a>
+        <a href="#contato" data-i18n="nav_contato">CONTATO</a>
+
+        <div class="nav-dropdown" id="langDropdown">
+          <button class="nav-dropdown-toggle" id="langToggle" data-i18n="nav_idiomas">
+            IDIOMAS <span class="chevron">▾</span>
+          </button>
+          <div class="dropdown-menu" id="langMenu">
+            <button class="lang-option active" data-lang="pt">🇧🇷 Português</button>
+            <button class="lang-option" data-lang="es">🇪🇸 Español</button>
+            <button class="lang-option" data-lang="en">🇺🇸 English</button>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero" id="inicio">
+    <div class="hero-content"> 
+      <p class="eyebrow"><span class="wave-line"></span> <span data-i18n="hero_eyebrow">QUIOSQUE SOBRE AS ONDAS</span></p>
+      <h1 data-i18n="hero_title">Onde o sabor<br>encontra o mar!!</h1>
+      <p class="hero-sub" data-i18n="hero_sub">O Sobre As Ondas é o lugar perfeito para aproveitar a praia com boa comida, bebidas refrescantes e momentos especiais. Tudo isso em um ambiente leve e acolhedor, feito para você curtir cada segundo com a gente..</p>
+      <a href="#cardapio" class="btn btn-primary" data-i18n="hero_cta">CONHEÇA NOSSO CARDÁPIO <span class="wave">〰</span></a>
+    </div>
+
+    <div class="hero-sign">
+      <div class="sign-circle">
+        <span>Sobre<br>As Ondas</span>
+        <span class="wave sign-wave">〰</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CARDÁPIO -->
+  <section class="menu" id="cardapio">
+    <div class="section-title">
+      <span class="divider-icon">〰</span>
+      <h2 data-i18n="menu_title">Cardápio</h2>
+      <p data-i18n="menu_sub">Sabores preparados com carinho para o seu melhor momento.</p>
+    </div>
+
+    <div class="menu-grid">
+
+      <article class="menu-card">
+        <img src="https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=500&auto=format&fit=crop&q=60" alt="Isca de frango">
+        <div class="menu-card-body">
+          <h3 data-i18n="item1_nome">Isca de frango</h3>
+          <p data-i18n="item1_desc">Iscas empanadas e sequinhas, perfeitas para compartilhar.</p>
+          <span class="price">R$ 28,00</span>
+        </div>
+      </article>
+
+      <article class="menu-card">
+        <img src="https://images.unsplash.com/photo-1625944230945-1b7dd3b949ab?w=500&auto=format&fit=crop&q=60" alt="Camarão empanado">
+        <div class="menu-card-body">
+          <h3 data-i18n="item2_nome">Camarão empanado</h3>
+          <p data-i18n="item2_desc">Camarões crocantes servidos com molho especial da casa.</p>
+          <span class="price">R$ 42,00</span>
+        </div>
+      </article>
+
+      <article class="menu-card">
+        <img src="https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=500&auto=format&fit=crop&q=60" alt="Batata frita">
+        <div class="menu-card-body">
+          <h3 data-i18n="item3_nome">Batata frita</h3>
+          <p data-i18n="item3_desc">Porção de batata frita crocante, sequinha e irresistível.</p>
+          <span class="price">R$ 30,00</span>
+        </div>
+      </article>
+
+      <article class="menu-card">
+        <img src="https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?w=500&auto=format&fit=crop&q=60" alt="Aipim frito">
+        <div class="menu-card-body">
+          <h3 data-i18n="item4_nome">Aipim frito</h3>
+          <p data-i18n="item4_desc">Aipim macio por dentro e crocante por fora, um clássico!</p>
+          <span class="price">R$ 35,00</span>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- BEBIDAS -->
+  <section class="drinks">
+    <div class="drinks-intro">
+      <span class="divider-icon">〰</span>
+      <h2 data-i18n="drinks_title">Bebidas</h2>
+      <p data-i18n="drinks_sub">Traga sua sede, que a gente cuida do resto.</p>
+      <a href="#bebidas" class="btn btn-outline" data-i18n="drinks_cta">VER BEBIDAS <span class="wave">〰</span></a>
+    </div>
+
+    <div class="drinks-grid">
+      <div class="drink-item">
+        <img src="https://images.unsplash.com/photo-1520950237264-4917a5aeb6a9?w=300&auto=format&fit=crop&q=60" alt="Água de coco">
+        <h4 data-i18n="drink1_nome">Água de coco</h4>
+        <span>R$ 10,00</span>
+      </div>
+      <div class="drink-item">
+        <img src="https://images.unsplash.com/photo-1541591425126-3b8b1b3b8f6f?w=300&auto=format&fit=crop&q=60" alt="Caipirinha">
+        <h4 data-i18n="drink2_nome">Caipirinha</h4>
+        <span>R$ 18,00</span>
+      </div>
+      <div class="drink-item">
+        <img src="https://images.unsplash.com/photo-1608270586620-248524c67de9?w=300&auto=format&fit=crop&q=60" alt="Cervejas">
+        <h4 data-i18n="drink3_nome">Cervejas</h4>
+        <span data-i18n="drink3_preco">A partir de R$ 8,00</span>
+      </div>
+      <div class="drink-item">
+        <img src="https://images.unsplash.com/photo-1536935338788-846bb9981813?w=300&auto=format&fit=crop&q=60" alt="Drinks">
+        <h4 data-i18n="drink4_nome">Drinks</h4>
+        <span data-i18n="drink4_preco">A partir de R$ 20,00</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer-wave"></div>
+
+  <section class="contato" id="contato">
+    <h2 data-i18n="contato_title">Contato</h2>
+    <p data-i18n="contato_sub">Segue a gente e fica por dentro das novidades do quiosque.</p>
+
+    <!-- troque o href pelo link real do seu Instagram -->
+    <a href="https://www.instagram.com/sobreasondas__?igsh=d2E1YmZiZmtndHh3" class="link-social" data-confirm-link>
+        📷 Instagram @sobreasondas__
+    </a>
+  </section>
+
+  <footer>
+    <p data-i18n="footer_texto">Sobre As Ondas - O melhor quiosque do recreio</p>
+  </footer>
+
+  <!-- MODAL DE CONFIRMAÇÃO DE LINK EXTERNO -->
+  <div class="modal-overlay" id="modalLink">
+      <div class="modal-box">
+          <p class="modal-texto" data-i18n="modal_texto">Você vai sair do nosso site e ir para o Instagram. Deseja continuar?</p>
+          <div class="modal-botoes">
+              <button class="modal-btn modal-btn--cancelar" id="modalCancelar" data-i18n="modal_cancelar">Cancelar</button>
+              <button class="modal-btn modal-btn--confirmar" id="modalConfirmar" data-i18n="modal_confirmar">Sim, continuar</button>
+          </div>
+      </div>
+  </div>
+
+  <script>
+    // ===== MODAL DE LINK EXTERNO =====
+    const modal = document.getElementById('modalLink');
+    const btnCancelar = document.getElementById('modalCancelar');
+    const btnConfirmar = document.getElementById('modalConfirmar');
+    let linkAlvo = null;
+
+    document.querySelectorAll('[data-confirm-link]').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            linkAlvo = link.getAttribute('href');
+            modal.classList.add('aberto');
+        });
+    });
+
+    btnCancelar.addEventListener('click', () => {
+        modal.classList.remove('aberto');
+        linkAlvo = null;
+    });
+
+    btnConfirmar.addEventListener('click', () => {
+        if (linkAlvo) {
+            window.open(linkAlvo, '_blank');
+        }
+        modal.classList.remove('aberto');
+    });
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.classList.remove('aberto');
+        }
+    });
+
+    // ===== NAVBAR "GRUDA" NO SCROLL + MENU MOBILE =====
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 20) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    const navLinks = document.getElementById('navLinks');
+
+    // ===== DROPDOWN DE IDIOMAS =====
+    const langDropdown = document.getElementById('langDropdown');
+    const langToggle = document.getElementById('langToggle');
+    langToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      langDropdown.classList.toggle('open');
+    });
+    document.addEventListener('click', (e) => {
+      if (!langDropdown.contains(e.target)) {
+        langDropdown.classList.remove('open');
+      }
+    });
+
+    // ===== TRADUÇÃO (PT / ES / EN) =====
+    const traducoes = {
+      pt: {
+        nav_inicio: "INÍCIO",
+        nav_cardapio: "CARDÁPIO",
+        nav_contato: "CONTATO",
+        nav_idiomas: 'IDIOMAS <span class="chevron">▾</span>',
+        hero_eyebrow: "QUIOSQUE SOBRE AS ONDAS",
+        hero_title: "Onde o sabor<br>encontra o mar!!",
+        hero_sub: "O Sobre As Ondas é o lugar perfeito para aproveitar a praia com boa comida, bebidas refrescantes e momentos especiais. Tudo isso em um ambiente leve e acolhedor, feito para você curtir cada segundo com a gente..",
+        hero_cta: 'CONHEÇA NOSSO CARDÁPIO <span class="wave">〰</span>',
+        menu_title: "Cardápio",
+        menu_sub: "Sabores preparados com carinho para o seu melhor momento.",
+        item1_nome: "Isca de frango",
+        item1_desc: "Iscas empanadas e sequinhas, perfeitas para compartilhar.",
+        item2_nome: "Camarão empanado",
+        item2_desc: "Camarões crocantes servidos com molho especial da casa.",
+        item3_nome: "Batata frita",
+        item3_desc: "Porção de batata frita crocante, sequinha e irresistível.",
+        item4_nome: "Aipim frito",
+        item4_desc: "Aipim macio por dentro e crocante por fora, um clássico!",
+        drinks_title: "Bebidas",
+        drinks_sub: "Traga sua sede, que a gente cuida do resto.",
+        drinks_cta: 'VER BEBIDAS <span class="wave">〰</span>',
+        drink1_nome: "Água de coco",
+        drink2_nome: "Caipirinha",
+        drink3_nome: "Cervejas",
+        drink3_preco: "A partir de R$ 8,00",
+        drink4_nome: "Drinks",
+        drink4_preco: "A partir de R$ 20,00",
+        contato_title: "Contato",
+        contato_sub: "Segue a gente e fica por dentro das novidades do quiosque.",
+        footer_texto: "Sobre As Ondas - O melhor quiosque do recreio",
+        modal_texto: "Você vai sair do nosso site e ir para o Instagram. Deseja continuar?",
+        modal_cancelar: "Cancelar",
+        modal_confirmar: "Sim, continuar"
+      },
+      es: {
+        nav_inicio: "INICIO",
+        nav_cardapio: "MENÚ",
+        nav_contato: "CONTACTO",
+        nav_idiomas: 'IDIOMAS <span class="chevron">▾</span>',
+        hero_eyebrow: "QUIOSCO SOBRE AS ONDAS",
+        hero_title: "Donde el sabor<br>encuentra el mar!!",
+        hero_sub: "Sobre As Ondas es el lugar perfecto para disfrutar de la playa con buena comida, bebidas refrescantes y momentos especiales. Todo en un ambiente ligero y acogedor, hecho para que disfrutes cada segundo con nosotros.",
+        hero_cta: 'CONOCE NUESTRO MENÚ <span class="wave">〰</span>',
+        menu_title: "Menú",
+        menu_sub: "Sabores preparados con cariño para tu mejor momento.",
+        item1_nome: "Tiras de pollo",
+        item1_desc: "Tiras empanizadas y crocantes, perfectas para compartir.",
+        item2_nome: "Camarones empanizados",
+        item2_desc: "Camarones crujientes servidos con salsa especial de la casa.",
+        item3_nome: "Papas fritas",
+        item3_desc: "Porción de papas fritas crujientes e irresistibles.",
+        item4_nome: "Yuca frita",
+        item4_desc: "Yuca suave por dentro y crujiente por fuera, ¡un clásico!",
+        drinks_title: "Bebidas",
+        drinks_sub: "Trae tu sed, que nosotros nos encargamos del resto.",
+        drinks_cta: 'VER BEBIDAS <span class="wave">〰</span>',
+        drink1_nome: "Agua de coco",
+        drink2_nome: "Caipiriña",
+        drink3_nome: "Cervezas",
+        drink3_preco: "Desde R$ 8,00",
+        drink4_nome: "Cócteles",
+        drink4_preco: "Desde R$ 20,00",
+        contato_title: "Contacto",
+        contato_sub: "Síguenos y entérate de las novedades del quiosco.",
+        footer_texto: "Sobre As Ondas - El mejor quiosco de Recreio",
+        modal_texto: "Vas a salir de nuestro sitio hacia Instagram. ¿Deseas continuar?",
+        modal_cancelar: "Cancelar",
+        modal_confirmar: "Sí, continuar"
+      },
+      en: {
+        nav_inicio: "HOME",
+        nav_cardapio: "MENU",
+        nav_contato: "CONTACT",
+        nav_idiomas: 'LANGUAGES <span class="chevron">▾</span>',
+        hero_eyebrow: "SOBRE AS ONDAS KIOSK",
+        hero_title: "Where flavor<br>meets the sea!!",
+        hero_sub: "Sobre As Ondas is the perfect spot to enjoy the beach with great food, refreshing drinks and special moments. All in a light, welcoming setting made for you to enjoy every second with us.",
+        hero_cta: 'SEE OUR MENU <span class="wave">〰</span>',
+        menu_title: "Menu",
+        menu_sub: "Flavors prepared with care for your best moment.",
+        item1_nome: "Chicken bites",
+        item1_desc: "Crispy breaded chicken bites, perfect for sharing.",
+        item2_nome: "Breaded shrimp",
+        item2_desc: "Crispy shrimp served with our special house sauce.",
+        item3_nome: "French fries",
+        item3_desc: "Crispy, irresistible portion of french fries.",
+        item4_nome: "Fried cassava",
+        item4_desc: "Soft inside, crispy outside — a classic!",
+        drinks_title: "Drinks",
+        drinks_sub: "Bring your thirst, we'll take care of the rest.",
+        drinks_cta: 'VIEW DRINKS <span class="wave">〰</span>',
+        drink1_nome: "Coconut water",
+        drink2_nome: "Caipirinha",
+        drink3_nome: "Beer",
+        drink3_preco: "From R$ 8.00",
+        drink4_nome: "Cocktails",
+        drink4_preco: "From R$ 20.00",
+        contato_title: "Contact",
+        contato_sub: "Follow us and stay up to date with the kiosk's news.",
+        footer_texto: "Sobre As Ondas - The best kiosk in Recreio",
+        modal_texto: "You're about to leave our site for Instagram. Continue?",
+        modal_cancelar: "Cancel",
+        modal_confirmar: "Yes, continue"
+      }
+    };
+
+    function aplicarIdioma(lang) {
+      const dict = traducoes[lang];
+      if (!dict) return;
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const chave = el.getAttribute('data-i18n');
+        if (dict[chave] !== undefined) {
+          el.innerHTML = dict[chave];
+        }
+      });
+      document.documentElement.lang = lang === 'pt' ? 'pt-BR' : lang;
+      document.querySelectorAll('.lang-option').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+      });
+      localStorage.setItem('idioma', lang);
+    }
+
+    document.querySelectorAll('.lang-option').forEach(btn => {
+      btn.addEventListener('click', () => {
+        aplicarIdioma(btn.getAttribute('data-lang'));
+        langDropdown.classList.remove('open');
+      });
+    });
+
+    const idiomaSalvo = localStorage.getItem('idioma');
+    if (idiomaSalvo && traducoes[idiomaSalvo]) {
+      aplicarIdioma(idiomaSalvo);
+    }
+  </script>
+</body>
+</html>
