@@ -7,6 +7,375 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<style>
+  .menu-tabs{
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    margin: 28px auto 34px;
+    flex-wrap:wrap;
+  }
+  .menu-tab{
+    font-family:'Poppins', sans-serif;
+    font-weight:600;
+    font-size:13px;
+    letter-spacing:0.8px;
+    text-transform:uppercase;
+    padding:12px 30px;
+    border-radius:999px;
+    border:2px solid #16304f;
+    background:transparent;
+    color:#16304f;
+    cursor:pointer;
+    transition: background .25s ease, color .25s ease, opacity .25s ease;
+  }
+  .menu-tab:hover{ opacity:0.8; }
+  .menu-tab.active{
+    background:#16304f;
+    color:#f6f0e2;
+  }
+  .menu-panel{ display:none; }
+  .menu-panel.active{ display:block; animation: menuFadeIn .3s ease; }
+  @keyframes menuFadeIn{
+    from{ opacity:0; transform:translateY(8px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+
+  /* ---------- Subtítulos de categoria dentro do painel de Petiscos ---------- */
+  .food-subtitle{
+    text-align:center;
+    font-family:'Poppins', sans-serif;
+    font-weight:700;
+    font-size:13px;
+    letter-spacing:1.2px;
+    text-transform:uppercase;
+    color:#d8503c;
+    margin: 0 0 18px;
+  }
+  .food-subtitle:not(:first-child){
+    margin-top: 40px;
+  }
+
+  /* ---------- Cards quadrados de bebidas ---------- */
+  .drink-cards-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 16px;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  .drink-square-card{
+    background: linear-gradient(160deg, #f6f0e2, #e7dcc2);
+    border-radius: 18px;
+    padding: 0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    box-shadow: 0 4px 14px rgba(22,48,79,0.08);
+    transition: transform .2s ease, box-shadow .2s ease;
+    overflow:hidden;
+  }
+  .drink-square-card:hover{
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(22,48,79,0.14);
+  }
+  .drink-square-card img{
+    width:100%;
+    aspect-ratio: 1 / 1;
+    object-fit:cover;
+    display:block;
+  }
+  .drink-card-body{
+    padding: 12px 10px 16px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+  .drink-square-card h4{
+    font-family:'Poppins', sans-serif;
+    font-weight:600;
+    font-size: 13.5px;
+    color:#16304f;
+    line-height:1.25;
+    margin-bottom: 4px;
+  }
+  .drink-square-card .price{
+    font-size: 12px;
+    font-weight:600;
+    color:#d8503c;
+  }
+
+  /* ---------- Seção Cervejas ---------- */
+  .cervejas-section{
+    max-width: 700px;
+    margin: 42px auto 0;
+    text-align:center;
+    padding: 0 20px;
+  }
+  .cervejas-section h3{
+    font-family:'Playfair Display', serif;
+    font-weight:700;
+    font-style:italic;
+    font-size: 26px;
+    color:#16304f;
+    margin-bottom: 22px;
+  }
+  .cervejas-group{
+    margin-bottom: 26px;
+  }
+  .cervejas-group:last-child{
+    margin-bottom: 0;
+  }
+  .cervejas-group-label{
+    font-family:'Poppins', sans-serif;
+    font-size: 12px;
+    font-weight:600;
+    letter-spacing: 1px;
+    text-transform:uppercase;
+    color:#d8503c;
+    margin-bottom: 12px;
+  }
+  .cervejas-tags{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap: 10px;
+  }
+  .cerveja-tag{
+    background:#fff;
+    border:1px solid rgba(22,48,79,0.12);
+    border-radius: 999px;
+    padding: 10px 20px;
+    font-family:'Poppins', sans-serif;
+    font-size: 13px;
+    font-weight:600;
+    color:#16304f;
+    box-shadow: 0 2px 8px rgba(22,48,79,0.05);
+  }
+
+  /* ===== NAVBAR (mesmo estilo visual de pedidos.html) ===== */
+  .navbar, #navbar{
+    position: fixed !important;
+    top: 16px !important;
+    left: 0; right: 0;
+    z-index: 200;
+    background: transparent !important;
+    box-shadow: none !important;
+    border-bottom: none !important;
+  }
+  .navbar.scrolled, #navbar.scrolled{
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+  .nav-container{
+    max-width: 1200px;
+    margin: 0 auto;
+    background: #0e2138;
+    border-radius: 999px;
+    padding: 12px 20px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    flex-wrap: wrap;
+    row-gap: 8px;
+    position: relative;
+  }
+  .nav-container .logo{
+    font-family:'Playfair Display', serif;
+    font-style:italic;
+    font-weight:700;
+    font-size: 18px;
+    color:#fff !important;
+    white-space:nowrap;
+    text-decoration:none;
+  }
+  .nav-container .logo .wave{ color:#E8734A; }
+
+  .nav-links{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    justify-content:center;
+    align-items:center;
+  }
+  .nav-links a{
+    text-decoration:none;
+    background: rgba(255,255,255,0.15);
+    color:#fff !important;
+    padding: 7px 14px;
+    border-radius: 999px;
+    font-family:'Poppins', sans-serif;
+    font-size: 11px;
+    font-weight:600;
+    letter-spacing:.4px;
+  }
+
+  .nav-right{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    order: 3;
+  }
+
+  .nav-home-btn{
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-decoration:none;
+    flex-shrink:0;
+  }
+  .nav-home-btn svg{ width:16px; height:16px; }
+  .nav-home-btn:hover{ background: rgba(255,255,255,0.28); }
+
+  .nav-dropdown{ position:relative; }
+  .nav-dropdown-toggle{
+    background: rgba(255,255,255,0.15);
+    color:#fff;
+    border:none;
+    padding: 7px 14px;
+    border-radius: 999px;
+    font-family:'Poppins', sans-serif;
+    font-size: 11px;
+    font-weight:600;
+    letter-spacing:.4px;
+    cursor:pointer;
+  }
+  .dropdown-menu{
+    display:none;
+    position:absolute;
+    top: calc(100% + 8px);
+    right:0;
+    background:#fff;
+    border-radius: 14px;
+    padding: 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    flex-direction:column;
+    gap:4px;
+    min-width:170px;
+    z-index: 210;
+  }
+  .nav-dropdown.open .dropdown-menu{ display:flex; }
+  .lang-option{
+    background:none;
+    border:none;
+    text-align:left;
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-family:'Poppins', sans-serif;
+    font-size: 12.5px;
+    font-weight:600;
+    color:#16304f;
+    cursor:pointer;
+  }
+  .lang-option:hover, .lang-option.active{ background: rgba(22,48,79,0.08); }
+
+  /* botão hamburguer — só aparece em telas estreitas (celular) */
+  .nav-toggle{
+    display:none;
+    flex-direction:column;
+    justify-content:center;
+    gap:5px;
+    width:34px;
+    height:34px;
+    background:none;
+    border:none;
+    cursor:pointer;
+    padding:0;
+  }
+  .nav-toggle span{
+    display:block;
+    width:100%;
+    height:3px;
+    border-radius:3px;
+    background:#fff;
+  }
+
+  @media (max-width: 640px){
+    .nav-toggle{ display:flex; }
+    .nav-links{
+      display:none;
+      position:absolute;
+      top: calc(100% + 10px);
+      left:0; right:0;
+      background:#fff;
+      border-radius: 18px;
+      padding: 14px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      flex-direction:column;
+      gap:8px;
+    }
+    .nav-links.open{ display:flex; }
+    .nav-links a{
+      text-align:center;
+      padding: 10px 14px;
+      background: #0e2138;
+      color:#fff;
+    }
+    .nav-dropdown-toggle{
+      padding: 7px 10px;
+      font-size: 10px;
+    }
+    .dropdown-menu{ right:0; left:auto; }
+  }
+
+  .page-spacer{ height: 0; }
+
+  /* ===== HERO: parágrafo de descrição na mesma cor do título ===== */
+  .hero-sub{
+    color: var(--azul-escuro) !important;
+  }
+
+  /* ===== HERO: contraste do texto sobre a foto (sem caixa) ===== */
+  .hero{
+    background:
+      radial-gradient(55% 65% at 22% 45%, rgba(255,255,255,0.6), rgba(255,255,255,0) 72%),
+      linear-gradient(180deg, rgba(20,55,65,0.15), rgba(20,55,65,0.05)),
+      url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1600&auto=format&fit=crop&q=80') center/cover no-repeat !important;
+  }
+  .eyebrow, .hero h1, .hero-sub{
+    text-shadow: 0 1px 3px rgba(255,255,255,0.85), 0 0 16px rgba(255,255,255,0.5);
+  }
+
+  /* ===== CONTATO: mesmo bege das seções acima, em vez do branco ===== */
+  .contato{
+    background: var(--areia);
+    max-width: 100%;
+    width: 100%;
+  }
+
+  /* ===== HERO: selo redondo "Sobre As Ondas" mais alto (no céu, não em cima do mar) ===== */
+  .hero-sign{
+    top: 40px !important;
+  }
+
+  @media (max-width: 768px){
+    .hero{
+      align-items: flex-start !important;
+    }
+    .hero-sign{
+      display:flex !important;
+      position:absolute !important;
+      right: 20px !important;
+      left: auto !important;
+      top: 95px !important;
+      justify-content:center;
+      transform:none !important;
+    }
+    .sign-circle{
+      width: 100px !important;
+      height: 100px !important;
+      font-size: 11px !important;
+    }
+  }
+</style>
 </head>
 <body>
 
@@ -15,10 +384,10 @@
     <div class="nav-container">
       <a href="#" class="logo">Sobre As Ondas <span class="wave">〰</span></a>
 
-      <nav class="nav-links" id="navLinks">
-        <a href="#inicio" data-i18n="nav_inicio">INÍCIO</a>
-        <a href="#cardapio" data-i18n="nav_cardapio">CARDÁPIO</a>
-        <a href="#contato" data-i18n="nav_contato">CONTATO</a>
+      <div class="nav-right">
+        <a href="index.html" class="nav-home-btn" title="Voltar para a página inicial" aria-label="Voltar para a página inicial">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1V10"/></svg>
+        </a>
 
         <div class="nav-dropdown" id="langDropdown">
           <button class="nav-dropdown-toggle" id="langToggle" data-i18n="nav_idiomas">
@@ -30,9 +399,20 @@
             <button class="lang-option" data-lang="en">🇺🇸 English</button>
           </div>
         </div>
+
+        <button class="nav-toggle" onclick="toggleNavMenu()" aria-label="Abrir menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+
+      <nav class="nav-links" id="navLinks">
+        <a href="#inicio" data-i18n="nav_inicio">INÍCIO</a>
+        <a href="#cardapio" data-i18n="nav_cardapio">CARDÁPIO</a>
+        <a href="#contato" data-i18n="nav_contato">CONTATO</a>
       </nav>
     </div>
   </header>
+  <div class="page-spacer"></div>
 
   <!-- HERO -->
   <section class="hero" id="inicio">
@@ -59,78 +439,302 @@
       <p data-i18n="menu_sub">Sabores preparados com carinho para o seu melhor momento.</p>
     </div>
 
-    <div class="menu-grid">
-
-      <article class="menu-card">
-        <img src="https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=500&auto=format&fit=crop&q=60" alt="Isca de frango">
-        <div class="menu-card-body">
-          <h3 data-i18n="item1_nome">Isca de frango</h3>
-          <p data-i18n="item1_desc">Iscas empanadas e sequinhas, perfeitas para compartilhar.</p>
-          <span class="price">R$ 28,00</span>
-        </div>
-      </article>
-
-      <article class="menu-card">
-        <img src="https://images.unsplash.com/photo-1625944230945-1b7dd3b949ab?w=500&auto=format&fit=crop&q=60" alt="Camarão empanado">
-        <div class="menu-card-body">
-          <h3 data-i18n="item2_nome">Camarão empanado</h3>
-          <p data-i18n="item2_desc">Camarões crocantes servidos com molho especial da casa.</p>
-          <span class="price">R$ 42,00</span>
-        </div>
-      </article>
-
-      <article class="menu-card">
-        <img src="https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=500&auto=format&fit=crop&q=60" alt="Batata frita">
-        <div class="menu-card-body">
-          <h3 data-i18n="item3_nome">Batata frita</h3>
-          <p data-i18n="item3_desc">Porção de batata frita crocante, sequinha e irresistível.</p>
-          <span class="price">R$ 30,00</span>
-        </div>
-      </article>
-
-      <article class="menu-card">
-        <img src="https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?w=500&auto=format&fit=crop&q=60" alt="Aipim frito">
-        <div class="menu-card-body">
-          <h3 data-i18n="item4_nome">Aipim frito</h3>
-          <p data-i18n="item4_desc">Aipim macio por dentro e crocante por fora, um clássico!</p>
-          <span class="price">R$ 35,00</span>
-        </div>
-      </article>
-
-    </div>
-  </section>
-
-  <!-- BEBIDAS -->
-  <section class="drinks">
-    <div class="drinks-intro">
-      <span class="divider-icon">〰</span>
-      <h2 data-i18n="drinks_title">Bebidas</h2>
-      <p data-i18n="drinks_sub">Traga sua sede, que a gente cuida do resto.</p>
-      <a href="#bebidas" class="btn btn-outline" data-i18n="drinks_cta">VER BEBIDAS <span class="wave">〰</span></a>
+    <div class="menu-tabs" role="tablist">
+      <button class="menu-tab active" data-panel="painelPetiscos" data-i18n="tab_petiscos" role="tab" aria-selected="true">Petiscos</button>
+      <button class="menu-tab" data-panel="painelBebidas" data-i18n="tab_bebidas" role="tab" aria-selected="false">Bebidas</button>
     </div>
 
-    <div class="drinks-grid">
-      <div class="drink-item">
-        <img src="https://images.unsplash.com/photo-1520950237264-4917a5aeb6a9?w=300&auto=format&fit=crop&q=60" alt="Água de coco">
-        <h4 data-i18n="drink1_nome">Água de coco</h4>
-        <span>R$ 10,00</span>
+    <div class="menu-panel active" id="painelPetiscos" role="tabpanel">
+
+      <div class="food-subtitle">Petiscos</div>
+      <div class="menu-grid">
+
+        <article class="menu-card">
+          <img src="https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=500&auto=format&fit=crop&q=60" alt="Isca de frango">
+          <div class="menu-card-body">
+            <h3>Isca de frango</h3>
+            <span class="price">R$ 75,00</span>
+          </div>
+        </article>
+
+        <article class="menu-card">
+          <img src="https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=500&auto=format&fit=crop&q=60" alt="Batata frita">
+          <div class="menu-card-body">
+            <h3>Batata Frita</h3>
+            <span class="price">R$ 30,00</span>
+          </div>
+        </article>
+
+        <article class="menu-card">
+          <img src="https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?w=500&auto=format&fit=crop&q=60" alt="Aipim frito">
+          <div class="menu-card-body">
+            <h3>Aipim Frito</h3>
+            <span class="price">R$ 30,00</span>
+          </div>
+        </article>
+
+        <article class="menu-card">
+          <img src="https://images.unsplash.com/photo-1639744210631-209fce3e256c?w=500&auto=format&fit=crop&q=60" alt="Batata Maluca">
+          <div class="menu-card-body">
+            <h3>Batata Maluca</h3>
+            <span class="price">R$ 55,00</span>
+          </div>
+        </article>
+
+        <article class="menu-card">
+          <img src="https://images.unsplash.com/photo-1619337744931-97f65a4f14d0?w=500&auto=format&fit=crop&q=60" alt="Bolinho de Bacalhau">
+          <div class="menu-card-body">
+            <h3>Bolinho de Bacalhau</h3>
+            <span class="price">R$ 50,00</span>
+          </div>
+        </article>
+
+        <article class="menu-card">
+          <img src="https://images.unsplash.com/photo-1625944230945-1b7dd3b949ab?w=500&auto=format&fit=crop&q=60" alt="Camarão Alho e Óleo">
+          <div class="menu-card-body">
+            <h3>Camarão Alho e Óleo</h3>
+            <span class="price">R$ 55,00</span>
+          </div>
+        </article>
+
+        <article class="menu-card">
+          <img src="https://images.unsplash.com/photo-1767974968707-db3d448d4ef3?w=500&auto=format&fit=crop&q=60" alt="Carne de Sol">
+          <div class="menu-card-body">
+            <h3>Carne de Sol</h3>
+            <span class="price">R$ 50,00</span>
+          </div>
+        </article>
+
+        <article class="menu-card">
+          <img src="https://images.unsplash.com/photo-1619337744931-97f65a4f14d0?w=500&auto=format&fit=crop&q=60" alt="Isca de Peixe">
+          <div class="menu-card-body">
+            <h3>Isca de Peixe</h3>
+            <span class="price">R$ 100,00</span>
+          </div>
+        </article>
+
+        <article class="menu-card">
+          <img src="https://images.unsplash.com/photo-1767974968707-db3d448d4ef3?w=500&auto=format&fit=crop&q=60" alt="Churrasco misto">
+          <div class="menu-card-body">
+            <h3>Churrasco misto</h3>
+            <span class="price">R$ 100,00</span>
+          </div>
+        </article>
+
+        <article class="menu-card">
+          <img src="https://images.unsplash.com/photo-1627053947279-3af797c5c05f?w=500&auto=format&fit=crop&q=60" alt="Frango à passarinho">
+          <div class="menu-card-body">
+            <h3>Frango à passarinho</h3>
+            <span class="price">R$ 95,00</span>
+          </div>
+        </article>
+
+        <article class="menu-card">
+          <img src="https://images.unsplash.com/photo-1619337744931-97f65a4f14d0?w=500&auto=format&fit=crop&q=60" alt="Manjubinha">
+          <div class="menu-card-body">
+            <h3>Manjubinha</h3>
+            <span class="price">R$ 95,00</span>
+          </div>
+        </article>
+
+        <article class="menu-card">
+          <img src="https://images.unsplash.com/photo-1619337744931-97f65a4f14d0?w=500&auto=format&fit=crop&q=60" alt="Sardinha">
+          <div class="menu-card-body">
+            <h3>Sardinha</h3>
+            <span class="price">R$ 95,00</span>
+          </div>
+        </article>
+
+        <article class="menu-card">
+          <img src="https://images.unsplash.com/photo-1619337744931-97f65a4f14d0?w=500&auto=format&fit=crop&q=60" alt="Corvina">
+          <div class="menu-card-body">
+            <h3>Corvina</h3>
+            <span class="price">R$ 95,00</span>
+          </div>
+        </article>
+
+        <article class="menu-card">
+          <img src="https://images.unsplash.com/photo-1619337744931-97f65a4f14d0?w=500&auto=format&fit=crop&q=60" alt="Lula à dore">
+          <div class="menu-card-body">
+            <h3>Lula à dore</h3>
+            <span class="price">R$ 95,00</span>
+          </div>
+        </article>
+
       </div>
-      <div class="drink-item">
-        <img src="https://images.unsplash.com/photo-1541591425126-3b8b1b3b8f6f?w=300&auto=format&fit=crop&q=60" alt="Caipirinha">
-        <h4 data-i18n="drink2_nome">Caipirinha</h4>
-        <span>R$ 18,00</span>
+
+      <div class="food-subtitle">Pastéis</div>
+      <div class="menu-grid">
+
+        <article class="menu-card">
+          <img src="https://images.unsplash.com/photo-1512685076844-4161e436c4f5?w=500&auto=format&fit=crop&q=60" alt="Pastel de Camarão">
+          <div class="menu-card-body">
+            <h3>Pastel de Camarão</h3>
+            <span class="price">R$ 12,00</span>
+          </div>
+        </article>
+
+        <article class="menu-card">
+          <img src="https://images.unsplash.com/photo-1512685076844-4161e436c4f5?w=500&auto=format&fit=crop&q=60" alt="Pastel de Queijo">
+          <div class="menu-card-body">
+            <h3>Pastel de Queijo</h3>
+            <span class="price">R$ 10,00</span>
+          </div>
+        </article>
+
+        <article class="menu-card">
+          <img src="https://images.unsplash.com/photo-1512685076844-4161e436c4f5?w=500&auto=format&fit=crop&q=60" alt="Pastel de Calabresa">
+          <div class="menu-card-body">
+            <h3>Pastel de Calabresa</h3>
+            <span class="price">R$ 10,00</span>
+          </div>
+        </article>
+
+        <article class="menu-card">
+          <img src="https://images.unsplash.com/photo-1512685076844-4161e436c4f5?w=500&auto=format&fit=crop&q=60" alt="Pastel de Frango c/Catupiry">
+          <div class="menu-card-body">
+            <h3>Pastel de Frango c/Catupiry</h3>
+            <span class="price">R$ 10,00</span>
+          </div>
+        </article>
+
       </div>
-      <div class="drink-item">
-        <img src="https://images.unsplash.com/photo-1608270586620-248524c67de9?w=300&auto=format&fit=crop&q=60" alt="Cervejas">
-        <h4 data-i18n="drink3_nome">Cervejas</h4>
-        <span data-i18n="drink3_preco">A partir de R$ 8,00</span>
+
+      <div class="food-subtitle">Porções Extras</div>
+      <div class="menu-grid">
+
+        <article class="menu-card">
+          <img src="https://images.unsplash.com/photo-1698775942613-3e9fc114b2a1?w=500&auto=format&fit=crop&q=60" alt="Azeitona">
+          <div class="menu-card-body">
+            <h3>Azeitona</h3>
+            <span class="price">R$ 21,00</span>
+          </div>
+        </article>
+
+        <article class="menu-card">
+          <img src="https://images.unsplash.com/photo-1767974968707-db3d448d4ef3?w=500&auto=format&fit=crop&q=60" alt="Queijo Coalho">
+          <div class="menu-card-body">
+            <h3>Queijo Coalho</h3>
+            <span class="price">R$ 15,00</span>
+          </div>
+        </article>
+
+        <article class="menu-card">
+          <img src="https://images.unsplash.com/photo-1460122109654-7e46ab4fc9b9?w=500&auto=format&fit=crop&q=60" alt="Saláminho">
+          <div class="menu-card-body">
+            <h3>Saláminho</h3>
+            <span class="price">R$ 35,00</span>
+          </div>
+        </article>
+
       </div>
-      <div class="drink-item">
-        <img src="https://images.unsplash.com/photo-1536935338788-846bb9981813?w=300&auto=format&fit=crop&q=60" alt="Drinks">
-        <h4 data-i18n="drink4_nome">Drinks</h4>
-        <span data-i18n="drink4_preco">A partir de R$ 20,00</span>
+
+    </div>
+
+    <div class="menu-panel" id="painelBebidas" role="tabpanel">
+      <div class="food-subtitle" data-i18n="drinks_title">Bebidas</div>
+      <div class="drink-cards-grid">
+        <div class="drink-square-card">
+          <img src="https://images.unsplash.com/photo-1646280621473-6fe28e268f9d?w=400&auto=format&fit=crop&q=60" alt="Água de coco">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink1_nome">Água de coco</h4>
+            <span class="price">R$ 10,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="https://images.unsplash.com/photo-1595994195534-d5219f02f99f?w=400&auto=format&fit=crop&q=60" alt="Água sem gás">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_agua_sg">Água sem gás</h4>
+            <span class="price">R$ 6,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="https://images.unsplash.com/photo-1691768997730-27b3213d31d2?w=400&auto=format&fit=crop&q=60" alt="Água com gás">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_agua_cg">Água com gás</h4>
+            <span class="price">R$ 7,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="https://images.unsplash.com/photo-1554169360-f86ef83314ec?w=400&auto=format&fit=crop&q=60" alt="Coca-Cola lata">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_coca">Coca-Cola lata</h4>
+            <span class="price">R$ 8,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="https://images.unsplash.com/photo-1664665239609-c07159ff308c?w=400&auto=format&fit=crop&q=60" alt="Guaraná antartica lata">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_guarana">Guaraná antartica lata</h4>
+            <span class="price">R$ 8,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="https://images.unsplash.com/photo-1550505095-81378a674395?w=400&auto=format&fit=crop&q=60" alt="H2O">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_h2o">H2O</h4>
+            <span class="price">R$ 9,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="https://images.unsplash.com/photo-1650939604035-9e259114d0ca?w=400&auto=format&fit=crop&q=60" alt="H2O Limoneto">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_h2o_limoneto">H2O Limoneto</h4>
+            <span class="price">R$ 9,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="https://images.unsplash.com/photo-1754594537133-796eb54f206c?w=400&auto=format&fit=crop&q=60" alt="Caipirinha de Maracujá">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_caipi_maracuja">Caipirinha de Maracujá</h4>
+            <span class="price">R$ 20,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="https://images.unsplash.com/photo-1608981618938-d8a334ae9e93?w=400&auto=format&fit=crop&q=60" alt="Caipirinha de Limão">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_caipi_limao">Caipirinha de Limão</h4>
+            <span class="price">R$ 18,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="https://images.unsplash.com/photo-1614707585284-9cb9fc018387?w=400&auto=format&fit=crop&q=60" alt="Caipirinha de Morango">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_caipi_morango">Caipirinha de Morango</h4>
+            <span class="price">R$ 20,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="https://images.unsplash.com/photo-1632996986862-75aa7ac496da?w=400&auto=format&fit=crop&q=60" alt="Caipirinha de Abacaxi">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_caipi_abacaxi">Caipirinha de Abacaxi</h4>
+            <span class="price">R$ 20,00</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="cervejas-section">
+        <h3 data-i18n="cervejas_title">Cervejas</h3>
+
+        <div class="cervejas-group">
+          <div class="cervejas-group-label" data-i18n="cervejas_latão">Latão</div>
+          <div class="cervejas-tags">
+            <span class="cerveja-tag">Brahma</span>
+            <span class="cerveja-tag">Heineken</span>
+            <span class="cerveja-tag">Império</span>
+          </div>
+        </div>
+
+        <div class="cervejas-group">
+          <div class="cervejas-group-label">600ml</div>
+          <div class="cervejas-tags">
+            <span class="cerveja-tag">Heineken</span>
+            <span class="cerveja-tag">Brahma</span>
+          </div>
+        </div>
       </div>
     </div>
+
   </section>
 
   <div class="footer-wave"></div>
@@ -205,6 +809,28 @@
 
     const navLinks = document.getElementById('navLinks');
 
+    // abre/fecha o menu hamburguer no celular (mesmo comportamento de pedidos.html)
+    function toggleNavMenu(){
+      navLinks.classList.toggle('open');
+    }
+
+    // ===== ABAS DO CARDÁPIO (PETISCOS / BEBIDAS) =====
+    const menuTabs = document.querySelectorAll('.menu-tab');
+    const menuPanels = document.querySelectorAll('.menu-panel');
+    menuTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        menuTabs.forEach(t => {
+          t.classList.remove('active');
+          t.setAttribute('aria-selected', 'false');
+        });
+        menuPanels.forEach(p => p.classList.remove('active'));
+
+        tab.classList.add('active');
+        tab.setAttribute('aria-selected', 'true');
+        document.getElementById(tab.dataset.panel).classList.add('active');
+      });
+    });
+
     // ===== DROPDOWN DE IDIOMAS =====
     const langDropdown = document.getElementById('langDropdown');
     const langToggle = document.getElementById('langToggle');
@@ -231,6 +857,8 @@
         hero_cta: 'CONHEÇA NOSSO CARDÁPIO <span class="wave">〰</span>',
         menu_title: "Cardápio",
         menu_sub: "Sabores preparados com carinho para o seu melhor momento.",
+        tab_petiscos: "Petiscos",
+        tab_bebidas: "Bebidas",
         item1_nome: "Isca de frango",
         item1_desc: "Iscas empanadas e sequinhas, perfeitas para compartilhar.",
         item2_nome: "Camarão empanado",
@@ -243,11 +871,18 @@
         drinks_sub: "Traga sua sede, que a gente cuida do resto.",
         drinks_cta: 'VER BEBIDAS <span class="wave">〰</span>',
         drink1_nome: "Água de coco",
-        drink2_nome: "Caipirinha",
-        drink3_nome: "Cervejas",
-        drink3_preco: "A partir de R$ 8,00",
-        drink4_nome: "Drinks",
-        drink4_preco: "A partir de R$ 20,00",
+        drink_agua_sg: "Água sem gás",
+        drink_agua_cg: "Água com gás",
+        drink_coca: "Coca-Cola lata",
+        drink_guarana: "Guaraná lata",
+        drink_h2o: "H2O",
+        drink_h2o_limoneto: "H2O Limoneto",
+        drink_caipi_maracuja: "Caipirinha de Maracujá",
+        drink_caipi_limao: "Caipirinha de Limão",
+        drink_caipi_morango: "Caipirinha de Morango",
+        drink_caipi_abacaxi: "Caipirinha de Abacaxi",
+        cervejas_title: "Cervejas",
+        cervejas_latão: "Latão",
         contato_title: "Contato",
         contato_sub: "Segue a gente e fica por dentro das novidades do quiosque.",
         footer_texto: "Sobre As Ondas - O melhor quiosque do recreio",
@@ -266,6 +901,8 @@
         hero_cta: 'CONOCE NUESTRO MENÚ <span class="wave">〰</span>',
         menu_title: "Menú",
         menu_sub: "Sabores preparados con cariño para tu mejor momento.",
+        tab_petiscos: "Bocadillos",
+        tab_bebidas: "Bebidas",
         item1_nome: "Tiras de pollo",
         item1_desc: "Tiras empanizadas y crocantes, perfectas para compartir.",
         item2_nome: "Camarones empanizados",
@@ -278,11 +915,18 @@
         drinks_sub: "Trae tu sed, que nosotros nos encargamos del resto.",
         drinks_cta: 'VER BEBIDAS <span class="wave">〰</span>',
         drink1_nome: "Agua de coco",
-        drink2_nome: "Caipiriña",
-        drink3_nome: "Cervezas",
-        drink3_preco: "Desde R$ 8,00",
-        drink4_nome: "Cócteles",
-        drink4_preco: "Desde R$ 20,00",
+        drink_agua_sg: "Agua sin gas",
+        drink_agua_cg: "Agua con gas",
+        drink_coca: "Coca-Cola lata",
+        drink_guarana: "Guaraná lata",
+        drink_h2o: "H2O",
+        drink_h2o_limoneto: "H2O Limoneto",
+        drink_caipi_maracuja: "Caipiriña de Maracuyá",
+        drink_caipi_limao: "Caipiriña de Limón",
+        drink_caipi_morango: "Caipiriña de Fresa",
+        drink_caipi_abacaxi: "Caipiriña de Piña",
+        cervejas_title: "Cervezas",
+        cervejas_latão: "Latón",
         contato_title: "Contacto",
         contato_sub: "Síguenos y entérate de las novedades del quiosco.",
         footer_texto: "Sobre As Ondas - El mejor quiosco de Recreio",
@@ -301,6 +945,8 @@
         hero_cta: 'SEE OUR MENU <span class="wave">〰</span>',
         menu_title: "Menu",
         menu_sub: "Flavors prepared with care for your best moment.",
+        tab_petiscos: "Snacks",
+        tab_bebidas: "Drinks",
         item1_nome: "Chicken bites",
         item1_desc: "Crispy breaded chicken bites, perfect for sharing.",
         item2_nome: "Breaded shrimp",
@@ -313,11 +959,18 @@
         drinks_sub: "Bring your thirst, we'll take care of the rest.",
         drinks_cta: 'VIEW DRINKS <span class="wave">〰</span>',
         drink1_nome: "Coconut water",
-        drink2_nome: "Caipirinha",
-        drink3_nome: "Beer",
-        drink3_preco: "From R$ 8.00",
-        drink4_nome: "Cocktails",
-        drink4_preco: "From R$ 20.00",
+        drink_agua_sg: "Still water",
+        drink_agua_cg: "Sparkling water",
+        drink_coca: "Coca-Cola can",
+        drink_guarana: "Guaraná can",
+        drink_h2o: "H2O",
+        drink_h2o_limoneto: "H2O Limoneto",
+        drink_caipi_maracuja: "Passion Fruit Caipirinha",
+        drink_caipi_limao: "Lime Caipirinha",
+        drink_caipi_morango: "Strawberry Caipirinha",
+        drink_caipi_abacaxi: "Pineapple Caipirinha",
+        cervejas_title: "Beers",
+        cervejas_latão: "Brass",
         contato_title: "Contact",
         contato_sub: "Follow us and stay up to date with the kiosk's news.",
         footer_texto: "Sobre As Ondas - The best kiosk in Recreio",

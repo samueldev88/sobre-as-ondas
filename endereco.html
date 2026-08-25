@@ -28,70 +28,63 @@
     min-height:100vh;
   }
 
-  /* ===== NAVBAR (mesma linguagem visual das outras páginas) ===== */
-  .navbar{
-    position: fixed;
-    top: 16px; left:0; right:0;
-    z-index: 200;
-  }
-  .nav-container{
-    max-width: 1200px;
+  .page-top{
+    max-width: 700px;
     margin: 0 auto;
+    padding: 20px 20px 0;
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap: 10px;
+  }
+  .icon-btn{
+    width:38px; height:38px;
+    border-radius:50%;
     background: #fff;
-    border-radius: 999px;
-    padding: 12px 20px;
+    color: var(--navy-deep);
+    box-shadow: 0 6px 18px rgba(14,33,56,0.12);
+    display:flex; align-items:center; justify-content:center;
+    text-decoration:none;
+    border:none;
+    cursor:pointer;
+    flex-shrink:0;
+  }
+  .icon-btn svg{ width:17px; height:17px; }
+  .lang-switch{ position:relative; }
+  .lang-menu{
+    display:none;
+    position:absolute;
+    top: calc(100% + 8px);
+    right:0;
+    background:#fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    padding: 6px;
+    z-index: 50;
+    min-width: 150px;
+  }
+  .lang-menu.open{ display:block; }
+  .lang-option{
     display:flex;
     align-items:center;
-    justify-content:space-between;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    flex-wrap: wrap;
-    row-gap: 8px;
-  }
-  .logo{
-    font-family:'Playfair Display', serif;
-    font-style:italic;
-    font-weight:700;
-    font-size: 18px;
-    color: var(--azul-escuro);
+    gap: 8px;
+    padding: 9px 10px;
+    border-radius: 8px;
+    font-family:'Poppins', sans-serif;
+    font-size: 13px;
+    font-weight:600;
+    color: var(--navy-deep);
+    cursor:pointer;
     white-space:nowrap;
   }
-  .logo span{ color: var(--terracota); }
-  .site-nav{
-    display:flex;
-    flex-wrap:wrap;
-    gap:8px;
-    justify-content:center;
-  }
-  .site-nav a{
-    text-decoration:none;
-    background: var(--azul-escuro);
-    color:#fff;
-    padding: 7px 14px;
-    border-radius: 999px;
-    font-family:'Poppins', sans-serif;
-    font-size: 11px;
-    font-weight:600;
-    letter-spacing:.4px;
-  }
-  .site-nav a.current{ background: var(--terracota); }
-
-  /*
-    A navbar é "fixed", então não ocupa espaço no fluxo normal da página.
-    Este espaçador existe só pra empurrar o conteúdo pra baixo dela.
-    Só que em telas estreitas o .nav-container quebra em duas linhas
-    (por causa do flex-wrap), ficando mais alto do que os 90px fixos
-    que existiam antes — por isso o título "Como chegar" ficava
-    escondido atrás da navbar. Agora a altura é calculada via JS
-    (ver ajustarEspacoNavbar) e este valor fixo serve só como
-    fallback antes do JS rodar.
-  */
-  .page-spacer{ height: 130px; }
+  .lang-option:hover{ background: rgba(22,48,79,0.06); }
+  .lang-option.active{ background: var(--navy-deep); color:#fff; }
 
   /* ===== CONTEÚDO DA PÁGINA ===== */
   .content-wrap{
     max-width: 700px;
     margin: 0 auto;
-    padding: 0 20px 60px;
+    padding: 16px 20px 60px;
   }
   .page-title{
     font-family:'Playfair Display', serif;
@@ -238,50 +231,51 @@
 </head>
 <body>
 
-<!-- NAVBAR -->
-<header class="navbar">
-  <div class="nav-container">
-    <a href="index.html" class="logo">Sobre As Ondas <span>〰</span></a>
-    <nav class="site-nav">
-      <a href="index.html">Início</a>
-      <a href="cardapio.html">Cardápio</a>
-      <a href="reserva.html">Reserva</a>
-      <a href="endereco.html" class="current">Endereço</a>
-      <a href="pedidos.html">Faça Pedido</a>
-    </nav>
+<div class="page-top">
+  <a href="index.html" class="icon-btn" title="Voltar ao início" aria-label="Voltar ao início">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1z"/></svg>
+  </a>
+  <div class="lang-switch">
+    <button class="icon-btn" onclick="toggleLangMenu(event)" title="Idiomas / Languages" aria-label="Idiomas">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
+    </button>
+    <div class="lang-menu" id="langMenu">
+      <div class="lang-option" data-lang="pt" onclick="setLang('pt')">🇧🇷 Português</div>
+      <div class="lang-option" data-lang="en" onclick="setLang('en')">🇺🇸 English</div>
+      <div class="lang-option" data-lang="es" onclick="setLang('es')">🇪🇸 Español</div>
+    </div>
   </div>
-</header>
-<div class="page-spacer" id="pageSpacer"></div>
+</div>
 
 <div class="content-wrap">
-  <div class="page-title">Como chegar</div>
-  <div class="page-subtitle">Estamos na Ciclovia, Recreio dos Bandeirantes — Ponto de referencia: Açai do surf. <div></div>Venha ter uma experiencia inesquecivel!</div>
+  <div class="page-title" data-i18n="pageTitle">Como chegar</div>
+  <div class="page-subtitle" data-i18n="pageSubtitle">Estamos na Ciclovia, Recreio dos Bandeirantes <div></div> Ponto de referencia: Açai do surf. <div></div>Venha ter uma experiencia inesquecivel!</div>
 
   <div class="card">
     <img
       class="map-frame"
-      src="quiosque.jpeg"
+      src="assets/images/quiosque.jpeg"
       alt="Foto do Quiosque Sobre As Ondas">
     <div class="card-body">
       <div class="endereco-linha">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
         <div class="endereco-texto">
           <strong>Sobre As Ondas</strong>
-          Ciclovia — Recreio dos Bandeirantes<br>
-          Rio de Janeiro — RJ, 22795-589
+          <span data-i18n="enderecoLinha1">Ciclovia — Recreio dos Bandeirantes</span><br>
+          <span data-i18n="enderecoLinha2">Rio de Janeiro — RJ, 22795-589</span>
         </div>
       </div>
-      <a class="btn-maps" href="https://maps.app.goo.gl/8wwsM96paA4DqXTY7?g_st=ic" target="_blank" rel="noopener" onclick="return confirmarSaida(event, 'https://maps.app.goo.gl/8wwsM96paA4DqXTY7?g_st=ic', 'Você vai sair do nosso site e ir para o Google Maps. Deseja continuar?')">
+      <a class="btn-maps" href="https://maps.app.goo.gl/8wwsM96paA4DqXTY7?g_st=ic" target="_blank" rel="noopener" onclick="return confirmarSaida(event, 'https://maps.app.goo.gl/8wwsM96paA4DqXTY7?g_st=ic', translations[currentLang].confirmMapsMsg)">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-        Abrir no Google Maps
+        <span data-i18n="btnAbrirMaps">Abrir no Google Maps</span>
       </a>
     </div>
   </div>
 
   <div class="card">
     <div class="card-body">
-      <div class="endereco-texto" style="margin-bottom:10px;"><strong>Horário de funcionamento</strong></div>
-      <div class="horarios"><span>Todos os dias</span><span>Aberto 24 horas</span></div>
+      <div class="endereco-texto" style="margin-bottom:10px;"><strong data-i18n="horarioFuncionamento">Horário de funcionamento</strong></div>
+      <div class="horarios"><span data-i18n="todosOsDias">Todos os dias</span><span data-i18n="aberto24h">Aberto 24 horas</span></div>
     </div>
   </div>
 </div>
@@ -291,19 +285,100 @@
   <div class="confirm-card">
     <div class="confirm-text" id="confirmText">Você vai sair do nosso site. Deseja continuar?</div>
     <div class="confirm-actions">
-      <button class="confirm-cancel" onclick="fecharConfirm()">Cancelar</button>
+      <button class="confirm-cancel" id="confirmCancelBtn" onclick="fecharConfirm()">Cancelar</button>
       <button class="confirm-ok" id="confirmOkBtn">Sim, continuar</button>
     </div>
   </div>
 </div>
 
 <script>
+  // =====================================================================
+  // IDIOMAS — mesmo padrão de tradução usado em pedidos.html
+  // =====================================================================
+  const translations = {
+    pt: {
+      pageTitle: 'Como chegar',
+      pageSubtitle: 'Estamos na Ciclovia, Recreio dos Bandeirantes — Ponto de referência: Açaí do surf. Venha ter uma experiência inesquecível!',
+      enderecoLinha1: 'Ciclovia — Recreio dos Bandeirantes',
+      enderecoLinha2: 'Rio de Janeiro — RJ, 22795-589',
+      btnAbrirMaps: 'Abrir no Google Maps',
+      horarioFuncionamento: 'Horário de funcionamento',
+      todosOsDias: 'Todos os dias',
+      aberto24h: 'Aberto 24 horas',
+      confirmMapsMsg: 'Você vai sair do nosso site e ir para o Google Maps. Deseja continuar?',
+      confirmCancelar: 'Cancelar',
+      confirmContinuar: 'Sim, continuar'
+    },
+    en: {
+      pageTitle: 'How to get there',
+      pageSubtitle: "We're on the Ciclovia (bike path), Recreio dos Bandeirantes — Landmark: Açaí do surf. Come have an unforgettable experience!",
+      enderecoLinha1: 'Ciclovia — Recreio dos Bandeirantes',
+      enderecoLinha2: 'Rio de Janeiro — RJ, 22795-589, Brazil',
+      btnAbrirMaps: 'Open in Google Maps',
+      horarioFuncionamento: 'Opening hours',
+      todosOsDias: 'Every day',
+      aberto24h: 'Open 24 hours',
+      confirmMapsMsg: "You're about to leave our site and go to Google Maps. Continue?",
+      confirmCancelar: 'Cancel',
+      confirmContinuar: 'Yes, continue'
+    },
+    es: {
+      pageTitle: 'Cómo llegar',
+      pageSubtitle: 'Estamos en la Ciclovía, Recreio dos Bandeirantes — Punto de referencia: Açaí do surf. ¡Ven a vivir una experiencia inolvidable!',
+      enderecoLinha1: 'Ciclovía — Recreio dos Bandeirantes',
+      enderecoLinha2: 'Río de Janeiro — RJ, 22795-589, Brasil',
+      btnAbrirMaps: 'Abrir en Google Maps',
+      horarioFuncionamento: 'Horario de atención',
+      todosOsDias: 'Todos los días',
+      aberto24h: 'Abierto 24 horas',
+      confirmMapsMsg: 'Vas a salir de nuestro sitio y a ir a Google Maps. ¿Deseas continuar?',
+      confirmCancelar: 'Cancelar',
+      confirmContinuar: 'Sí, continuar'
+    }
+  };
+
+  let currentLang = localStorage.getItem('idioma') || 'pt';
+
+  function toggleLangMenu(event){
+    if(event) event.stopPropagation();
+    document.getElementById('langMenu').classList.toggle('open');
+  }
+
+  document.addEventListener('click', function(e){
+    const menu = document.getElementById('langMenu');
+    if(menu && menu.classList.contains('open') && !menu.contains(e.target)){
+      menu.classList.remove('open');
+    }
+  });
+
+  function applyStaticI18n(){
+    const dict = translations[currentLang];
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      const key = el.getAttribute('data-i18n');
+      if(dict[key] !== undefined) el.textContent = dict[key];
+    });
+    document.querySelectorAll('.lang-option').forEach(function(el){
+      el.classList.toggle('active', el.getAttribute('data-lang') === currentLang);
+    });
+  }
+
+  function setLang(lang){
+    currentLang = lang;
+    localStorage.setItem('idioma', lang);
+    applyStaticI18n();
+    document.getElementById('langMenu').classList.remove('open');
+  }
+
+  applyStaticI18n();
+
   let _urlPendente = null;
 
   function confirmarSaida(event, url, mensagem){
     event.preventDefault();
     _urlPendente = url;
     document.getElementById('confirmText').textContent = mensagem;
+    document.getElementById('confirmCancelBtn').textContent = translations[currentLang].confirmCancelar;
+    document.getElementById('confirmOkBtn').textContent = translations[currentLang].confirmContinuar;
     document.getElementById('confirmOverlay').classList.add('show');
     return false;
   }
@@ -323,26 +398,6 @@
   document.getElementById('confirmOverlay').addEventListener('click', function(e){
     if(e.target === this) fecharConfirm();
   });
-
-  // Ajusta a altura do espaçador para ser sempre igual à altura real
-  // da navbar + a margem de 16px do topo + uma folga de segurança.
-  // Isso resolve o problema de o texto "Como chegar" ficar escondido
-  // atrás da navbar quando ela quebra em duas linhas em telas estreitas.
-  function ajustarEspacoNavbar(){
-    const navContainer = document.querySelector('.nav-container');
-    const spacer = document.getElementById('pageSpacer');
-    if(!navContainer || !spacer) return;
-    const alturaNavbar = navContainer.offsetHeight;
-    spacer.style.height = (alturaNavbar + 16 + 24) + 'px';
-  }
-
-  window.addEventListener('load', ajustarEspacoNavbar);
-  window.addEventListener('resize', ajustarEspacoNavbar);
-  // As fontes carregando depois podem mudar a altura da navbar,
-  // então recalculamos de novo quando elas terminarem de carregar.
-  if(document.fonts && document.fonts.ready){
-    document.fonts.ready.then(ajustarEspacoNavbar);
-  }
 </script>
 
 </body>

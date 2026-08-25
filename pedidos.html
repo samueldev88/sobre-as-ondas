@@ -11,8 +11,6 @@
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
-<!-- gera o QR Code do Pix direto no navegador -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <style>
   :root{
@@ -35,55 +33,6 @@
     min-height:100vh;
   }
 
-  /* ===== NAVBAR DO SITE (mesma linguagem visual da landing) ===== */
-  .navbar{
-    position: fixed;
-    top: 16px; left:0; right:0;
-    z-index: 200;
-  }
-  .nav-container{
-    max-width: 1200px;
-    margin: 0 auto;
-    background: #fff;
-    border-radius: 999px;
-    padding: 12px 20px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    flex-wrap: wrap;
-    row-gap: 8px;
-  }
-  .logo{
-    font-family:'Playfair Display', serif;
-    font-style:italic;
-    font-weight:700;
-    font-size: 18px;
-    color: var(--azul-escuro);
-    white-space:nowrap;
-  }
-  .logo span{ color: var(--terracota); }
-  .site-nav{
-    display:flex;
-    flex-wrap:wrap;
-    gap:8px;
-    justify-content:center;
-  }
-  .site-nav a{
-    text-decoration:none;
-    background: var(--azul-escuro);
-    color:#fff;
-    padding: 7px 14px;
-    border-radius: 999px;
-    font-family:'Poppins', sans-serif;
-    font-size: 11px;
-    font-weight:600;
-    letter-spacing:.4px;
-  }
-  .site-nav a.current{ background: var(--terracota); }
-
-  .page-spacer{ height: 90px; }
-
   /* ===== APP DE PEDIDOS ===== */
   .phone-wrap{
     display:flex;
@@ -105,18 +54,76 @@
     background: var(--navy-deep);
     padding: 18px 20px 0;
   }
+  .top-bar-header{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .top-bar-titles{
+    flex:1;
+    min-width:0;
+  }
   .top-bar-title{
     color: var(--cream);
     font-family:'Caveat', cursive;
     font-size: 30px;
     font-weight:700;
+    line-height:1;
   }
   .top-bar-sub{
     color: var(--sand);
     font-size: 12.5px;
-    margin-top: -4px;
-    margin-bottom: 14px;
+    margin-top: 2px;
   }
+  .top-bar-actions{
+    display:flex;
+    align-items:center;
+    gap: 8px;
+    flex-shrink:0;
+  }
+  .icon-btn{
+    width:34px; height:34px;
+    border-radius:50%;
+    background: rgba(255,255,255,0.12);
+    color: var(--cream);
+    display:flex; align-items:center; justify-content:center;
+    text-decoration:none;
+    border:none;
+    cursor:pointer;
+    flex-shrink:0;
+  }
+  .icon-btn svg{ width:16px; height:16px; }
+  .lang-switch{ position:relative; }
+  .lang-menu{
+    display:none;
+    position:absolute;
+    top: calc(100% + 8px);
+    right:0;
+    background:#fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    padding: 6px;
+    z-index: 50;
+    min-width: 150px;
+  }
+  .lang-menu.open{ display:block; }
+  .lang-option{
+    display:flex;
+    align-items:center;
+    gap: 8px;
+    padding: 9px 10px;
+    border-radius: 8px;
+    font-family:'Poppins', sans-serif;
+    font-size: 13px;
+    font-weight:600;
+    color: var(--navy-deep);
+    cursor:pointer;
+    white-space:nowrap;
+  }
+  .lang-option:hover{ background: rgba(22,48,79,0.06); }
+  .lang-option.active{ background: var(--navy-deep); color:#fff; }
 
   .tabs{
     display:flex;
@@ -147,6 +154,31 @@
   .view.active{ display:block; }
 
   /* CLIENTE */
+  .local-tabs{
+    display:flex;
+    gap: 6px;
+    margin-bottom: 12px;
+    background: rgba(22,48,79,0.06);
+    padding: 4px;
+    border-radius: 12px;
+  }
+  .local-tab{
+    flex:1;
+    text-align:center;
+    padding: 9px 6px;
+    font-family:'Poppins', sans-serif;
+    font-size: 13px;
+    font-weight:600;
+    color: var(--navy-deep);
+    border-radius: 9px;
+    cursor:pointer;
+    user-select:none;
+  }
+  .local-tab.active{
+    background: var(--navy-deep);
+    color: #fff;
+  }
+
   .mesa-input{
     background:#fff;
     border-radius: 12px;
@@ -157,6 +189,7 @@
     margin-bottom: 16px;
     box-shadow: 0 2px 8px rgba(22,48,79,0.06);
   }
+  .mesa-input.hidden{ display:none; }
   .mesa-input svg{width:18px; height:18px; color: var(--navy); flex-shrink:0;}
   .mesa-input input{
     border:none; outline:none;
@@ -418,57 +451,11 @@
     cursor:pointer;
   }
 
-  .pix-box{
-    background:#fff;
-    border-radius: 14px;
-    padding: 18px;
-    text-align:center;
-    margin-top:14px;
-  }
-  .pix-box #pixQr{
-    display:flex;
-    justify-content:center;
-    margin: 6px 0 14px;
-  }
   .pix-valor{
     font-size: 20px;
     font-weight:700;
     color: var(--navy-deep);
     margin-bottom: 4px;
-  }
-  .pix-label{
-    font-size:12px;
-    color:#8a8175;
-    margin-bottom:14px;
-  }
-  .pix-copia{
-    background: var(--cream);
-    border-radius: 10px;
-    padding: 10px 12px;
-    font-size: 11px;
-    word-break: break-all;
-    color:#57503f;
-    text-align:left;
-    margin-bottom: 10px;
-    max-height: 70px;
-    overflow-y:auto;
-  }
-  .pix-copiar-btn{
-    background: var(--navy);
-    color:#fff;
-    border-radius: 10px;
-    padding: 11px;
-    font-weight:600;
-    font-size: 13.5px;
-    cursor:pointer;
-    margin-bottom: 8px;
-  }
-  .pix-copiar-btn.copiado{ background: var(--green); }
-  .pix-aviso{
-    font-size:12px;
-    color:#8a8175;
-    line-height:1.5;
-    margin: 10px 0 16px;
   }
 
   .telefone-box{ margin-top:14px; }
@@ -643,35 +630,38 @@
 
   @media (max-width: 480px){
     .phone{ border-radius: 0; }
-    .page-spacer{ height: 110px; }
   }
 </style>
 </head>
 <body>
 
-<!-- NAVBAR -->
-<header class="navbar">
-  <div class="nav-container">
-    <a href="index.html" class="logo">Sobre As Ondas <span>〰</span></a>
-    <nav class="site-nav">
-      <a href="index.html">Início</a>
-      <a href="cardapio.html">Cardápio</a>
-      <a href="reserva.html">Reserva</a>
-      <a href="endereco.html">Endereço</a>
-      <a href="pedidos.html" class="current">Faça Pedido</a>
-    </nav>
-  </div>
-</header>
-<div class="page-spacer"></div>
-
 <div class="phone-wrap">
 <div class="phone">
   <div class="top-bar">
-    <div class="top-bar-title">Sobre as Ondas</div>
-    <div class="top-bar-sub">faça seu pedido direto da sua mesa</div>
+    <div class="top-bar-header">
+      <a href="index.html" class="icon-btn" title="Voltar ao início" aria-label="Voltar ao início">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1z"/></svg>
+      </a>
+      <div class="top-bar-titles">
+        <div class="top-bar-title" data-i18n="title">Sobre as Ondas</div>
+        <div class="top-bar-sub" data-i18n="subtitle">faça seu pedido da praia ou direto da sua mesa</div>
+      </div>
+      <div class="top-bar-actions">
+        <div class="lang-switch">
+          <button class="icon-btn" onclick="toggleLangMenu(event)" title="Idiomas / Languages" aria-label="Idiomas">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
+          </button>
+          <div class="lang-menu" id="langMenu">
+            <div class="lang-option" data-lang="pt" onclick="setLang('pt')">🇧🇷 Português</div>
+            <div class="lang-option" data-lang="en" onclick="setLang('en')">🇺🇸 English</div>
+            <div class="lang-option" data-lang="es" onclick="setLang('es')">🇪🇸 Español</div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="tabs">
-      <div class="tab active" id="tabCliente" onclick="switchTab('cliente')">Fazer Pedido</div>
-      <div class="tab" id="tabMeusPedidos" onclick="switchTab('meusPedidos')">Seus Pedidos</div>
+      <div class="tab active" id="tabCliente" data-i18n="tabPedido" onclick="switchTab('cliente')">Fazer Pedido</div>
+      <div class="tab" id="tabMeusPedidos" data-i18n="tabMeusPedidos" onclick="switchTab('meusPedidos')">Seus Pedidos</div>
       <div class="tab hidden" id="tabEquipe" onclick="switchTab('equipe')">Painel da Equipe</div>
       <div class="tab hidden" id="tabReservas" onclick="switchTab('reservas')">Reservas</div>
     </div>
@@ -680,19 +670,35 @@
   <!-- VISÃO CLIENTE -->
   <div class="view active" id="viewCliente">
 
-    <div class="mesa-input">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-      <input type="text" id="mesaNumero" placeholder="Número da mesa (ex: 7)">
+    <div class="local-tabs">
+      <div class="local-tab active" id="localTabMesa" data-i18n="localMesa" onclick="switchLocalTab('mesa')">Mesa</div>
+      <div class="local-tab" id="localTabPraia" data-i18n="localPraia" onclick="switchLocalTab('praia')">Praia</div>
     </div>
 
-    <div class="cat-title">Petiscos</div>
+    <div class="mesa-input" id="mesaInputWrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      <input type="text" id="mesaNumero" data-i18n-placeholder="placeholderMesa" placeholder="Número da mesa (ex: 7)">
+    </div>
+
+    <div class="mesa-input hidden" id="praiaInputWrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.362 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+      <input type="text" id="praiaTelefone" data-i18n-placeholder="placeholderPraia" placeholder="Número do seu celular (ex: +55 21)">
+    </div>
+
+    <div class="cat-title" data-i18n="catPetiscos">Petiscos</div>
     <div id="menuPetiscos"></div>
 
-    <div class="cat-title">Pastéis (unid)</div>
+    <div class="cat-title" data-i18n="catPasteis">Pastéis (unid)</div>
     <div id="menuPasteis"></div>
 
-    <div class="cat-title">Outros</div>
+    <div class="cat-title" data-i18n="catOutros">Outros</div>
     <div id="menuOutros"></div>
+
+    <div class="cat-title" data-i18n="catBebidas">Bebidas</div>
+    <div id="menuBebidas"></div>
+
+    <div class="cat-title" data-i18n="catDrinks">Drinks</div>
+    <div id="menuDrinks"></div>
 
     <div class="cart-bar" onclick="openCart()">
       <span id="cartSummary">Carrinho vazio</span>
@@ -737,10 +743,10 @@
     <div class="staff-access" style="margin-top:20px;" onclick="auth.signOut()">Sair da conta da equipe</div>
   </div>
 
-  <div class="footer-note">
+  <div class="footer-note" data-i18n="footerNote">
     Os pedidos são enviados em tempo real para a equipe.
   </div>
-  <div class="staff-access" onclick="abrirLoginEquipe()">Acesso da equipe</div>
+  <div class="staff-access" data-i18n="staffAccess" onclick="abrirLoginEquipe()">Acesso da equipe</div>
 </div>
 </div>
 
@@ -750,90 +756,75 @@
 
     <!-- ETAPA 1: itens do pedido -->
     <div id="stepItens">
-      <h3>Confirmar pedido</h3>
+      <h3 data-i18n="modalConfirmarPedido">Confirmar pedido</h3>
       <div id="modalItems"></div>
-      <div class="modal-total"><span>Total</span><span id="modalTotalValue">R$ 0</span></div>
-      <div class="confirm-btn" onclick="irParaPagamento()">Continuar para pagamento</div>
-      <div class="close-modal" onclick="closeCart()">Voltar ao cardápio</div>
+      <div class="modal-total"><span data-i18n="modalTotal">Total</span><span id="modalTotalValue">R$ 0</span></div>
+      <div class="confirm-btn" onclick="irParaPagamento()" data-i18n="btnContinuarPagamento">Continuar para pagamento</div>
+      <div class="close-modal" onclick="closeCart()" data-i18n="btnVoltarCardapio">Voltar ao cardápio</div>
     </div>
 
     <!-- ETAPA 2: escolher forma de pagamento -->
     <div id="stepMetodo" style="display:none;">
-      <h3>Como você vai pagar?</h3>
+      <h3 data-i18n="modalComoVaiPagar">Como você vai pagar?</h3>
       <div class="pay-methods">
         <div class="pay-btn" onclick="escolherMetodo('pix')">
           <div class="pay-icon pix">💠</div>
           <div>
-            <div>Pix</div>
-            <div class="pay-sub">Pagamento na hora, aprovação imediata</div>
+            <div data-i18n="payPix">Pix</div>
+            <div class="pay-sub" data-i18n="payPixSub">Confirmação automática pelo Mercado Pago</div>
           </div>
         </div>
         <div class="pay-btn" onclick="escolherMetodo('credito')">
           <div class="pay-icon credito">💳</div>
           <div>
-            <div>Cartão de crédito</div>
-            <div class="pay-sub">Você será levado ao checkout do Mercado Pago</div>
+            <div data-i18n="payCredito">Cartão de crédito</div>
+            <div class="pay-sub" data-i18n="payCartaoSub">Você será levado ao checkout do Mercado Pago</div>
           </div>
         </div>
         <div class="pay-btn" onclick="escolherMetodo('debito')">
           <div class="pay-icon debito">💳</div>
           <div>
-            <div>Cartão de débito</div>
-            <div class="pay-sub">Você será levado ao checkout do Mercado Pago</div>
+            <div data-i18n="payDebito">Cartão de débito</div>
+            <div class="pay-sub" data-i18n="payCartaoSub">Você será levado ao checkout do Mercado Pago</div>
           </div>
         </div>
         <div class="pay-btn" onclick="escolherMetodo('retirada')">
           <div class="pay-icon retirada">📞</div>
           <div>
-            <div>Pagar na retirada</div>
-            <div class="pay-sub">Deixe seu telefone, a gente liga quando ficar pronto</div>
+            <div data-i18n="payRetirada">Pagar na retirada</div>
+            <div class="pay-sub" data-i18n="payRetiradaSub">Deixe seu telefone, a gente liga quando ficar pronto</div>
           </div>
         </div>
       </div>
-      <div class="pay-back" onclick="voltarParaItens()">Voltar</div>
+      <div class="pay-back" onclick="voltarParaItens()" data-i18n="btnVoltar">Voltar</div>
     </div>
 
-    <!-- ETAPA 3A: pagamento via Pix -->
-    <div id="stepPix" style="display:none;">
-      <h3>Pagar com Pix</h3>
-      <div class="pix-box">
-        <div class="pix-valor" id="pixValor">R$ 0</div>
-        <div class="pix-label">Escaneie o QR Code ou copie o código abaixo</div>
-        <div id="pixQr"></div>
-        <div class="pix-copia" id="pixCopiaCola"></div>
-        <div class="pix-copiar-btn" id="pixCopiarBtn" onclick="copiarPix()">Copiar código Pix</div>
-      </div>
-      <div class="pix-aviso">Depois de pagar, toque no botão abaixo para enviarmos seu pedido para a cozinha. A equipe confirma o recebimento do Pix.</div>
-      <div class="confirm-btn" onclick="confirmarPedido('pix')">Já paguei, enviar pedido</div>
-      <div class="pay-back" onclick="voltarParaMetodo()">Escolher outra forma de pagamento</div>
-    </div>
-
-    <!-- ETAPA 3B: pagamento via Mercado Pago (cartão) -->
+    <!-- ETAPA 3B: pagamento via Mercado Pago (Pix, crédito ou débito) -->
     <div id="stepCartao" style="display:none;">
       <h3 id="cartaoTitulo">Pagar com cartão</h3>
       <div class="mp-box">
         <div class="pix-valor" id="cartaoValor">R$ 0</div>
-        <div class="mp-aviso" id="cartaoAviso">Você será redirecionado para o ambiente seguro do Mercado Pago para finalizar o pagamento. Depois de pagar, você volta automaticamente para cá.</div>
+        <div class="mp-aviso" id="cartaoAviso" data-i18n="mpAviso">Você será redirecionado para o ambiente seguro do Mercado Pago para finalizar o pagamento. Depois de pagar, você volta automaticamente para cá.</div>
         <div id="cartaoCarregando" style="display:none;">
           <div class="spinner"></div>
-          <div class="mp-aviso" style="margin-bottom:0;">Preparando pagamento...</div>
+          <div class="mp-aviso" style="margin-bottom:0;" data-i18n="mpPreparando">Preparando pagamento...</div>
         </div>
-        <div class="confirm-btn" id="cartaoBtnIr" onclick="pagarComMercadoPago()">Ir para pagamento</div>
-        <div class="erro-pagamento" id="cartaoErro">Não foi possível iniciar o pagamento. Tenta de novo em instantes.</div>
+        <div class="confirm-btn" id="cartaoBtnIr" onclick="pagarComMercadoPago()" data-i18n="btnIrPagamento">Ir para pagamento</div>
+        <div class="erro-pagamento" id="cartaoErro" data-i18n="mpErro">Não foi possível iniciar o pagamento. Tenta de novo em instantes.</div>
       </div>
-      <div class="pay-back" onclick="voltarParaMetodo()">Escolher outra forma de pagamento</div>
+      <div class="pay-back" onclick="voltarParaMetodo()" data-i18n="btnEscolherOutra">Escolher outra forma de pagamento</div>
     </div>
 
     <!-- ETAPA 3C: pagar na retirada / deixar telefone -->
     <div id="stepRetirada" style="display:none;">
-      <h3>Pagar na retirada</h3>
+      <h3 data-i18n="payRetirada">Pagar na retirada</h3>
       <div class="telefone-box">
-        <label for="telefoneInput">Seu telefone (com DDD)</label>
-        <input type="tel" id="telefoneInput" placeholder="Ex: (21) 99119-2065">
-        <div class="telefone-aviso">Você paga direto com a equipe, na entrega ou retirada. Vamos te ligar assim que o pedido estiver pronto.</div>
+        <label for="telefoneInput" data-i18n="labelTelefone">Seu telefone (com DDD)</label>
+        <input type="tel" id="telefoneInput" data-i18n-placeholder="placeholderTelefone" placeholder="Ex: (21) 99119-2065">
+        <div class="telefone-aviso" data-i18n="avisoTelefone">Você paga direto com a equipe, na entrega ou retirada. Vamos te ligar assim que o pedido estiver pronto.</div>
       </div>
-      <div class="confirm-btn" onclick="confirmarPedido('retirada')">Enviar pedido</div>
-      <div class="pay-back" onclick="voltarParaMetodo()">Escolher outra forma de pagamento</div>
+      <div class="confirm-btn" onclick="confirmarPedido('retirada')" data-i18n="btnEnviarPedido">Enviar pedido</div>
+      <div class="pay-back" onclick="voltarParaMetodo()" data-i18n="btnEscolherOutra">Escolher outra forma de pagamento</div>
     </div>
 
   </div>
@@ -852,6 +843,254 @@
 </div>
 
 <script>
+  // =====================================================================
+  // IDIOMAS — traduz os textos fixos da interface do cliente (o painel
+  // da equipe e o de reservas continuam só em português, já que são de
+  // uso interno). Os nomes dos itens do cardápio também ficam em
+  // português, como é comum em cardápios de restaurante.
+  // =====================================================================
+  const translations = {
+    pt: {
+      title: 'Sobre as Ondas',
+      subtitle: 'faça seu pedido da praia ou direto da sua mesa',
+      tabPedido: 'Fazer Pedido',
+      tabMeusPedidos: 'Seus Pedidos',
+      localMesa: 'Mesa',
+      localPraia: 'Praia',
+      placeholderMesa: 'Número da mesa (ex: 7)',
+      placeholderPraia: 'Número do seu celular (ex: +55 21)',
+      catPetiscos: 'Petiscos',
+      catPasteis: 'Pastéis (unid)',
+      catOutros: 'Outros',
+      catBebidas: 'Bebidas',
+      catDrinks: 'Drinks',
+      carrinhoVazio: 'Carrinho vazio',
+      itemSingular: 'item',
+      itemPlural: 'itens',
+      noCarrinho: 'no carrinho',
+      footerNote: 'Os pedidos são enviados em tempo real para a equipe.',
+      staffAccess: 'Acesso da equipe',
+      modalConfirmarPedido: 'Confirmar pedido',
+      modalTotal: 'Total',
+      btnContinuarPagamento: 'Continuar para pagamento',
+      btnVoltarCardapio: 'Voltar ao cardápio',
+      modalComoVaiPagar: 'Como você vai pagar?',
+      payPix: 'Pix',
+      payPixSub: 'Confirmação automática pelo Mercado Pago',
+      payCredito: 'Cartão de crédito',
+      payDebito: 'Cartão de débito',
+      payCartaoSub: 'Você será levado ao checkout do Mercado Pago',
+      payRetirada: 'Pagar na retirada',
+      payRetiradaSub: 'Deixe seu telefone, a gente liga quando ficar pronto',
+      btnVoltar: 'Voltar',
+      mpAviso: 'Você será redirecionado para o ambiente seguro do Mercado Pago para finalizar o pagamento. Depois de pagar, você volta automaticamente para cá.',
+      mpPreparando: 'Preparando pagamento...',
+      btnIrPagamento: 'Ir para pagamento',
+      mpErro: 'Não foi possível iniciar o pagamento. Tenta de novo em instantes.',
+      btnEscolherOutra: 'Escolher outra forma de pagamento',
+      labelTelefone: 'Seu telefone (com DDD)',
+      placeholderTelefone: 'Ex: (21) 99119-2065',
+      avisoTelefone: 'Você paga direto com a equipe, na entrega ou retirada. Vamos te ligar assim que o pedido estiver pronto.',
+      btnEnviarPedido: 'Enviar pedido',
+      pagarComCartao: 'Pagar com cartão',
+      pagarComPix: 'Pagar com Pix',
+      pagarComCredito: 'Pagar com cartão de crédito',
+      pagarComDebito: 'Pagar com cartão de débito',
+      semPedidos: 'Você ainda não fez nenhum pedido por aqui.',
+      carregando: 'Carregando...',
+      removerLista: 'Remover da lista',
+      stepRecebido: 'Recebido',
+      stepPreparando: 'Preparando',
+      stepPronto: 'Pronto',
+      statusAguardando: ['Aguardando confirmação do pagamento', 'Assim que confirmarmos, seu pedido segue pra cozinha.'],
+      statusRecebido: ['Recebemos seu pedido!', 'A equipe já foi avisada.'],
+      statusPreparando: ['Está sendo preparado', 'Não deve demorar :)'],
+      statusPronto: ['Pronto!', 'Pode retirar ou aguardar na mesa.']
+    },
+    en: {
+      title: 'Sobre as Ondas',
+      subtitle: 'order straight from your table',
+      tabPedido: 'Order',
+      tabMeusPedidos: 'Your Orders',
+      localMesa: 'Table',
+      localPraia: 'Beach',
+      placeholderMesa: 'Table number (e.g. 7)',
+      placeholderPraia: 'Your phone number (e.g. +55 21)',
+      catPetiscos: 'Snacks',
+      catPasteis: 'Pastéis (each)',
+      catOutros: 'Others',
+      catBebidas: 'Beverages',
+      catDrinks: 'Drinks',
+      carrinhoVazio: 'Cart is empty',
+      itemSingular: 'item',
+      itemPlural: 'items',
+      noCarrinho: 'in cart',
+      footerNote: 'Orders are sent to the staff in real time.',
+      staffAccess: 'Staff access',
+      modalConfirmarPedido: 'Confirm order',
+      modalTotal: 'Total',
+      btnContinuarPagamento: 'Continue to payment',
+      btnVoltarCardapio: 'Back to menu',
+      modalComoVaiPagar: 'How would you like to pay?',
+      payPix: 'Pix',
+      payPixSub: 'Automatic confirmation via Mercado Pago',
+      payCredito: 'Credit card',
+      payDebito: 'Debit card',
+      payCartaoSub: "You'll be taken to Mercado Pago's checkout",
+      payRetirada: 'Pay on pickup',
+      payRetiradaSub: "Leave your phone number, we'll call you when it's ready",
+      btnVoltar: 'Back',
+      mpAviso: "You'll be redirected to Mercado Pago's secure environment to finish the payment. You'll return here automatically afterwards.",
+      mpPreparando: 'Preparing payment...',
+      btnIrPagamento: 'Go to payment',
+      mpErro: 'Could not start the payment. Please try again shortly.',
+      btnEscolherOutra: 'Choose another payment method',
+      labelTelefone: 'Your phone number (with area code)',
+      placeholderTelefone: 'e.g. (21) 99119-2065',
+      avisoTelefone: "You'll pay directly with the staff on pickup or delivery. We'll call you as soon as it's ready.",
+      btnEnviarPedido: 'Send order',
+      pagarComCartao: 'Pay by card',
+      pagarComPix: 'Pay with Pix',
+      pagarComCredito: 'Pay by credit card',
+      pagarComDebito: 'Pay by debit card',
+      semPedidos: "You haven't placed any orders here yet.",
+      carregando: 'Loading...',
+      removerLista: 'Remove from list',
+      stepRecebido: 'Received',
+      stepPreparando: 'Preparing',
+      stepPronto: 'Ready',
+      statusAguardando: ['Waiting for payment confirmation', "Once confirmed, your order goes to the kitchen."],
+      statusRecebido: ['We got your order!', 'The staff has been notified.'],
+      statusPreparando: ['Being prepared', "Won't be long :)"],
+      statusPronto: ['Ready!', 'You can pick it up or wait at your table.']
+    },
+    es: {
+      title: 'Sobre as Ondas',
+      subtitle: 'haz tu pedido desde tu mesa',
+      tabPedido: 'Hacer Pedido',
+      tabMeusPedidos: 'Tus Pedidos',
+      localMesa: 'Mesa',
+      localPraia: 'Playa',
+      placeholderMesa: 'Número de la mesa (ej: 7)',
+      placeholderPraia: 'Tu número de celular (ej: +55 21)',
+      catPetiscos: 'Aperitivos',
+      catPasteis: 'Empanadas (unid.)',
+      catOutros: 'Otros',
+      catBebidas: 'Bebidas',
+      catDrinks: 'Cócteles',
+      carrinhoVazio: 'Carrito vacío',
+      itemSingular: 'artículo',
+      itemPlural: 'artículos',
+      noCarrinho: 'en el carrito',
+      footerNote: 'Los pedidos se envían al equipo en tiempo real.',
+      staffAccess: 'Acceso del equipo',
+      modalConfirmarPedido: 'Confirmar pedido',
+      modalTotal: 'Total',
+      btnContinuarPagamento: 'Continuar al pago',
+      btnVoltarCardapio: 'Volver al menú',
+      modalComoVaiPagar: '¿Cómo vas a pagar?',
+      payPix: 'Pix',
+      payPixSub: 'Confirmación automática por Mercado Pago',
+      payCredito: 'Tarjeta de crédito',
+      payDebito: 'Tarjeta de débito',
+      payCartaoSub: 'Serás dirigido al checkout de Mercado Pago',
+      payRetirada: 'Pagar al retirar',
+      payRetiradaSub: 'Deja tu teléfono, te llamamos cuando esté listo',
+      btnVoltar: 'Volver',
+      mpAviso: 'Serás redirigido al entorno seguro de Mercado Pago para finalizar el pago. Luego volverás aquí automáticamente.',
+      mpPreparando: 'Preparando el pago...',
+      btnIrPagamento: 'Ir al pago',
+      mpErro: 'No fue posible iniciar el pago. Inténtalo de nuevo en un momento.',
+      btnEscolherOutra: 'Elegir otra forma de pago',
+      labelTelefone: 'Tu teléfono (con código de área)',
+      placeholderTelefone: 'Ej: (21) 99119-2065',
+      avisoTelefone: 'Pagas directamente con el equipo, en la entrega o retiro. Te llamaremos en cuanto esté listo.',
+      btnEnviarPedido: 'Enviar pedido',
+      pagarComCartao: 'Pagar con tarjeta',
+      pagarComPix: 'Pagar con Pix',
+      pagarComCredito: 'Pagar con tarjeta de crédito',
+      pagarComDebito: 'Pagar con tarjeta de débito',
+      semPedidos: 'Aún no has hecho ningún pedido aquí.',
+      carregando: 'Cargando...',
+      removerLista: 'Quitar de la lista',
+      stepRecebido: 'Recibido',
+      stepPreparando: 'Preparando',
+      stepPronto: 'Listo',
+      statusAguardando: ['Esperando confirmación del pago', 'En cuanto lo confirmemos, tu pedido va a la cocina.'],
+      statusRecebido: ['¡Recibimos tu pedido!', 'El equipo ya fue avisado.'],
+      statusPreparando: ['Se está preparando', 'No debería tardar :)'],
+      statusPronto: ['¡Listo!', 'Puedes retirarlo o esperar en la mesa.']
+    }
+  };
+
+  let currentLang = localStorage.getItem('idioma') || 'pt';
+
+  function toggleLangMenu(event){
+    if(event) event.stopPropagation();
+    document.getElementById('langMenu').classList.toggle('open');
+  }
+
+  document.addEventListener('click', function(e){
+    const menu = document.getElementById('langMenu');
+    if(menu && menu.classList.contains('open') && !menu.contains(e.target)){
+      menu.classList.remove('open');
+    }
+  });
+
+  function applyStaticI18n(){
+    const dict = translations[currentLang];
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      const key = el.getAttribute('data-i18n');
+      if(dict[key] !== undefined) el.textContent = dict[key];
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(function(el){
+      const key = el.getAttribute('data-i18n-placeholder');
+      if(dict[key] !== undefined) el.placeholder = dict[key];
+    });
+    document.querySelectorAll('.lang-option').forEach(function(el){
+      el.classList.toggle('active', el.getAttribute('data-lang') === currentLang);
+    });
+  }
+
+  function setLang(lang){
+    currentLang = lang;
+    localStorage.setItem('idioma', lang);
+    applyStaticI18n();
+    document.getElementById('langMenu').classList.remove('open');
+    if(typeof updateCartBar === 'function') updateCartBar();
+    if(typeof renderMeusPedidos === 'function') renderMeusPedidos();
+    if(typeof renderMenu === 'function' && typeof menu !== 'undefined'){
+      renderMenu(menu.petiscos, 'menuPetiscos');
+      renderMenu(menu.pasteis, 'menuPasteis');
+      renderMenu(menu.outros, 'menuOutros');
+      renderMenu(menu.bebidas, 'menuBebidas');
+      renderMenu(menu.drinks, 'menuDrinks');
+    }
+  }
+
+  applyStaticI18n();
+
+  // ===== abas "Mesa" / "Praia" no início do pedido =====
+  let localTabAtivo = 'mesa';
+  function switchLocalTab(tab){
+    localTabAtivo = tab;
+    document.getElementById('localTabMesa').classList.toggle('active', tab === 'mesa');
+    document.getElementById('localTabPraia').classList.toggle('active', tab === 'praia');
+    document.getElementById('mesaInputWrap').classList.toggle('hidden', tab !== 'mesa');
+    document.getElementById('praiaInputWrap').classList.toggle('hidden', tab !== 'praia');
+  }
+
+  // Retorna o valor de "mesa" que vai pro pedido, considerando qual aba
+  // está ativa (número da mesa ou telefone de quem tá na praia).
+  function obterLocalPedido(){
+    if(localTabAtivo === 'praia'){
+      const tel = document.getElementById('praiaTelefone').value.trim();
+      return tel ? ('Praia · ' + tel) : 'Praia';
+    }
+    const mesa = document.getElementById('mesaNumero').value.trim();
+    return mesa || '?';
+  }
+
   // =====================================================================
   // FIREBASE — cole aqui embaixo o firebaseConfig que o console te deu
   // =====================================================================
@@ -979,13 +1218,89 @@
     ],
     bebidas:[
       {id:'b1', name:'Água', price:5},
+      {id:'b2', name:'Água c/gás', price:6},
+      {id:'b3', name:'Coca-Cola', price:7},
+      {id:'b4', name:'Guaraná Antartica Lata', price:7},
+      {id:'b5', name:'H2O Tradicional', price:7},
+      {id:'b6', name:'H2O Limoneto', price:7},
+      {id:'b7', name:'Red Bull', price:16},
+      {id:'b8', name:'Água 1,5l', price:14},
+      {id:'b9', name:'Coca-Cola 2l', price:15},
+      {id:'b10', name:'Latão Brahma', price:8},
+      {id:'b11', name:'Latão Heineken', price:8},
+      {id:'b12', name:'Latão Império', price:8},
+      {id:'b13', name:'Heineken 600ml', price:18},
+      {id:'b14', name:'Original 600ml', price:18},
+      {id:'b15', name:'Stella artois', price:18},
+      {id:'b16', name:'Brahma 600ml', price:16},
     ],
     drinks: [
-      {id:'d1', name:'Caipirinha', prince:18},
-      {id:'d2', name:'Caipirinha vodka', prince:22},
-      {id:'d3', name:'Gin tropical', prince:25},
+      {id:'d1', name:'Caipirinha de Limão', price:18},
+      {id:'d2', name:'Caipirinha de Maracujá', price:18},
+      {id:'d3', name:'Caipirinha de Morango', price:18},
+      {id:'d4', name:'Caipirinha de Abacaxi', price:18},
+      {id:'d5', name:'Caipi/Vodka', price:22},
+      {id:'d6', name:'Gin Tropical', price:25},
+      {id:'d7', name:'Drink de vinho', price:18},
+
     ]
   };
+
+  // Tradução dos nomes dos itens do cardápio (a lista `menu` acima continua
+  // em português — é o nome "canônico" usado internamente/no pedido salvo
+  // para a equipe). Aqui só trocamos o que aparece na tela do cliente.
+  const itemNames = {
+    p1:  { en:'Fried Cassava',        es:'Yuca Frita' },
+    p2:  { en:'French Fries',         es:'Papas Fritas' },
+    p3:  { en:'Loaded Fries',         es:'Papas Locas' },
+    p4:  { en:'Codfish Fritters',     es:'Buñuelos de Bacalao' },
+    p5:  { en:'Garlic Butter Shrimp', es:'Camarón al Ajillo' },
+    p6:  { en:'Sun-Dried Beef',       es:'Cecina Brasileña' },
+    p7:  { en:'Fish Strips',          es:'Tiras de Pescado' },
+    p8:  { en:'Chicken Strips',       es:'Tiras de Pollo' },
+    p9:  { en:'Mixed Grill Skewers',  es:'Parrillada Mixta' },
+    p10: { en:'Crispy Fried Chicken', es:'Pollo Frito Crocante' },
+    p11: { en:'Fried Anchovies',      es:'Boquerones Fritos' },
+    p12: { en:'Sardines',             es:'Sardinas' },
+    p13: { en:'Corvina Fish',         es:'Corvina' },
+    p14: { en:'Fried Calamari',       es:'Calamares Fritos' },
+    a1:  { en:'Shrimp',               es:'Camarón' },
+    a2:  { en:'Cheese',               es:'Queso' },
+    a3:  { en:'Pepperoni Sausage',    es:'Chorizo' },
+    a4:  { en:'Chicken & Catupiry',   es:'Pollo con Catupiry' },
+    o1:  { en:'Olives',               es:'Aceitunas' },
+    o2:  { en:'Grilled Coalho Cheese',es:'Queso Coalho a la Parrilla' },
+    o3:  { en:'Sliced Salami',        es:'Salamín' },
+    b1:  { en:'Water',                es:'Agua' },
+    b2:  { en:'Carbonated Water',                es:'Agua c/Gas' },
+    b3:  { en:'Coca-Cola Brass',                es:'Coca-Cola Latón' },
+    b4:  { en:'Guaraná Antartica Brass',                es:'Guaraná Antartica Latón' },
+    b5:  { en:'H2O Traditional',                es:'H2O Tradicional' },
+    b6:  { en:'H2O Lemon Grove',                es:'H2O Limonar' },
+    b7:  { en:'Red Bull',                es:'Red Bull' },
+    b8:  { en:'Water 1,5l',                es:'Agua 1,5l' },
+    b9:  { en:'Coca-Cola 2l',                es:'Coca-Cola 2l' },
+    b10:  { en:'Tallboy Beer Brahma',                es:'Latón Brahma' },
+    b11:  { en:'Tallboy Beer Heineken',                es:'Latón Heineken' },
+    b12:  { en:'Tallboy Beer Império',                es:'Latón Imperio' },
+    b13:  { en:'Heineken Beer 600ml',                es:'Cerveza Heineken 600ml' },
+    b14:  { en:'Original Beer 600ml',                es:'Cerveza Original 600ml' },
+    b15:  { en:'Stella Beer 600ml',                es:'Cerveza Stella Artois 600ml' },
+    b16:  { en:'Brahma Beer 600ml',                es:'Cerveza Brahma 600ml' },
+    d1:  { en:'Lime Caipirinha',           es:'Caipiriña de Limón' },
+    d2:  { en:'Passion Fruit Caipirinha',           es:'Caipiriña de Maracuyá' },
+    d3:  { en:'Strawberry Caipirinha',           es:'Caipiriña de Fresa' },
+    d4:  { en:'Pineapple Caipirinha',           es:'Caipiriña de Piña' },
+    d5:  { en:'Vodka Caipirinha',     es:'Caipiriña de Vodka' },
+    d6:  { en:'Tropical Gin',         es:'Gin Tropical' },
+    d7:  { en:'Wine-Based Drink',         es:'Cóctel de Vino' },
+
+  };
+
+  function translatedItemName(id, nomeOriginal){
+    if(currentLang === 'pt') return nomeOriginal;
+    return (itemNames[id] && itemNames[id][currentLang]) || nomeOriginal;
+  }
 
   function formatarDataHora(data){
     const dataStr = data.toLocaleDateString('pt-BR', {day:'2-digit', month:'2-digit'});
@@ -1002,10 +1317,6 @@
   // =====================================================================
   // CONFIGURAÇÃO DE PAGAMENTO — edite aqui
   // =====================================================================
-  const PIX_CHAVE = "+5521980401317";   // chave pix do restaurante (telefone, com +55 obrigatório)
-  const PIX_NOME  = "SOBRE AS ONDAS";   // nome do recebedor (sem acento, max 25 letras)
-  const PIX_CIDADE = "RIO DE JANEIRO";  // cidade do recebedor (sem acento, max 15 letras) — ajuste se necessário
-
   // URL da Cloud Function que cria o pagamento no Mercado Pago.
   const MP_FUNCTION_URL = "/.netlify/functions/criarPagamento";
 
@@ -1014,7 +1325,7 @@
     el.innerHTML = list.map(item => `
       <div class="menu-item">
         <div>
-          <div class="item-name">${item.name}</div>
+          <div class="item-name">${translatedItemName(item.id, item.name)}</div>
           <div class="item-price">R$ ${item.price}</div>
         </div>
         <div class="qty-control">
@@ -1027,7 +1338,7 @@
   }
 
   function allItems(){
-    return [...menu.petiscos, ...menu.pasteis, ...menu.outros];
+    return [...menu.petiscos, ...menu.pasteis, ...menu.outros, ...menu.bebidas, ...menu.drinks];
   }
 
   function changeQty(id, delta){
@@ -1043,7 +1354,8 @@
     const ids = Object.keys(cart);
     const totalQty = ids.reduce((s,id) => s + cart[id].qty, 0);
     const totalPrice = ids.reduce((s,id) => s + cart[id].qty * cart[id].price, 0);
-    document.getElementById('cartSummary').textContent = totalQty === 0 ? 'Carrinho vazio' : `${totalQty} ${totalQty === 1 ? 'item' : 'itens'} no carrinho`;
+    const dictCarrinho = translations[currentLang];
+    document.getElementById('cartSummary').textContent = totalQty === 0 ? dictCarrinho.carrinhoVazio : `${totalQty} ${totalQty === 1 ? dictCarrinho.itemSingular : dictCarrinho.itemPlural} ${dictCarrinho.noCarrinho}`;
     document.getElementById('cartTotal').textContent = totalQty === 0 ? '' : `R$ ${totalPrice}`;
   }
 
@@ -1059,7 +1371,7 @@
     modalItems.innerHTML = ids.map(id => {
       const it = cart[id];
       total += it.qty * it.price;
-      return `<div class="modal-row"><span>${it.qty}x ${it.name}</span><span>R$ ${it.qty * it.price}</span></div>`;
+      return `<div class="modal-row"><span>${it.qty}x ${translatedItemName(id, it.name)}</span><span>R$ ${it.qty * it.price}</span></div>`;
     }).join('');
     document.getElementById('modalTotalValue').textContent = 'R$ ' + total;
     mostrarEtapa('stepItens');
@@ -1072,7 +1384,7 @@
 
   // ===== CONTROLE DAS ETAPAS DO MODAL =====
   function mostrarEtapa(id){
-    ['stepItens','stepMetodo','stepPix','stepCartao','stepRetirada'].forEach(s => {
+    ['stepItens','stepMetodo','stepCartao','stepRetirada'].forEach(s => {
       document.getElementById(s).style.display = (s === id) ? 'block' : 'none';
     });
   }
@@ -1094,11 +1406,10 @@
     metodoEscolhido = metodo;
     const total = cartTotal();
 
-    if(metodo === 'pix'){
-      montarPix(total);
-      mostrarEtapa('stepPix');
-    } else if(metodo === 'credito' || metodo === 'debito'){
-      document.getElementById('cartaoTitulo').textContent = metodo === 'credito' ? 'Pagar com cartão de crédito' : 'Pagar com cartão de débito';
+    if(metodo === 'pix' || metodo === 'credito' || metodo === 'debito'){
+      const dictMetodo = translations[currentLang];
+      const titulos = { pix: dictMetodo.pagarComPix, credito: dictMetodo.pagarComCredito, debito: dictMetodo.pagarComDebito };
+      document.getElementById('cartaoTitulo').textContent = titulos[metodo];
       document.getElementById('cartaoValor').textContent = 'R$ ' + total;
       document.getElementById('cartaoErro').style.display = 'none';
       document.getElementById('cartaoBtnIr').style.display = 'block';
@@ -1110,84 +1421,10 @@
   }
 
   // =====================================================================
-  // PIX — geração real do payload (BR Code) direto no navegador
-  // =====================================================================
-  function crc16(payload){
-    let polinomio = 0x1021;
-    let resultado = 0xFFFF;
-    for(let i = 0; i < payload.length; i++){
-      resultado ^= (payload.charCodeAt(i) << 8);
-      for(let j = 0; j < 8; j++){
-        if((resultado & 0x8000) !== 0){
-          resultado = (resultado << 1) ^ polinomio;
-        } else {
-          resultado <<= 1;
-        }
-        resultado &= 0xFFFF;
-      }
-    }
-    return resultado.toString(16).toUpperCase().padStart(4, '0');
-  }
-
-  function campoEMV(id, valor){
-    const tamanho = String(valor.length).padStart(2, '0');
-    return id + tamanho + valor;
-  }
-
-  function gerarPayloadPix(valor, txid){
-    const valorFormatado = valor.toFixed(2);
-    const gui = campoEMV('00', 'BR.GOV.BCB.PIX');
-    const chave = campoEMV('01', PIX_CHAVE);
-    const merchantAccountInfo = campoEMV('26', gui + chave);
-
-    const txidCampo = campoEMV('05', txid.substring(0, 25));
-    const adicional = campoEMV('62', txidCampo);
-
-    let payload =
-      campoEMV('00', '01') +
-      campoEMV('01', '12') +
-      merchantAccountInfo +
-      campoEMV('52', '0000') +
-      campoEMV('53', '986') +
-      campoEMV('54', valorFormatado) +
-      campoEMV('58', 'BR') +
-      campoEMV('59', PIX_NOME.substring(0, 25)) +
-      campoEMV('60', PIX_CIDADE.substring(0, 15)) +
-      adicional +
-      '6304';
-
-    return payload + crc16(payload);
-  }
-
-  function montarPix(total){
-    const txid = 'PED' + Date.now().toString().slice(-10);
-    const payload = gerarPayloadPix(total, txid);
-
-    document.getElementById('pixValor').textContent = 'R$ ' + total;
-    document.getElementById('pixCopiaCola').textContent = payload;
-    document.getElementById('pixCopiarBtn').textContent = 'Copiar código Pix';
-    document.getElementById('pixCopiarBtn').classList.remove('copiado');
-
-    const qrEl = document.getElementById('pixQr');
-    qrEl.innerHTML = '';
-    new QRCode(qrEl, { text: payload, width: 180, height: 180 });
-  }
-
-  function copiarPix(){
-    const texto = document.getElementById('pixCopiaCola').textContent;
-    navigator.clipboard.writeText(texto).then(() => {
-      const btn = document.getElementById('pixCopiarBtn');
-      btn.textContent = 'Copiado!';
-      btn.classList.add('copiado');
-      setTimeout(() => { btn.textContent = 'Copiar código Pix'; btn.classList.remove('copiado'); }, 2500);
-    });
-  }
-
-  // =====================================================================
   // CARTÃO — cria a cobrança no Mercado Pago (Cloud Function) e redireciona
   // =====================================================================
   async function pagarComMercadoPago(){
-    const mesa = document.getElementById('mesaNumero').value.trim() || '?';
+    const mesa = obterLocalPedido();
     const items = Object.values(cart).map(it => ({ name: it.name, qty: it.qty, price: it.price }));
     if(items.length === 0) return;
 
@@ -1234,7 +1471,7 @@
 
   // ===== ENVIA O PEDIDO PRO FIREBASE (Pix e Pagar na retirada) =====
   function confirmarPedido(metodo){
-    const mesa = document.getElementById('mesaNumero').value.trim() || '?';
+    const mesa = obterLocalPedido();
     const items = Object.values(cart).map(it => `${it.qty}x ${it.name}`);
     if(items.length === 0) return;
 
@@ -1251,9 +1488,9 @@
       mesa: mesa,
       items: items,
       total: cartTotal(),
-      status: metodo === 'pix' ? 'aguardando_pagamento' : 'recebido',
+      status: 'recebido',
       paymentMethod: metodo,
-      paymentStatus: metodo === 'pix' ? 'aguardando_confirmacao' : 'pagar_na_retirada',
+      paymentStatus: 'pagar_na_retirada',
       time: formatarDataHora(new Date()),
       criadoEm: firebase.firestore.FieldValue.serverTimestamp()
     };
@@ -1265,6 +1502,8 @@
       renderMenu(menu.petiscos, 'menuPetiscos');
       renderMenu(menu.pasteis, 'menuPasteis');
       renderMenu(menu.outros, 'menuOutros');
+      renderMenu(menu.bebidas, 'menuBebidas');
+      renderMenu(menu.drinks, 'menuDrinks');
       updateCartBar();
       closeCart();
       adicionarMeuPedido(docRef.id);
@@ -1335,7 +1574,6 @@
       pix: '💠 Pix',
       credito: '💳 Crédito (Mercado Pago)',
       debito: '💳 Débito (Mercado Pago)',
-      retirada: '📞 Pagar na retirada'
     };
     const statusPagLabel = {
       aguardando_confirmacao: 'confirmar recebimento',
@@ -1505,14 +1743,18 @@
     renderMeusPedidos();
   }
 
-  const statusPedidoLabel = {
-    aguardando_pagamento: ['Aguardando confirmação do pagamento', 'Assim que confirmarmos, seu pedido segue pra cozinha.'],
-    recebido: ['Recebemos seu pedido!', 'A equipe já foi avisada.'],
-    preparando: ['Está sendo preparado', 'Não deve demorar :)'],
-    pronto: ['Pronto!', 'Pode retirar ou aguardar na mesa.']
-  };
+  function statusPedidoLabelAtual(){
+    const d = translations[currentLang];
+    return {
+      aguardando_pagamento: d.statusAguardando,
+      recebido: d.statusRecebido,
+      preparando: d.statusPreparando,
+      pronto: d.statusPronto
+    };
+  }
 
   function stepsHtml(status){
+    const d = translations[currentLang];
     const ordem = ['recebido', 'preparando', 'pronto'];
     const atual = ordem.indexOf(status);
     function stepClass(idx){
@@ -1526,39 +1768,41 @@
     }
     return `
       <div class="track-steps">
-        <div class="track-step ${stepClass(0)}"><div class="circle">1</div><div class="label">Recebido</div></div>
+        <div class="track-step ${stepClass(0)}"><div class="circle">1</div><div class="label">${d.stepRecebido}</div></div>
         <div class="track-line ${lineClass(1)}"></div>
-        <div class="track-step ${stepClass(1)}"><div class="circle">2</div><div class="label">Preparando</div></div>
+        <div class="track-step ${stepClass(1)}"><div class="circle">2</div><div class="label">${d.stepPreparando}</div></div>
         <div class="track-line ${lineClass(2)}"></div>
-        <div class="track-step ${stepClass(2)}"><div class="circle">3</div><div class="label">Pronto</div></div>
+        <div class="track-step ${stepClass(2)}"><div class="circle">3</div><div class="label">${d.stepPronto}</div></div>
       </div>
     `;
   }
 
   function renderMeusPedidos(){
+    const d = translations[currentLang];
     const container = document.getElementById('listaMeusPedidos');
     if(meusPedidosIds.length === 0){
-      container.innerHTML = '<div class="empty-msg" style="padding:20px 4px;">Você ainda não fez nenhum pedido por aqui.</div>';
+      container.innerHTML = `<div class="empty-msg" style="padding:20px 4px;">${d.semPedidos}</div>`;
       return;
     }
 
+    const statusLabel = statusPedidoLabelAtual();
     container.innerHTML = meusPedidosIds.map(id => {
       const pedido = meusPedidosData[id];
       if(!pedido){
-        return `<div class="order-card"><div class="empty-msg">Carregando...</div></div>`;
+        return `<div class="order-card"><div class="empty-msg">${d.carregando}</div></div>`;
       }
-      const [msg, sub] = statusPedidoLabel[pedido.status] || statusPedidoLabel.aguardando_pagamento;
+      const [msg, sub] = statusLabel[pedido.status] || statusLabel.aguardando_pagamento;
       return `
         <div class="order-card">
           <div class="order-top">
-            <div class="order-mesa">Mesa ${pedido.mesa || '-'}</div>
+            <div class="order-mesa">${d.localMesa} ${pedido.mesa || '-'}</div>
             <div class="order-time">${pedido.time || ''}</div>
           </div>
           ${stepsHtml(pedido.status)}
           <div class="track-msg" style="margin-top:2px;">${msg}</div>
           <div class="track-sub">${sub}</div>
           <div class="track-items">${(pedido.items || []).join(', ')}</div>
-          <div class="pay-back" onclick="removerMeuPedidoLocal('${id}')">Remover da lista</div>
+          <div class="pay-back" onclick="removerMeuPedidoLocal('${id}')">${d.removerLista}</div>
         </div>
       `;
     }).join('');
@@ -1580,7 +1824,9 @@
   renderMenu(menu.petiscos, 'menuPetiscos');
   renderMenu(menu.pasteis, 'menuPasteis');
   renderMenu(menu.outros, 'menuOutros');
-</script>
+  renderMenu(menu.bebidas, 'menuBebidas');
+  renderMenu(menu.drinks, 'menuDrinks');
+</script
 
 </body>
 </html>

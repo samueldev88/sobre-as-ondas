@@ -71,6 +71,14 @@
     background: rgba(255,255,255,0.12);
     display:flex; align-items:center; justify-content:center;
     color: var(--cream);
+    cursor:pointer;
+    border:none;
+    -webkit-tap-highlight-color: transparent;
+    transition: background .15s ease, transform .15s ease;
+  }
+  .icon-pill:active{
+    transform: scale(0.92);
+    background: rgba(255,255,255,0.22);
   }
   .icon-pill svg{width:17px; height:17px;}
 
@@ -256,6 +264,118 @@
     border-radius: 999px;
     cursor:pointer;
   }
+
+  /* ===== MODAL DE COMPARTILHAR ===== */
+  .share-overlay{
+    position:fixed;
+    inset:0;
+    background: rgba(14,33,56,0.55);
+    display:none;
+    align-items:flex-end;
+    justify-content:center;
+    z-index: 600;
+  }
+  .share-overlay.show{ display:flex; }
+
+  .share-sheet{
+    background:#fff;
+    width:100%;
+    max-width:430px;
+    border-radius: 22px 22px 0 0;
+    padding: 20px 22px 30px;
+    box-shadow: 0 -10px 40px rgba(0,0,0,0.25);
+    animation: sheetUp .22s ease;
+  }
+  @keyframes sheetUp{
+    from{ transform: translateY(30px); opacity:0; }
+    to{ transform: translateY(0); opacity:1; }
+  }
+
+  .share-sheet-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom: 18px;
+  }
+  .share-sheet-title{
+    font-weight:700;
+    font-size: 18px;
+    color: var(--navy-deep);
+  }
+  .share-close{
+    background:none;
+    border:none;
+    cursor:pointer;
+    color: var(--navy-deep);
+    width:30px; height:30px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .share-close svg{width:20px; height:20px;}
+
+  .share-card{
+    background: linear-gradient(160deg, var(--navy) 0%, var(--navy-deep) 100%);
+    border-radius: 18px;
+    padding: 30px 20px 24px;
+    text-align:center;
+    margin-bottom: 22px;
+  }
+  .share-card .avatar{
+    width:96px; height:96px;
+    margin-bottom: 14px;
+  }
+  .share-card-name{
+    font-family:'Caveat', cursive;
+    font-size: 30px;
+    font-weight:700;
+    color: var(--cream);
+    line-height:1;
+  }
+  .share-card-handle{
+    font-size: 13.5px;
+    color: var(--sand);
+    margin-top: 6px;
+    letter-spacing: 0.3px;
+  }
+
+  .share-options{
+    display:flex;
+    justify-content:space-between;
+    gap: 8px;
+  }
+  .share-option{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap: 8px;
+    background:none;
+    border:none;
+    cursor:pointer;
+    font-family:'DM Sans', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .share-option-icon{
+    width:50px; height:50px;
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    color:#fff;
+    transition: transform .15s ease;
+  }
+  .share-option:active .share-option-icon{
+    transform: scale(0.9);
+  }
+  .share-option-icon svg{width:22px; height:22px;}
+  .share-option-label{
+    font-size: 11.5px;
+    color: var(--navy-deep);
+    font-weight:500;
+  }
+
+  .icon-copy{ background:#e7dcc2; color:var(--navy-deep) !important; }
+  .icon-whatsapp{ background:#25d366; }
+  .icon-facebook{ background:#1877f2; }
+  .icon-x{ background:#000; }
+  .icon-instagram{ background: radial-gradient(circle at 30% 110%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); }
 </style>
 </head>
 <body>
@@ -264,20 +384,20 @@
 
   <div class="top-band">
     <div class="share-row">
-      <div class="icon-pill">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.5 6.5L21 9l-5 4.5L17.5 21 12 17l-5.5 4L8 13.5 3 9l6.5-.5z"/></svg>
-      </div>
-      <div class="icon-pill">
+      <button class="icon-pill" onclick="abrirCompartilhar()" aria-label="Compartilhar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 10.5l6.8-3.9M8.6 13.5l6.8 3.9"/></svg>
+      </button>
+      <div class="icon-pill" style="cursor:default;">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v7a1 1 0 001 1h14a1 1 0 001-1v-7M16 6l-4-4-4 4M12 2v13"/></svg>
       </div>
     </div>
 
     <div class="avatar">
-      <img src="logo.png" alt="Sobre as Ondas" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">
+      <img src="assets/images/logo.png" alt="Sobre as Ondas" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">
     </div>
 
     <div class="brand-script">@sobreasondas</div>
-    <div class="tagline">O melhor lado da maré</div>
+    <div class="tagline">Gastronomia, Música boas e pratos de tirar o fõlego :)</div>
   </div>
 
   <div class="links">
@@ -336,9 +456,69 @@
   </div>
 </div>
 
+<!-- MODAL DE COMPARTILHAR -->
+<div class="share-overlay" id="shareOverlay">
+  <div class="share-sheet">
+    <div class="share-sheet-header">
+      <div class="share-sheet-title">Compartilhar</div>
+      <button class="share-close" onclick="fecharCompartilhar()" aria-label="Fechar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <div class="share-card">
+      <div class="avatar">
+        <img src="logo.png" alt="Sobre as Ondas" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">
+      </div>
+      <div class="share-card-name">Sobre as Ondas</div>
+      <div class="share-card-handle">@sobreasondas</div>
+    </div>
+
+    <div class="share-options">
+      <button class="share-option" onclick="copiarLink()">
+        <div class="share-option-icon icon-copy">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.07 0l2.83-2.83a5 5 0 00-7.07-7.07l-1.5 1.5"/><path d="M14 11a5 5 0 00-7.07 0L4.1 13.83a5 5 0 007.07 7.07l1.5-1.5"/></svg>
+        </div>
+        <div class="share-option-label">Copiar link</div>
+      </button>
+
+      <button class="share-option" onclick="compartilharWhatsApp()">
+        <div class="share-option-icon icon-whatsapp">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 004.74 1.21h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.86 9.86 0 0012.04 2zm0 18.02h-.01a8.2 8.2 0 01-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 01-1.26-4.35c0-4.54 3.7-8.24 8.26-8.24 2.2 0 4.27.86 5.83 2.42a8.19 8.19 0 012.41 5.83c0 4.55-3.7 8.2-8.25 8.2zm4.52-6.16c-.25-.12-1.47-.72-1.7-.81-.23-.08-.39-.12-.56.13-.17.25-.64.81-.78.97-.15.17-.29.19-.54.06-.25-.12-1.04-.38-1.99-1.22-.73-.66-1.23-1.46-1.37-1.71-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.15.16-.25.24-.42.08-.17.04-.31-.02-.44-.06-.12-.56-1.36-.77-1.86-.2-.49-.41-.42-.56-.43-.14-.01-.31-.01-.48-.01-.17 0-.44.06-.67.31-.23.25-.88.86-.88 2.1 0 1.24.9 2.44 1.03 2.61.12.17 1.77 2.71 4.29 3.79.6.26 1.07.41 1.43.53.6.19 1.15.16 1.58.1.48-.07 1.47-.6 1.68-1.19.21-.58.21-1.08.15-1.19-.06-.1-.23-.16-.48-.28z"/></svg>
+        </div>
+        <div class="share-option-label">WhatsApp</div>
+      </button>
+
+      <button class="share-option" onclick="compartilharFacebook()">
+        <div class="share-option-icon icon-facebook">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 10-11.56 9.87v-6.98H7.9V12h2.54V9.8c0-2.5 1.5-3.89 3.78-3.89 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.98A10 10 0 0022 12z"/></svg>
+        </div>
+        <div class="share-option-label">Facebook</div>
+      </button>
+
+      <button class="share-option" onclick="compartilharX()">
+        <div class="share-option-icon icon-x">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.6 8.7L23.3 22H16.6l-5.2-6.8L5.4 22H2.3l8.1-9.3L1.5 2h6.9l4.7 6.2L18.9 2zm-1.2 18h1.7L7.4 4H5.6l12.1 16z"/></svg>
+        </div>
+        <div class="share-option-label">X</div>
+      </button>
+
+      <button class="share-option" onclick="compartilharInstagram()">
+        <div class="share-option-icon icon-instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+        </div>
+        <div class="share-option-label">Instagram</div>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="badge" id="badge">Link copiado!</div>
+
 <script>
-  function showBadge(){
+  function showBadge(msg){
     const b = document.getElementById('badge');
+    if(msg) b.textContent = msg;
     b.classList.add('show');
     clearTimeout(window._t);
     window._t = setTimeout(()=> b.classList.remove('show'), 1400);
@@ -369,6 +549,59 @@
   document.getElementById('confirmOverlay').addEventListener('click', function(e){
     if(e.target === this) fecharConfirm();
   });
+
+  /* ===== COMPARTILHAR ===== */
+  function abrirCompartilhar(){
+    document.getElementById('shareOverlay').classList.add('show');
+  }
+
+  function fecharCompartilhar(){
+    document.getElementById('shareOverlay').classList.remove('show');
+  }
+
+  document.getElementById('shareOverlay').addEventListener('click', function(e){
+    if(e.target === this) fecharCompartilhar();
+  });
+
+  function siteUrl(){
+    return window.location.href;
+  }
+
+  function copiarLink(){
+    const url = siteUrl();
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(url).then(()=> showBadge('Link copiado!'));
+    } else {
+      const temp = document.createElement('input');
+      temp.value = url;
+      document.body.appendChild(temp);
+      temp.select();
+      document.execCommand('copy');
+      document.body.removeChild(temp);
+      showBadge('Link copiado!');
+    }
+  }
+
+  function compartilharWhatsApp(){
+    const texto = encodeURIComponent('Dá uma olhada no Sobre as Ondas: ' + siteUrl());
+    window.open('https://wa.me/?text=' + texto, '_blank', 'noopener');
+  }
+
+  function compartilharFacebook(){
+    const url = encodeURIComponent(siteUrl());
+    window.open('https://www.facebook.com/sharer/sharer.php?u=' + url, '_blank', 'noopener');
+  }
+
+  function compartilharX(){
+    const url = encodeURIComponent(siteUrl());
+    const texto = encodeURIComponent('Dá uma olhada no Sobre as Ondas');
+    window.open('https://twitter.com/intent/tweet?text=' + texto + '&url=' + url, '_blank', 'noopener');
+  }
+
+  function compartilharInstagram(){
+    copiarLink();
+    showBadge('Link copiado! Cole no Instagram');
+  }
 </script>
 
 </body>
