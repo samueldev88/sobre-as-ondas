@@ -22,8 +22,6 @@
     --ink: #1c2530;
     --green: #4a8a5f;
     --amber: #c8862e;
-    --azul-escuro: #1B4B57;
-    --terracota: #E8734A;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   body{
@@ -1752,7 +1750,7 @@
     return `${dia}/${mes}/${ano}`;
   }
 
-function renderReservas(){
+  function renderReservas(){
     const lista = document.getElementById('listaReservas');
     if(reservations.length === 0){
       lista.innerHTML = '<div class="empty-msg">Nenhuma reserva ainda</div>';
