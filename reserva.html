@@ -379,6 +379,33 @@
     color: #c9c2b4;
   }
 
+  /* ---------- Aviso de tolerância de atraso ---------- */
+  .policy-note{
+    margin: 18px 20px 0;
+    background: #fbf3e6;
+    border: 1px solid rgba(200,134,46,0.35);
+    border-left: 4px solid var(--amber, #c8862e);
+    border-radius: 10px;
+    padding: 12px 14px;
+    display:flex;
+    align-items:flex-start;
+    gap: 10px;
+  }
+  .policy-note svg{
+    width:18px; height:18px;
+    color: var(--amber, #c8862e);
+    flex-shrink:0;
+    margin-top:1px;
+  }
+  .policy-note-text{
+    font-size: 12.8px;
+    line-height:1.5;
+    color: #5c4a26;
+  }
+  .policy-note-text strong{
+    color: #43350f;
+  }
+
   /* ---------- Popup de reserva confirmada + confete ---------- */
   .confirm-overlay{
     position:fixed;
@@ -571,6 +598,11 @@
 
   </div>
 
+  <div class="policy-note">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+    <div class="policy-note-text" id="policyNoteText">Toleramos até <strong>15 minutos de atraso</strong> em relação ao horário reservado. Após esse prazo, a mesa poderá ser disponibilizada para outros clientes.</div>
+  </div>
+
   <div class="continue-btn disabled" id="continueBtn" data-i18n="continueBtn">Continuar</div>
 
   <div class="footer-note" data-i18n="footerNote">
@@ -638,14 +670,15 @@
       footerNote: 'Escolha o dia e a hora que irá comparecer. Obrigado pela preferencia',
       sampleBadge: 'Isso é só uma amostra 🌊',
       confirmTitle: 'Parabéns pela escolha!',
-      confirmSub: 'Compareça no dia e horário reservados, te esperamos lá!',
+      confirmSub: 'Compareça no dia e horário reservados — toleramos até 15 minutos de atraso. Te esperamos lá!',
       confirmCloseBtn: 'Combinado!',
       indisponivel: ' — indisponível',
       errData: 'Selecione o dia da reserva',
       errPessoas: 'Selecione o número de pessoas',
       errHorario: 'Selecione o horário',
       errOcupado: 'Esse horário acabou de ser reservado. Escolhe outro.',
-      errGenerico: 'Não foi possível enviar. Tenta de novo.'
+      errGenerico: 'Não foi possível enviar. Tenta de novo.',
+      policyNoteHtml: 'Toleramos até <strong>15 minutos de atraso</strong> em relação ao horário reservado. Após esse prazo, a mesa poderá ser disponibilizada para outros clientes.'
     },
     es: {
       topBarLabel: 'Reservas',
@@ -664,14 +697,15 @@
       footerNote: 'Elige el día y la hora en que asistirás. Gracias por tu preferencia',
       sampleBadge: 'Esto es solo una muestra 🌊',
       confirmTitle: '¡Felicidades por tu elección!',
-      confirmSub: 'Preséntate en el día y horario reservados, ¡te esperamos allá!',
+      confirmSub: 'Preséntate en el día y horario reservados — toleramos hasta 15 minutos de retraso. ¡Te esperamos allá!',
       confirmCloseBtn: '¡De acuerdo!',
       indisponivel: ' — no disponible',
       errData: 'Selecciona el día de la reserva',
       errPessoas: 'Selecciona el número de personas',
       errHorario: 'Selecciona el horario',
       errOcupado: 'Ese horario acaba de ser reservado. Elige otro.',
-      errGenerico: 'No se pudo enviar. Intenta de nuevo.'
+      errGenerico: 'No se pudo enviar. Intenta de nuevo.',
+      policyNoteHtml: 'Toleramos hasta <strong>15 minutos de retraso</strong> respecto al horario reservado. Pasado ese plazo, la mesa podrá ser liberada para otros clientes.'
     },
     en: {
       topBarLabel: 'Reservations',
@@ -690,14 +724,15 @@
       footerNote: 'Choose the day and time you\'ll attend. Thanks for choosing us',
       sampleBadge: 'This is just a sample 🌊',
       confirmTitle: 'Congrats on your choice!',
-      confirmSub: 'Show up on the reserved day and time, we\'ll be waiting for you!',
+      confirmSub: 'Show up on the reserved day and time — we allow up to 15 minutes of delay. We\'ll be waiting for you!',
       confirmCloseBtn: 'Got it!',
       indisponivel: ' — unavailable',
       errData: 'Select the reservation day',
       errPessoas: 'Select the number of guests',
       errHorario: 'Select the time',
       errOcupado: 'That time slot was just booked. Pick another one.',
-      errGenerico: 'Could not send. Please try again.'
+      errGenerico: 'Could not send. Please try again.',
+      policyNoteHtml: 'We allow up to <strong>15 minutes of delay</strong> from the reserved time. After that, the table may be released to other guests.'
     }
   };
 
@@ -721,6 +756,9 @@
     if(!inputData.value){
       displayData.textContent = t('fieldDataPlaceholder');
     }
+
+    // Aviso de tolerância de atraso usa innerHTML pra manter o <strong>
+    document.getElementById('policyNoteText').innerHTML = t('policyNoteHtml');
 
     continueBtn.textContent = enviando ? t('continueBtnSending') : t('continueBtn');
 
