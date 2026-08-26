@@ -220,6 +220,48 @@
   }
   .item-name{ font-weight:600; font-size:14.5px; color: var(--navy-deep); }
   .item-price{ font-size:12.5px; color:#8a8175; margin-top:2px; }
+  .menu-item.esgotado{ opacity:0.55; }
+  .menu-item.esgotado .item-name{ text-decoration: line-through; color:#8a8175; }
+  .item-esgotado-tag{
+    font-size:11.5px;
+    font-weight:700;
+    letter-spacing:0.3px;
+    color:#a9432f;
+    margin-top:2px;
+    text-transform:uppercase;
+  }
+  .estoque-item{
+    background:#fff;
+    border-radius: 12px;
+    padding: 12px 14px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom: 8px;
+    box-shadow: 0 1px 6px rgba(22,48,79,0.05);
+    cursor:pointer;
+    user-select:none;
+  }
+  .estoque-item .item-name{ font-weight:600; font-size:14.5px; color: var(--navy-deep); }
+  .estoque-toggle{
+    width:44px; height:26px;
+    border-radius:14px;
+    background: var(--green);
+    position:relative;
+    flex-shrink:0;
+    transition: background 0.15s;
+  }
+  .estoque-toggle.off{ background:#c7bfae; }
+  .estoque-toggle .knob{
+    width:20px; height:20px;
+    border-radius:50%;
+    background:#fff;
+    position:absolute;
+    top:3px; left:21px;
+    transition: left 0.15s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+  }
+  .estoque-toggle.off .knob{ left:3px; }
   .qty-control{
     display:flex; align-items:center; gap:10px;
   }
@@ -664,6 +706,7 @@
       <div class="tab" id="tabMeusPedidos" data-i18n="tabMeusPedidos" onclick="switchTab('meusPedidos')">Seus Pedidos</div>
       <div class="tab hidden" id="tabEquipe" onclick="switchTab('equipe')">Painel da Equipe</div>
       <div class="tab hidden" id="tabReservas" onclick="switchTab('reservas')">Reservas</div>
+      <div class="tab hidden" id="tabEstoque" onclick="switchTab('estoque')">Estoque</div>
     </div>
   </div>
 
@@ -740,6 +783,14 @@
   <div class="view" id="viewReservas">
     <div class="col-title" style="color:var(--navy);"><span class="dot" style="background:var(--navy);"></span> Reservas</div>
     <div id="listaReservas"></div>
+    <div class="staff-access" style="margin-top:20px;" onclick="auth.signOut()">Sair da conta da equipe</div>
+  </div>
+
+  <!-- VISÃO ESTOQUE (equipe) — marcar itens em falta na cozinha -->
+  <div class="view" id="viewEstoque">
+    <div class="col-title" style="color:var(--navy);"><span class="dot" style="background:var(--navy);"></span> Estoque</div>
+    <div style="font-size:12.5px; color:#8a8175; margin-bottom:14px;">Toque para marcar um item como esgotado. Ele some das opções disponíveis pro cliente na hora.</div>
+    <div id="listaEstoque"></div>
     <div class="staff-access" style="margin-top:20px;" onclick="auth.signOut()">Sair da conta da equipe</div>
   </div>
 
@@ -864,6 +915,7 @@
       catOutros: 'Outros',
       catBebidas: 'Bebidas',
       catDrinks: 'Drinks',
+      esgotado: 'Esgotado',
       carrinhoVazio: 'Carrinho vazio',
       itemSingular: 'item',
       itemPlural: 'itens',
@@ -921,6 +973,7 @@
       catOutros: 'Others',
       catBebidas: 'Beverages',
       catDrinks: 'Drinks',
+      esgotado: 'Sold out',
       carrinhoVazio: 'Cart is empty',
       itemSingular: 'item',
       itemPlural: 'items',
@@ -978,6 +1031,7 @@
       catOutros: 'Otros',
       catBebidas: 'Bebidas',
       catDrinks: 'Cócteles',
+      esgotado: 'Agotado',
       carrinhoVazio: 'Carrito vacío',
       itemSingular: 'artículo',
       itemPlural: 'artículos',
@@ -1107,6 +1161,37 @@
   const auth = firebase.auth();
   const pedidosRef = db.collection('pedidos');
   const reservasRef = db.collection('reservas');
+  const estoqueRef = db.collection('config').doc('estoque');
+
+  // =====================================================================
+  // ESTOQUE (itens em falta) — documento público, lido por qualquer
+  // pessoa (cliente e equipe) em tempo real, mas só a equipe pode
+  // escrever nele (configure isso nas regras do Firestore). Formato:
+  // { "p1": true, "b7": true }  →  chave = id do item, true = esgotado.
+  // =====================================================================
+  let estoque = {};
+  estoqueRef.onSnapshot(function(doc){
+    estoque = (doc.exists && doc.data()) || {};
+
+    // se algum item do carrinho do cliente ficou esgotado agora, remove
+    let carrinhoMudou = false;
+    Object.keys(cart).forEach(function(id){
+      if(estoque[id]){
+        delete cart[id];
+        carrinhoMudou = true;
+      }
+    });
+    if(carrinhoMudou) updateCartBar();
+
+    renderMenu(menu.petiscos, 'menuPetiscos');
+    renderMenu(menu.pasteis, 'menuPasteis');
+    renderMenu(menu.outros, 'menuOutros');
+    renderMenu(menu.bebidas, 'menuBebidas');
+    renderMenu(menu.drinks, 'menuDrinks');
+    if(typeof renderEstoqueEquipe === 'function') renderEstoqueEquipe();
+  }, function(err){
+    console.error('Erro ao ler estoque:', err);
+  });
 
   // =====================================================================
   // LOGIN DA EQUIPE (Firebase Authentication)
@@ -1147,6 +1232,7 @@
     if(user){
       document.getElementById('tabEquipe').classList.remove('hidden');
       document.getElementById('tabReservas').classList.remove('hidden');
+      document.getElementById('tabEstoque').classList.remove('hidden');
 
       if(!pararDeOuvirPedidos){
         pararDeOuvirPedidos = pedidosRef.orderBy('criadoEm', 'asc').onSnapshot(snapshot => {
@@ -1168,8 +1254,10 @@
     } else {
       document.getElementById('tabEquipe').classList.add('hidden');
       document.getElementById('tabReservas').classList.add('hidden');
+      document.getElementById('tabEstoque').classList.add('hidden');
       if(document.getElementById('viewEquipe').classList.contains('active') ||
-         document.getElementById('viewReservas').classList.contains('active')){
+         document.getElementById('viewReservas').classList.contains('active') ||
+         document.getElementById('viewEstoque').classList.contains('active')){
         switchTab('cliente');
       }
       if(pararDeOuvirPedidos){
@@ -1322,19 +1410,26 @@
 
   function renderMenu(list, containerId){
     const el = document.getElementById(containerId);
-    el.innerHTML = list.map(item => `
-      <div class="menu-item">
+    const d = translations[currentLang];
+    el.innerHTML = list.map(item => {
+      const esgotado = !!estoque[item.id];
+      return `
+      <div class="menu-item${esgotado ? ' esgotado' : ''}">
         <div>
           <div class="item-name">${translatedItemName(item.id, item.name)}</div>
-          <div class="item-price">R$ ${item.price}</div>
+          ${esgotado
+            ? `<div class="item-esgotado-tag">${d.esgotado || 'Esgotado'}</div>`
+            : `<div class="item-price">R$ ${item.price}</div>`}
         </div>
+        ${esgotado ? '' : `
         <div class="qty-control">
           <div class="qty-btn" onclick="changeQty('${item.id}', -1)">−</div>
           <div class="qty-num" id="qty-${item.id}">${cart[item.id]?.qty || 0}</div>
           <div class="qty-btn" onclick="changeQty('${item.id}', 1)">+</div>
-        </div>
+        </div>`}
       </div>
-    `).join('');
+    `;
+    }).join('');
   }
 
   function allItems(){
@@ -1342,6 +1437,7 @@
   }
 
   function changeQty(id, delta){
+    if(delta > 0 && estoque[id]) return; // item esgotado, não deixa adicionar
     const item = allItems().find(i => i.id === id);
     if(!cart[id]) cart[id] = {qty:0, name:item.name, price:item.price};
     cart[id].qty = Math.max(0, cart[id].qty + delta);
@@ -1656,7 +1752,7 @@
     return `${dia}/${mes}/${ano}`;
   }
 
-  function renderReservas(){
+function renderReservas(){
     const lista = document.getElementById('listaReservas');
     if(reservations.length === 0){
       lista.innerHTML = '<div class="empty-msg">Nenhuma reserva ainda</div>';
@@ -1815,10 +1911,44 @@
     document.getElementById('viewMeusPedidos').classList.toggle('active', tab === 'meusPedidos');
     document.getElementById('viewEquipe').classList.toggle('active', tab === 'equipe');
     document.getElementById('viewReservas').classList.toggle('active', tab === 'reservas');
+    document.getElementById('viewEstoque').classList.toggle('active', tab === 'estoque');
     document.getElementById('tabCliente').classList.toggle('active', tab === 'cliente');
     document.getElementById('tabMeusPedidos').classList.toggle('active', tab === 'meusPedidos');
     document.getElementById('tabEquipe').classList.toggle('active', tab === 'equipe');
     document.getElementById('tabReservas').classList.toggle('active', tab === 'reservas');
+    document.getElementById('tabEstoque').classList.toggle('active', tab === 'estoque');
+    if(tab === 'estoque') renderEstoqueEquipe();
+  }
+
+  // ===== EQUIPE: estoque (itens em falta) =====
+  function toggleEstoque(id){
+    const novoValor = !estoque[id];
+    estoqueRef.set({ [id]: novoValor }, { merge: true }).catch(err => {
+      console.error('Erro ao atualizar estoque:', err);
+    });
+  }
+
+  function renderEstoqueEquipe(){
+    const el = document.getElementById('listaEstoque');
+    if(!el) return;
+    const categorias = [
+      ['Petiscos', menu.petiscos],
+      ['Pastéis', menu.pasteis],
+      ['Outros', menu.outros],
+      ['Bebidas', menu.bebidas],
+      ['Drinks', menu.drinks],
+    ];
+    el.innerHTML = categorias.map(([titulo, lista]) => `
+      <div class="cat-title">${titulo}</div>
+      ${lista.map(item => {
+        const off = !!estoque[item.id];
+        return `
+        <div class="estoque-item" onclick="toggleEstoque('${item.id}')">
+          <div class="item-name">${item.name}</div>
+          <div class="estoque-toggle${off ? ' off' : ''}"><div class="knob"></div></div>
+        </div>`;
+      }).join('')}
+    `).join('');
   }
 
   renderMenu(menu.petiscos, 'menuPetiscos');
