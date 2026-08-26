@@ -125,13 +125,16 @@
 
   .tabs{
     display:flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 6px;
-    padding-bottom: 0;
+    padding-bottom: 8px;
   }
   .tab{
-    flex:1;
+    flex: 0 1 auto;
+    min-width: 100px;
     text-align:center;
-    padding: 12px 6px;
+    padding: 12px 10px;
     font-size: 14px;
     font-weight:600;
     color: var(--sand);
@@ -705,6 +708,7 @@
       <div class="tab hidden" id="tabEquipe" onclick="switchTab('equipe')">Painel da Equipe</div>
       <div class="tab hidden" id="tabReservas" onclick="switchTab('reservas')">Reservas</div>
       <div class="tab hidden" id="tabEstoque" onclick="switchTab('estoque')">Estoque</div>
+      <div class="tab hidden" id="tabLixeira" onclick="switchTab('lixeira')">Lixeira</div>
     </div>
   </div>
 
@@ -792,9 +796,21 @@
     <div class="staff-access" style="margin-top:20px;" onclick="auth.signOut()">Sair da conta da equipe</div>
   </div>
 
+  <!-- VISÃO LIXEIRA (equipe) — pedidos e reservas apagados, com opção de restaurar -->
+  <div class="view" id="viewLixeira">
+    <div class="col-title" style="color:#a9432f;"><span class="dot" style="background:#a9432f;"></span> Lixeira</div>
+    <div style="font-size:12.5px; color:#8a8175; margin-bottom:14px;">Itens apagados ficam guardados aqui por 30 dias antes de sumir de vez. Dá pra restaurar a qualquer momento nesse prazo.</div>
+    <div class="cat-title" style="margin-top:0;">Pedidos apagados</div>
+    <div id="listaLixeiraPedidos"></div>
+    <div class="cat-title">Reservas apagadas</div>
+    <div id="listaLixeiraReservas"></div>
+    <div class="staff-access" style="margin-top:20px;" onclick="auth.signOut()">Sair da conta da equipe</div>
+  </div>
+
   <div class="footer-note" data-i18n="footerNote">
     Os pedidos são enviados em tempo real para a equipe.
   </div>
+  <a href="termos-privacidade.pdf" target="_blank" style="display:block; text-align:center; font-size:11px; color:#8a8175; text-decoration:underline; margin-top:6px;">Política de Privacidade e Termos de Uso</a>
   <div class="staff-access" data-i18n="staffAccess" onclick="abrirLoginEquipe()">Acesso da equipe</div>
 </div>
 </div>
@@ -1231,11 +1247,14 @@
       document.getElementById('tabEquipe').classList.remove('hidden');
       document.getElementById('tabReservas').classList.remove('hidden');
       document.getElementById('tabEstoque').classList.remove('hidden');
+      document.getElementById('tabLixeira').classList.remove('hidden');
 
       if(!pararDeOuvirPedidos){
         pararDeOuvirPedidos = pedidosRef.orderBy('criadoEm', 'asc').onSnapshot(snapshot => {
           orders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
           renderBoard();
+          renderLixeira();
+          purgarLixeiraAntiga();
         }, err => {
           console.error('Erro ao ler pedidos do Firebase:', err);
         });
@@ -1245,6 +1264,8 @@
         pararDeOuvirReservas = reservasRef.orderBy('data', 'asc').onSnapshot(snapshot => {
           reservations = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
           renderReservas();
+          renderLixeira();
+          purgarLixeiraAntiga();
         }, err => {
           console.error('Erro ao ler reservas do Firebase:', err);
         });
@@ -1253,9 +1274,11 @@
       document.getElementById('tabEquipe').classList.add('hidden');
       document.getElementById('tabReservas').classList.add('hidden');
       document.getElementById('tabEstoque').classList.add('hidden');
+      document.getElementById('tabLixeira').classList.add('hidden');
       if(document.getElementById('viewEquipe').classList.contains('active') ||
          document.getElementById('viewReservas').classList.contains('active') ||
-         document.getElementById('viewEstoque').classList.contains('active')){
+         document.getElementById('viewEstoque').classList.contains('active') ||
+         document.getElementById('viewLixeira').classList.contains('active')){
         switchTab('cliente');
       }
       if(pararDeOuvirPedidos){
@@ -1631,9 +1654,30 @@
   })();
 
   // ===== EQUIPE: avança status do pedido no Firebase =====
+  // "Excluir" aqui é reversível: o pedido vai pra Lixeira (fica marcado
+  // como excluído, some das colunas normais) e pode ser restaurado por
+  // até 30 dias antes de ser apagado de vez.
   function excluirPedido(id, event){
     if(event) event.stopPropagation();
-    if(confirm('Remover este pedido da lista? Essa ação não pode ser desfeita.')){
+    if(confirm('Mover este pedido para a lixeira? Dá pra restaurar depois, na aba Lixeira.')){
+      pedidosRef.doc(id).update({
+        excluido: true,
+        excluidoEm: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    }
+  }
+
+  function restaurarPedido(id, event){
+    if(event) event.stopPropagation();
+    pedidosRef.doc(id).update({
+      excluido: false,
+      excluidoEm: firebase.firestore.FieldValue.delete()
+    });
+  }
+
+  function excluirPedidoDefinitivo(id, event){
+    if(event) event.stopPropagation();
+    if(confirm('Apagar este pedido de vez? Essa ação não pode ser desfeita.')){
       pedidosRef.doc(id).delete();
     }
   }
@@ -1658,6 +1702,7 @@
     const cols = {recebido: [], preparando: [], pronto: []};
     const pendentes = [];
     orders.forEach(o => {
+      if(o.excluido) return;
       if(o.status === 'aguardando_pagamento') pendentes.push(o);
       else if(cols[o.status]) cols[o.status].push(o);
     });
@@ -1733,9 +1778,29 @@
   }
 
   // ===== EQUIPE: reservas =====
+  // Mesma lógica de exclusão reversível dos pedidos: vai pra Lixeira,
+  // não some de vez.
   function excluirReserva(id, event){
     if(event) event.stopPropagation();
-    if(confirm('Remover esta reserva da lista? Essa ação não pode ser desfeita.')){
+    if(confirm('Mover esta reserva para a lixeira? Dá pra restaurar depois, na aba Lixeira.')){
+      reservasRef.doc(id).update({
+        excluido: true,
+        excluidoEm: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    }
+  }
+
+  function restaurarReserva(id, event){
+    if(event) event.stopPropagation();
+    reservasRef.doc(id).update({
+      excluido: false,
+      excluidoEm: firebase.firestore.FieldValue.delete()
+    });
+  }
+
+  function excluirReservaDefinitivo(id, event){
+    if(event) event.stopPropagation();
+    if(confirm('Apagar esta reserva de vez? Essa ação não pode ser desfeita.')){
       reservasRef.doc(id).delete();
     }
   }
@@ -1752,12 +1817,13 @@
 
   function renderReservas(){
     const lista = document.getElementById('listaReservas');
-    if(reservations.length === 0){
+    const ativas = reservations.filter(r => !r.excluido);
+    if(ativas.length === 0){
       lista.innerHTML = '<div class="empty-msg">Nenhuma reserva ainda</div>';
       return;
     }
 
-    lista.innerHTML = reservations.map(r => {
+    lista.innerHTML = ativas.map(r => {
       const status = r.status || 'nova';
       const btn = status === 'confirmada'
         ? `<div class="status-btn done">Confirmada</div>`
@@ -1780,6 +1846,75 @@
         </div>
       `;
     }).join('');
+  }
+
+  // ===== EQUIPE: Lixeira (pedidos e reservas excluídos, com restauração) =====
+  const DIAS_PARA_APAGAR_DE_VEZ = 30;
+
+  function formatarDataHoraExcluido(ts){
+    if(!ts || !ts.toDate) return '';
+    const d = ts.toDate();
+    return d.toLocaleDateString('pt-BR') + ' às ' + d.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+  }
+
+  function renderLixeira(){
+    const elPedidos = document.getElementById('listaLixeiraPedidos');
+    const elReservas = document.getElementById('listaLixeiraReservas');
+    if(!elPedidos || !elReservas) return;
+
+    const pedidosExcluidos = orders.filter(o => o.excluido);
+    const reservasExcluidas = reservations.filter(r => r.excluido);
+
+    elPedidos.innerHTML = pedidosExcluidos.length ? pedidosExcluidos.map(o => `
+      <div class="order-card">
+        <div class="order-top">
+          <div class="order-mesa">Mesa ${o.mesa || '-'}</div>
+          <div class="order-time">${o.time || ''}</div>
+        </div>
+        <div class="order-items">${(o.items || []).join(', ')}</div>
+        <div class="item-price" style="margin-top:4px;">Apagado em: ${formatarDataHoraExcluido(o.excluidoEm)}</div>
+        <div class="order-actions">
+          <div class="status-btn next" onclick="restaurarPedido('${o.id}', event)">Restaurar</div>
+          <div class="trash-btn" onclick="excluirPedidoDefinitivo('${o.id}', event)" title="Apagar de vez">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14z"/><path d="M10 11v6M14 11v6"/></svg>
+          </div>
+        </div>
+      </div>
+    `).join('') : '<div class="empty-msg">Lixeira de pedidos vazia</div>';
+
+    elReservas.innerHTML = reservasExcluidas.length ? reservasExcluidas.map(r => `
+      <div class="reserva-card">
+        <div class="reserva-top">
+          <div class="reserva-data">${formatarDataReserva(r.data)}</div>
+          <div class="reserva-horario">${r.horario || ''}</div>
+        </div>
+        <div class="reserva-info">${r.pessoas || ''}${r.observacao ? ' · ' + r.observacao : ''}</div>
+        <div class="item-price" style="margin-top:4px;">Apagada em: ${formatarDataHoraExcluido(r.excluidoEm)}</div>
+        <div class="order-actions">
+          <div class="status-btn next" onclick="restaurarReserva('${r.id}', event)">Restaurar</div>
+          <div class="trash-btn" onclick="excluirReservaDefinitivo('${r.id}', event)" title="Apagar de vez">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14z"/><path d="M10 11v6M14 11v6"/></svg>
+          </div>
+        </div>
+      </div>
+    `).join('') : '<div class="empty-msg">Lixeira de reservas vazia</div>';
+  }
+
+  // Apaga de vez, automaticamente, itens que já estão na lixeira há mais
+  // de 30 dias — evita acumular dado antigo pra sempre, mas ainda dá uma
+  // margem folgada para restaurar algo apagado sem querer.
+  function purgarLixeiraAntiga(){
+    const limite = Date.now() - DIAS_PARA_APAGAR_DE_VEZ * 24 * 60 * 60 * 1000;
+    orders.forEach(o => {
+      if(o.excluido && o.excluidoEm && o.excluidoEm.toMillis && o.excluidoEm.toMillis() < limite){
+        pedidosRef.doc(o.id).delete();
+      }
+    });
+    reservations.forEach(r => {
+      if(r.excluido && r.excluidoEm && r.excluidoEm.toMillis && r.excluidoEm.toMillis() < limite){
+        reservasRef.doc(r.id).delete();
+      }
+    });
   }
 
   // =====================================================================
@@ -1910,12 +2045,15 @@
     document.getElementById('viewEquipe').classList.toggle('active', tab === 'equipe');
     document.getElementById('viewReservas').classList.toggle('active', tab === 'reservas');
     document.getElementById('viewEstoque').classList.toggle('active', tab === 'estoque');
+    document.getElementById('viewLixeira').classList.toggle('active', tab === 'lixeira');
     document.getElementById('tabCliente').classList.toggle('active', tab === 'cliente');
     document.getElementById('tabMeusPedidos').classList.toggle('active', tab === 'meusPedidos');
     document.getElementById('tabEquipe').classList.toggle('active', tab === 'equipe');
     document.getElementById('tabReservas').classList.toggle('active', tab === 'reservas');
     document.getElementById('tabEstoque').classList.toggle('active', tab === 'estoque');
+    document.getElementById('tabLixeira').classList.toggle('active', tab === 'lixeira');
     if(tab === 'estoque') renderEstoqueEquipe();
+    if(tab === 'lixeira') renderLixeira();
   }
 
   // ===== EQUIPE: estoque (itens em falta) =====
