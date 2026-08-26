@@ -277,7 +277,7 @@
   }
   .chevron svg{width:16px; height:16px;}
 
-  select, textarea{
+  select, textarea, input[type="text"]{
     border:none;
     background:transparent;
     font-family:'DM Sans', sans-serif;
@@ -286,6 +286,9 @@
     width:100%;
     outline:none;
     padding-top:2px;
+  }
+  input[type="text"]::placeholder{
+    color: #9a9186;
   }
   textarea{
     resize:none;
@@ -529,7 +532,17 @@
 
   <div class="form-block">
 
-    <div class="form-field date-field" id="fieldData">
+    <div class="form-field" id="fieldNome">
+      <div class="field-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
+      </div>
+      <div class="field-texts">
+        <div class="field-label" data-i18n="fieldNomeLabel">Nome completo</div>
+        <input type="text" id="nomeCompleto" data-i18n-placeholder="nomePlaceholder" placeholder="Digite seu nome completo" autocomplete="name">
+      </div>
+    </div>
+
+    <div class="form-field date-field locked" id="fieldData">
       <div class="field-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
       </div>
@@ -657,6 +670,8 @@
       topBarLabel: 'Reservas',
       reserveTitle: 'Fazer reserva de mesa',
       reserveSub: 'Escolha a data e venha ao quiosque',
+      fieldNomeLabel: 'Nome completo',
+      nomePlaceholder: 'Digite seu nome completo',
       fieldDataLabel: 'Dia da Reserva',
       fieldDataPlaceholder: 'Selecione a data',
       fieldPessoasLabel: 'Pessoas',
@@ -673,6 +688,7 @@
       confirmSub: 'Compareça no dia e horário reservados — toleramos até 15 minutos de atraso. Te esperamos lá!',
       confirmCloseBtn: 'Combinado!',
       indisponivel: ' — indisponível',
+      errNome: 'Informe seu nome completo',
       errData: 'Selecione o dia da reserva',
       errPessoas: 'Selecione o número de pessoas',
       errHorario: 'Selecione o horário',
@@ -684,6 +700,8 @@
       topBarLabel: 'Reservas',
       reserveTitle: 'Hacer reserva de mesa',
       reserveSub: 'Elige la fecha y ven al quiosco',
+      fieldNomeLabel: 'Nombre completo',
+      nomePlaceholder: 'Escribe tu nombre completo',
       fieldDataLabel: 'Día de la Reserva',
       fieldDataPlaceholder: 'Selecciona la fecha',
       fieldPessoasLabel: 'Personas',
@@ -700,6 +718,7 @@
       confirmSub: 'Preséntate en el día y horario reservados — toleramos hasta 15 minutos de retraso. ¡Te esperamos allá!',
       confirmCloseBtn: '¡De acuerdo!',
       indisponivel: ' — no disponible',
+      errNome: 'Ingresa tu nombre completo',
       errData: 'Selecciona el día de la reserva',
       errPessoas: 'Selecciona el número de personas',
       errHorario: 'Selecciona el horario',
@@ -711,6 +730,8 @@
       topBarLabel: 'Reservations',
       reserveTitle: 'Book a table',
       reserveSub: 'Choose the date and come to the kiosk',
+      fieldNomeLabel: 'Full name',
+      nomePlaceholder: 'Enter your full name',
       fieldDataLabel: 'Reservation Day',
       fieldDataPlaceholder: 'Select the date',
       fieldPessoasLabel: 'Guests',
@@ -727,6 +748,7 @@
       confirmSub: 'Show up on the reserved day and time — we allow up to 15 minutes of delay. We\'ll be waiting for you!',
       confirmCloseBtn: 'Got it!',
       indisponivel: ' — unavailable',
+      errNome: 'Enter your full name',
       errData: 'Select the reservation day',
       errPessoas: 'Select the number of guests',
       errHorario: 'Select the time',
@@ -789,6 +811,25 @@
   document.addEventListener('click', function(){
     langDropdown.classList.remove('open');
   });
+
+  /* ---------- Campo de nome completo ---------- */
+  // Precisa ser preenchido antes de liberar a escolha da data — assim o
+  // painel da equipe sempre recebe o nome de quem está reservando.
+  const nomeEl = document.getElementById('nomeCompleto');
+  const fieldDataEl = document.getElementById('fieldData');
+
+  nomeEl.addEventListener('input', function(){
+    atualizarBloqueioData();
+    updateContinueState();
+  });
+
+  function nomePreenchido(){
+    return nomeEl.value.trim().length > 0;
+  }
+
+  function atualizarBloqueioData(){
+    fieldDataEl.classList.toggle('locked', !nomePreenchido());
+  }
 
   /* ---------- Campo de data ---------- */
   const inputData = document.getElementById('dataReserva');
@@ -882,7 +923,7 @@
   let enviando = false;
 
   function isComplete(){
-    return !!inputData.value && !!pessoasEl.value && !!horarioEl.value;
+    return nomePreenchido() && !!inputData.value && !!pessoasEl.value && !!horarioEl.value;
   }
 
   function updateContinueState(){
@@ -891,6 +932,8 @@
   }
 
   function resetForm(){
+    nomeEl.value = '';
+    atualizarBloqueioData();
     inputData.value = '';
     displayData.textContent = 'Selecione a data';
     displayData.classList.remove('filled');
@@ -906,6 +949,7 @@
     if(enviando) return;
 
     if(!isComplete()){
+      if(!nomePreenchido()){ showBadge(t('errNome'), 'error'); return; }
       if(!inputData.value){ showBadge(t('errData'), 'error'); return; }
       if(!pessoasEl.value){ showBadge(t('errPessoas'), 'error'); return; }
       if(!horarioEl.value){ showBadge(t('errHorario'), 'error'); return; }
@@ -915,6 +959,7 @@
     const horarioVal = horarioEl.value;
 
     const reserva = {
+      nome: nomeEl.value.trim(),
       data: dataVal,                   // formato YYYY-MM-DD, fica fácil de ordenar
       pessoas: pessoasEl.value,
       horario: horarioVal,

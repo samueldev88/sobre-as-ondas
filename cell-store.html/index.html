@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>LaStore | Tecnologia e Inovação</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+:root{
+    --primary:#0f172a;
+    --secondary:#1e293b;
+    --accent:#2563eb;
+    --success:#10b981;
+    --light:#f8fafc;
+    --text:#475569;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    background:var(--light);
+    color:var(--text);
+    font-family:'Segoe UI',sans-serif;
+}
+
+/* NAVBAR */
+.navbar{
+    background:rgba(15,23,42,.95)!important;
+    backdrop-filter:blur(10px);
+    padding:15px 0;
+}
+
+.navbar-brand{
+    color:#fff !important;
+    font-weight:800;
+    font-size:1.5rem;
+}
+
+.nav-link{
+    color:#cbd5e1 !important;
+    transition:.3s;
+}
+
+.nav-link:hover{
+    color:#fff !important;
+}
+
+/* HERO */
+.hero{
+    min-height:85vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    color:white;
+
+    background:
+    linear-gradient(
+        135deg,
+        #0f172a,
+        #1e293b
+    );
+}
+
+.hero h1{
+    font-size:4rem;
+    font-weight:800;
+    margin-bottom:20px;
+}
+
+.hero p{
+    font-size:1.2rem;
+    opacity:.8;
+    max-width:700px;
+    margin:auto;
+}
+
+.hero .btn{
+    margin-top:30px;
+    padding:14px 30px;
+    border-radius:12px;
+    font-weight:600;
+}
+
+/* SECTION */
+.section-title{
+    text-align:center;
+    font-size:2.5rem;
+    font-weight:700;
+    margin-bottom:50px;
+    color:var(--primary);
+}
+
+/* CARDS */
+.card{
+    border:none;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+    transition:.4s;
+    height:100%;
+}
+
+.card:hover{
+    transform:translateY(-10px);
+    box-shadow:0 20px 40px rgba(0,0,0,.15);
+}
+
+.card-img-top{
+    height:280px;
+    object-fit:contain;
+    padding:20px;
+    background:white;
+}
+
+.card-title{
+    min-height:80px;
+    font-size:1rem;
+    font-weight:600;
+}
+
+.price{
+    font-size:1.8rem;
+    font-weight:800;
+    color:var(--accent);
+}
+
+.btn-cart{
+    background:var(--primary);
+    color:white;
+    width:100%;
+    border-radius:12px;
+    padding:12px;
+    transition:.3s;
+}
+
+.btn-cart:hover{
+    background:var(--accent);
+    color:white;
+}
+
+/* CONTATO */
+.contact{
+    background:white;
+    border-radius:20px;
+    padding:40px;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+
+/* FOOTER */
+footer{
+    background:var(--primary);
+    color:white;
+    padding:50px 0;
+    margin-top:80px;
+}
+
+.footer-text{
+    opacity:.7;
+}
+
+/* OFFCANVAS */
+.offcanvas{
+    border:none;
+}
+
+.form-control{
+    border-radius:12px;
+}
+
+.btn-primary{
+    background:var(--accent);
+    border:none;
+}
+
+.btn-primary:hover{
+    background:#1d4ed8;
+}
+
+@media(max-width:768px){
+
+.hero h1{
+    font-size:2.5rem;
+}
+
+.section-title{
+    font-size:2rem;
+}
+
+}
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<nav class="navbar navbar-expand-lg fixed-top">
+<div class="container">
+
+<a class="navbar-brand" href="#">
+🖥️ LaStore
+</a>
+
+<button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+<span class="navbar-toggler-icon"></span>
+</button>
+
+<div class="collapse navbar-collapse" id="navbarNav">
+
+<ul class="navbar-nav ms-auto me-3">
+
+<li class="nav-item">
+<a class="nav-link" href="#home">Home</a>
+</li>
+
+<li class="nav-item">
+<a class="nav-link" href="#produtos">Produtos</a>
+</li>
+
+<li class="nav-item">
+<a class="nav-link" href="#contato">Contato</a>
+</li>
+
+</ul>
+
+<button
+class="btn btn-primary"
+data-bs-toggle="offcanvas"
+data-bs-target="#login">
+Login </button>
+
+</div>
+</div>
+</nav>
+
+</header>
+
+<main>
+
+<section id="home" class="hero">
+
+<div class="container">
+
+<h1>Tecnologia para o seu dia a dia</h1>
+
+<p>
+Os melhores smartphones, notebooks e acessórios com preços competitivos e entrega rápida para todo o Brasil.
+</p>
+
+<a href="#produtos" class="btn btn-primary">
+Ver Produtos
+</a>
+
+</div>
+
+</section>
+
+<section id="produtos" class="py-5">
+
+<div class="container">
+
+<h2 class="section-title">
+Produtos em Destaque
+</h2>
+
+<div class="row g-4">
+
+<div class="col-md-6 col-lg-4">
+
+<div class="card">
+
+<img
+src="https://horizonplay.fbitsstatic.net/img/p/smartphone-samsung-galaxy-a16-sm-a165m-dual-sim-de-128gb-4gb-ram-de-6-7-50-5-2mp-13mp-light-gray-152478/339081.jpg?w=670&h=670&v=202501231555"
+class="card-img-top">
+
+<div class="card-body d-flex flex-column">
+
+<h5 class="card-title">
+Samsung Galaxy A16 128GB
+</h5>
+
+<p class="price">
+R$ 783,40
+</p>
+
+<a href="#" class="btn btn-cart mt-auto">
+🛒 Adicionar ao Carrinho
+</a>
+
+</div>
+</div>
+</div>
+
+<div class="col-md-6 col-lg-4">
+
+<div class="card">
+
+<img
+src="https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcTF6fMld_D76Q135TUOcxY_WT55fPdddpoz2CCiGW16uQ-2l4sKL_Lm_xfB4ng6LVjVs_negzHs_B8CIBebFWRwb944hF-o_VS5XSPoDG32-0N-1CF_nwsgCt_-OFv042NvxNtih0E9BWY&usqp=CAc"
+class="card-img-top">
+
+<div class="card-body d-flex flex-column">
+
+<h5 class="card-title">
+Samsung Galaxy Book Go
+</h5>
+
+<p class="price">
+R$ 2.789,10
+</p>
+
+<a href="#" class="btn btn-cart mt-auto">
+🛒 Adicionar ao Carrinho
+</a>
+
+</div>
+</div>
+</div>
+
+<div class="col-md-6 col-lg-4">
+
+<div class="card">
+
+<img
+src="https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcSDHl7IGNN-c6VTKessWrzqLMX72WUH75_4E2bUFeJ4hO3MxTqA41mdZUwN_GTZT2Ot0Dv4WwpmY1N2ilcf4PkqiHlMtq92T5DcrvlVoA-Kic12PH2kKSZ5bWdzwJHIVbV1d8bzwg&usqp=CAc"
+class="card-img-top">
+
+<div class="card-body d-flex flex-column">
+
+<h5 class="card-title">
+SmartWatch Feminino 1.83"
+</h5>
+
+<p class="price">
+R$ 122,90
+</p>
+
+<a href="#" class="btn btn-cart mt-auto">
+🛒 Adicionar ao Carrinho
+</a>
+
+</div>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<section id="contato" class="py-5">
+
+<div class="container">
+
+<h2 class="section-title">
+Fale Conosco
+</h2>
+
+<div class="contact">
+
+<div class="row">
+
+<div class="col-md-6">
+<h4>LaStore</h4>
+<p>
+Estamos prontos para ajudar você a encontrar os melhores produtos de tecnologia.
+</p>
+</div>
+
+<div class="col-md-6">
+
+<form>
+
+<input
+type="text"
+class="form-control mb-3"
+placeholder="Seu nome">
+
+<input
+type="email"
+class="form-control mb-3"
+placeholder="Seu e-mail">
+
+<textarea
+class="form-control mb-3"
+rows="4"
+placeholder="Sua mensagem"></textarea>
+
+<button class="btn btn-primary w-100">
+Enviar Mensagem
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+</main>
+
+<footer>
+
+<div class="container text-center">
+
+<h4>🖥️ LaStore</h4>
+
+<p class="footer-text">
+Sua loja online de tecnologia.
+</p>
+
+<hr>
+
+<p class="footer-text mb-0">
+© 2026 LaStore - Todos os direitos reservados.
+</p>
+
+</div>
+
+</footer>
+
+<!-- LOGIN -->
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="login">
+
+<div class="offcanvas-header">
+
+<h5 class="fw-bold">
+Acesse sua Conta
+</h5>
+
+<button
+type="button"
+class="btn-close"
+data-bs-dismiss="offcanvas"> </button>
+
+</div>
+
+<div class="offcanvas-body">
+
+<form>
+
+<div class="mb-3">
+<label class="form-label">E-mail</label>
+<input type="email" class="form-control">
+</div>
+
+<div class="mb-3">
+<label class="form-label">Senha</label>
+<input type="password" class="form-control">
+</div>
+
+<button class="btn btn-primary w-100">
+Entrar
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
