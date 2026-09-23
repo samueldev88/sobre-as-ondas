@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sobre As Ondas — Quiosque</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="pagina-cardapio">
+
+  <!-- NAVBAR -->
+  <header class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="#" class="logo">Sobre As Ondas</a>
+
+      <div class="nav-right">
+        <a href="https://linktr.ee/sobreasondas_" class="nav-home-btn" title="Voltar para a página inicial" aria-label="Voltar para a página inicial" data-i18n-aria="aria_voltar_inicio">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1V10"/></svg>
+        </a>
+
+        <div class="nav-dropdown" id="langDropdown">
+          <button class="nav-dropdown-toggle" id="langToggle" data-i18n="nav_idiomas">
+            IDIOMAS <span class="chevron">▾</span>
+          </button>
+          <div class="dropdown-menu" id="langMenu">
+            <button class="lang-option active" data-lang="pt">🇧🇷 Português</button>
+            <button class="lang-option" data-lang="es">🇪🇸 Español</button>
+            <button class="lang-option" data-lang="en">🇺🇸 English</button>
+          </div>
+        </div>
+
+        <button class="nav-toggle" onclick="toggleNavMenu()" aria-label="Abrir menu" data-i18n-aria="aria_abrir_menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+
+      <nav class="nav-links" id="navLinks">
+        <a href="#inicio" data-i18n="nav_inicio">INÍCIO</a>
+        <a href="#cardapio" data-i18n="nav_cardapio">CARDÁPIO</a>
+        <a href="#contato" data-i18n="nav_contato">CONTATO</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- CARROSSEL DE PROMOÇÕES -->
+  <section class="promo-carousel" id="inicio" aria-label="Promoções Sobre As Ondas" data-i18n-aria="aria_promocoes">
+    <div class="promo-track" id="promoTrack">
+      <div class="promo-slide"><img class="promo-slide-photo" src="assets/images/carousel/promo-1-luar.jpg" alt="Quiosque Sobre As Ondas ao luar, Praia do Recreio" data-i18n-alt="promo_luar_alt" loading="eager"></div>
+      <div class="promo-slide"><img class="promo-slide-photo" src="assets/images/carousel/promo-2-isca-de-peixe.jpg" alt="Isca de peixe com batata frita, R$ 100,00" data-i18n-alt="promo_isca_peixe_alt" loading="lazy"></div>
+      <div class="promo-slide"><img class="promo-slide-photo" src="assets/images/carousel/promo-3-heineken.jpg" alt="Heineken: unidade R$ 8,00, balde com 5 por R$ 40,00" data-i18n-alt="promo_heineken_alt" loading="lazy"></div>
+      <div class="promo-slide"><img class="promo-slide-photo" src="assets/images/carousel/promo-4-caipirinhas.jpg" alt="Caipirinhas de limão, morango, maracujá e abacaxi, R$ 18,00 cada" data-i18n-alt="promo_caipirinhas_alt" loading="lazy"></div>
+    </div>
+
+    <button class="promo-arrow promo-arrow-prev" id="promoPrev" aria-label="Slide anterior" data-i18n-aria="aria_slide_anterior">&#10094;</button>
+    <button class="promo-arrow promo-arrow-next" id="promoNext" aria-label="Próximo slide" data-i18n-aria="aria_proximo_slide">&#10095;</button>
+    <div class="promo-dots" id="promoDots" role="tablist" aria-label="Selecionar slide" data-i18n-aria="aria_selecionar_slide"></div>
+  </section>
+
+  <!-- CTA abaixo do carrossel -->
+  <div class="hero-cta-below">
+    <a href="#cardapio" class="btn btn-primary hero-cta-small" data-i18n="hero_cta">CONHEÇA NOSSO CARDÁPIO <span class="wave">〰</span></a>
+  </div>
+
+  <div class="cta-wave-divider" aria-hidden="true">
+    <svg viewBox="0 0 200 20" preserveAspectRatio="none">
+      <path d="M0 10 Q12.5 2 25 10 T50 10 T75 10 T100 10 T125 10 T150 10 T175 10 T200 10" fill="none" stroke="#E8734A" stroke-width="2.5" stroke-linecap="round"/>
+    </svg>
+  </div>
+
+  <!-- CARDÁPIO -->
+  <section class="menu" id="cardapio">
+    <div class="section-title">
+      <span class="divider-icon">〰</span>
+      <h2 data-i18n="menu_title">Cardápio</h2>
+      <p data-i18n="menu_sub">Sabores preparados com carinho para o seu melhor momento.</p>
+    </div>
+
+    <div class="menu-tabs" role="tablist">
+      <button class="menu-tab active" data-panel="painelPetiscos" role="tab" aria-selected="true">
+        <span class="tab-icon tab-icon--wide" aria-hidden="true">
+          <svg viewBox="0 0 36 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <!-- garfo, à esquerda -->
+            <line x1="3" y1="2.5" x2="3" y2="9"/>
+            <line x1="5.2" y1="2.5" x2="5.2" y2="9"/>
+            <line x1="7.4" y1="2.5" x2="7.4" y2="9"/>
+            <path d="M3 9c0 1.5 1 2.2 2.2 2.2S7.4 10.5 7.4 9"/>
+            <line x1="5.2" y1="11.2" x2="5.2" y2="21.5"/>
+            <!-- prato, no meio -->
+            <circle cx="18" cy="12" r="8.3"/>
+            <circle cx="18" cy="12" r="4"/>
+            <!-- faca, à direita -->
+            <path d="M30.8 2.5c-2 1-2 5.6-.9 7.6.4.7.9 1 .9 1"/>
+            <line x1="30.8" y1="11.1" x2="30.8" y2="21.5"/>
+          </svg>
+        </span>
+        <span data-i18n="tab_petiscos">Petiscos</span>
+      </button>
+      <button class="menu-tab" data-panel="painelBebidas" role="tab" aria-selected="false">
+        <span class="tab-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16"/>
+            <path d="M4 4l8 9 8-9"/>
+            <path d="M12 13v6"/>
+            <path d="M8 19h8"/>
+          </svg>
+        </span>
+        <span data-i18n="tab_bebidas">Bebidas</span>
+      </button>
+    </div>
+
+    <div class="menu-panel active" id="painelPetiscos" role="tabpanel">
+
+      <div class="food-subtitle" data-i18n="subtitle_petiscos">Petiscos</div>
+      <div class="menu-grid">
+
+        <article class="menu-card">
+          <img src="assets/isca-de-frango.jpeg" alt="Isca de frango" data-i18n-alt="item_isca_frango">
+          <div class="menu-card-body">
+            <h3 data-i18n="item_isca_frango">Isca de frango</h3>
+            <p class="menu-card-desc" data-i18n="item_isca_frango_desc">Pedaços suculentos de frango empanados e fritos até dourar, crocantes por fora e macios por dentro. Acompanha porção de fritas ou aipim frito, à sua escolha.</p>
+            <span class="price">R$ 75,00</span>
+          </div>
+        </article>
+
+        <article class="menu-card">
+          <img src="assets/batata-frita.jpeg" alt="Batata frita" data-i18n-alt="item_batata_frita">
+          <div class="menu-card-body">
+            <h3 data-i18n="item_batata_frita">Batata Frita</h3>
+            <p class="menu-card-desc" data-i18n="item_batata_frita_desc">Batatas fritas na hora, douradas e crocantes por fora, macias por dentro. Simples, do jeito que tem que ser.</p>
+            <span class="price">R$ 30,00</span>
+          </div>
+        </article>
+
+        <article class="menu-card">
+          <img src="assets/aipim-frito.jpeg" alt="Aipim frito" data-i18n-alt="item_aipim_frito">
+          <div class="menu-card-body">
+            <h3 data-i18n="item_aipim_frito">Aipim Frito</h3>
+            <p class="menu-card-desc" data-i18n="item_aipim_frito_desc">Aipim selecionado, frito até ficar crocante por fora e macio por dentro. Um clássico de praia que não pode faltar na mesa.</p>
+            <span class="price">R$ 30,00</span>
+          </div>
+        </article>
+
+        <article class="menu-card">
+          <img src="assets/batata-maluca.jpeg" alt="Batata Maluca" data-i18n-alt="item_batata_maluca">
+          <div class="menu-card-body">
+            <h3 data-i18n="item_batata_maluca">Batata Maluca</h3>
+            <p class="menu-card-desc" data-i18n="item_batata_maluca_desc">Batata frita coberta com um mix generoso de temperos e acompanhamentos que dão um toque especial a cada garfada.</p>
+            <span class="price">R$ 55,00</span>
+          </div>
+        </article>
+
+        <article class="menu-card">
+          <img src="assets/bolinho-bacalhau.jpeg" alt="Bolinho de Bacalhau" data-i18n-alt="item_bolinho_bacalhau">
+          <div class="menu-card-body">
+            <h3 data-i18n="item_bolinho_bacalhau">Bolinho de Bacalhau</h3>
+            <p class="menu-card-desc" data-i18n="item_bolinho_bacalhau_desc">Bolinhos artesanais feitos com bacalhau desfiado, temperados na medida certa e fritos até a casquinha dourada perfeita.</p>
+            <span class="price">R$ 50,00</span>
+          </div>
+        </article>
+
+        <article class="menu-card">
+          <img src="assets/camarão-alho-oleo.jpeg" alt="Camarão Alho e Óleo" data-i18n-alt="item_camarao_alho_oleo">
+          <div class="menu-card-body">
+            <h3 data-i18n="item_camarao_alho_oleo">Camarão Alho e Óleo</h3>
+            <p class="menu-card-desc" data-i18n="item_camarao_alho_oleo_desc">Camarões salteados no alho e azeite, com aquele aroma que já entrega o sabor antes da primeira garfada.</p>
+            <span class="price">R$ 55,00</span>
+          </div>
+        </article>
+
+        <article class="menu-card">
+          <img src="assets/carne-de-sol.jpeg" alt="Carne de Sol" data-i18n-alt="item_carne_de_sol">
+          <div class="menu-card-body">
+            <h3 data-i18n="item_carne_de_sol">Carne de Sol</h3>
+            <p class="menu-card-desc" data-i18n="item_carne_de_sol_desc">Carne de sol desfiada, temperada e grelhada no ponto, com aquele sabor defumado típico do sertão nordestino.</p>
+            <span class="price">R$ 50,00</span>
+          </div>
+        </article>
+
+        <article class="menu-card">
+          <img src="assets/isca-de-peixe.jpeg" alt="Isca de Peixe" data-i18n-alt="item_isca_peixe">
+          <div class="menu-card-body">
+            <h3 data-i18n="item_isca_peixe">Isca de Peixe</h3>
+            <p class="menu-card-desc" data-i18n="item_isca_peixe_desc">Tiras de peixe fresco empanadas e fritas na hora, crocantes por fora e macias por dentro. Acompanha porção de fritas ou aipim frito, à sua escolha.</p>
+            <span class="price">R$ 100,00</span>
+          </div>
+        </article>
+
+        <article class="menu-card">
+          <img src="assets/churrasco-misto.jpeg" alt="Churrasco misto" data-i18n-alt="item_churrasco_misto">
+          <div class="menu-card-body">
+            <h3 data-i18n="item_churrasco_misto">Churrasco misto</h3>
+            <p class="menu-card-desc" data-i18n="item_churrasco_misto_desc">Seleção de carnes grelhadas na brasa, temperadas do jeito certo para compartilhar com quem você ama.</p>
+            <span class="price">R$ 100,00</span>
+          </div>
+        </article>
+
+        <article class="menu-card">
+          <img src="assets/frango-á-passarrinho.jpeg" alt="Frango à passarinho" data-i18n-alt="item_frango_passarinho">
+          <div class="menu-card-body">
+            <h3 data-i18n="item_frango_passarinho">Frango à passarinho</h3>
+            <p class="menu-card-desc" data-i18n="item_frango_passarinho_desc">Frango temperado e frito em pedaços pequenos, crocante por fora e suculento por dentro. Acompanha porção de fritas ou aipim frito, à sua escolha.</p>
+            <span class="price">R$ 95,00</span>
+          </div>
+        </article>
+
+        <article class="menu-card">
+          <img src="assets/manjubinha.jpeg" alt="Manjubinha" data-i18n-alt="item_manjubinha">
+          <div class="menu-card-body">
+            <h3 data-i18n="item_manjubinha">Manjubinha</h3>
+            <p class="menu-card-desc" data-i18n="item_manjubinha_desc">Peixinhos fritos e crocantes, temperados na medida certa. Perfeitos para petiscar com uma cerveja bem gelada.</p>
+            <span class="price">R$ 95,00</span>
+          </div>
+        </article>
+
+        <article class="menu-card">
+          <img src="assets/sardinha.jpeg" alt="Sardinha" data-i18n-alt="item_sardinha">
+          <div class="menu-card-body">
+            <h3 data-i18n="item_sardinha">Sardinha</h3>
+            <p class="menu-card-desc" data-i18n="item_sardinha_desc">Sardinhas fritas até a casquinha crocante, com aquele sabor de mar que só a praia entrega.</p>
+            <span class="price">R$ 95,00</span>
+          </div>
+        </article>
+
+        <article class="menu-card">
+          <img src="assets/corvina.jpeg" alt="Corvina" data-i18n-alt="item_corvina">
+          <div class="menu-card-body">
+            <h3 data-i18n="item_corvina">Corvina</h3>
+            <p class="menu-card-desc" data-i18n="item_corvina_desc">Filé de corvina fresco, no ponto certo, com textura macia e sabor suave que agrada todo mundo.</p>
+            <span class="price">R$ 95,00</span>
+          </div>
+        </article>
+
+        <article class="menu-card">
+          <img src="assets/lula-á-dore.jpeg" alt="Lula à dore" data-i18n-alt="item_lula_dore">
+          <div class="menu-card-body">
+            <h3 data-i18n="item_lula_dore">Lula à dore</h3>
+            <p class="menu-card-desc" data-i18n="item_lula_dore_desc">Anéis de lula empanados e fritos na hora, crocantes por fora e macios por dentro. Serve com limão para realçar o sabor.</p>
+            <span class="price">R$ 95,00</span>
+          </div>
+        </article>
+
+      </div>
+
+      <div class="food-subtitle" data-i18n="subtitle_pasteis">Pastéis</div>
+      <div class="food-subtitle-note" data-i18n="subtitle_pasteis_nota">(Porção 5 unidades)</div>
+      <div class="menu-grid">
+
+        <article class="menu-card">
+          <img src="assets/pastel-camarão.jpeg" alt="Pastel de Camarão" data-i18n-alt="item_pastel_camarao">
+          <div class="menu-card-body">
+            <h3 data-i18n="item_pastel_camarao">Pastel de Camarão</h3>
+            <p class="menu-card-desc" data-i18n="item_pastel_camarao_desc">Massa fininha e crocante recheada com camarão temperado. Sai da fritadeira na hora do seu pedido.</p>
+            <span class="price">R$ 12,00</span>
+          </div>
+        </article>
+
+        <article class="menu-card">
+          <img src="assets/pastel-queijo.jpeg" alt="Pastel de Queijo" data-i18n-alt="item_pastel_queijo">
+          <div class="menu-card-body">
+            <h3 data-i18n="item_pastel_queijo">Pastel de Queijo</h3>
+            <p class="menu-card-desc" data-i18n="item_pastel_queijo_desc">Clássico que nunca falha: massa crocante com recheio de queijo derretido em cada mordida.</p>
+            <span class="price">R$ 10,00</span>
+          </div>
+        </article>
+
+        <article class="menu-card">
+          <img src="assets/pastel-calabresa.jpeg" alt="Pastel de Calabresa" data-i18n-alt="item_pastel_calabresa">
+          <div class="menu-card-body">
+            <h3 data-i18n="item_pastel_calabresa">Pastel de Calabresa</h3>
+            <p class="menu-card-desc" data-i18n="item_pastel_calabresa_desc">Recheio generoso de calabresa temperada dentro de uma massa fina e crocante.</p>
+            <span class="price">R$ 10,00</span>
+          </div>
+        </article>
+
+        <article class="menu-card">
+          <img src="assets/pastel-frango.jpeg" alt="Pastel de Frango c/Catupiry" data-i18n-alt="item_pastel_frango_catupiry">
+          <div class="menu-card-body">
+            <h3 data-i18n="item_pastel_frango_catupiry">Pastel de Frango c/Catupiry</h3>
+            <p class="menu-card-desc" data-i18n="item_pastel_frango_catupiry_desc">Frango desfiado com catupiry cremoso, envolto numa massa crocante e douradinha.</p>
+            <span class="price">R$ 10,00</span>
+          </div>
+        </article>
+
+      </div>
+
+      <div class="food-subtitle" data-i18n="subtitle_porcoes">Porções Extras</div>
+      <div class="menu-grid">
+
+        <article class="menu-card">
+          <img src="assets/azeitona.jpeg" alt="Azeitona" data-i18n-alt="item_azeitona">
+          <div class="menu-card-body">
+            <h3 data-i18n="item_azeitona">Azeitona</h3>
+            <p class="menu-card-desc" data-i18n="item_azeitona_desc">Azeitonas selecionadas, perfeitas para acompanhar uma bebida bem gelada.</p>
+            <span class="price">R$ 21,00</span>
+          </div>
+        </article>
+
+        <article class="menu-card">
+          <img src="assets/queijo-coalho.jpeg" alt="Queijo Coalho" data-i18n-alt="item_queijo_coalho">
+          <div class="menu-card-body">
+            <h3 data-i18n="item_queijo_coalho">Queijo Coalho</h3>
+            <p class="menu-card-desc" data-i18n="item_queijo_coalho_desc">Queijo coalho grelhado na hora, com aquela casquinha por fora e macio por dentro.</p>
+            <span class="price">R$ 15,00</span>
+          </div>
+        </article>
+
+        <article class="menu-card">
+          <img src="assets/salaminho.jpeg" alt="Saláminho" data-i18n-alt="item_salaminho">
+          <div class="menu-card-body">
+            <h3 data-i18n="item_salaminho">Saláminho</h3>
+            <p class="menu-card-desc" data-i18n="item_salaminho_desc">Saláminho fatiado, ideal para petiscar enquanto aproveita a vista para o mar.</p>
+            <span class="price">R$ 35,00</span>
+          </div>
+        </article>
+
+      </div>
+
+    </div>
+
+    <div class="menu-panel" id="painelBebidas" role="tabpanel">
+
+      <div class="food-subtitle" data-i18n="subtitle_drinks">Drinks</div>
+      <div class="drink-cards-grid">
+        <div class="drink-square-card">
+          <img src="assets/caipirinha-morango.jpeg" alt="Caipirinha de Morango" data-i18n-alt="drink_caipirinha_morango">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_caipirinha_morango">Caipirinha de Morango</h4>
+            <span class="price">R$ 18,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="assets/caipirinha-maracujá.jpeg" alt="Caipirinha de Maracujá" data-i18n-alt="drink_caipirinha_maracuja">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_caipirinha_maracuja">Caipirinha de Maracujá</h4>
+            <span class="price">R$ 18,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="assets/caipirinha-abacaxi.jpeg" alt="Caipirinha de Abacaxi" data-i18n-alt="drink_caipirinha_abacaxi">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_caipirinha_abacaxi">Caipirinha de Abacaxi</h4>
+            <span class="price">R$ 18,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="assets/caipirinha-limão.jpeg" alt="Caipirinha de Limão" data-i18n-alt="drink_caipirinha_limao">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_caipirinha_limao">Caipirinha de Limão</h4>
+            <span class="price">R$ 16,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="assets/caipirinha-tropical.jpeg" alt="Caipirinha Tropical" data-i18n-alt="drink_caipirinha_tropical">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_caipirinha_tropical">Caipirinha Tropical</h4>
+            <span class="price">R$ 20,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="assets/caipvodka.jpeg" alt="Caipvodka" data-i18n-alt="drink_caipvodka">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_caipvodka">Caipvodka</h4>
+            <span class="price">R$ 20,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="assets/caipvodka-tropical.jpeg" alt="Caipvodka Tropical" data-i18n-alt="drink_caipvodka_tropical">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_caipvodka_tropical">Caipvodka Tropical</h4>
+            <span class="price">R$ 24,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="assets/caipvodka-absolute.jpeg" alt="Caipvodka Absolut" data-i18n-alt="drink_caipvodka_absolut">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_caipvodka_absolut">Caipvodka Absolut</h4>
+            <span class="price">R$ 30,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="assets/batida.jpeg" alt="Batida" data-i18n-alt="drink_batida">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_batida">Batida</h4>
+            <span class="price">R$ 25,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="assets/aperol.jpeg" alt="Aperol" data-i18n-alt="drink_aperol">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_aperol">Aperol</h4>
+            <span class="price">R$ 30,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="assets/caipsaque.jpeg" alt="Caipsaque" data-i18n-alt="drink_caipsaque">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_caipsaque">Caipsaque</h4>
+            <span class="price">R$ 30,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="assets/gin-tônica.jpeg" alt="Gin Tônica" data-i18n-alt="drink_gin_tonica">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_gin_tonica">Gin Tônica</h4>
+            <span class="price">R$ 30,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="assets/pinã-colada.jpeg" alt="Piña Colada" data-i18n-alt="drink_pina_colada">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_pina_colada">Piña Colada</h4>
+            <span class="price">R$ 30,00</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="food-subtitle" data-i18n="drinks_title">Bebidas</div>
+      <div class="drink-cards-grid">
+        <div class="drink-square-card">
+          <img src="assets/água.jpeg" alt="Água sem gás" data-i18n-alt="drink_agua_sg">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_agua_sg">Água sem gás</h4>
+            <span class="price">R$ 4,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="assets/água-gás.jpeg" alt="Água com gás" data-i18n-alt="drink_agua_cg">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_agua_cg">Água com gás</h4>
+            <span class="price">R$ 5,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="assets/água-coco.jpeg" alt="Água de Coco" data-i18n-alt="drink_agua_coco">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_agua_coco">Água de Coco</h4>
+            <span class="price">R$ 10,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="assets/guaravita.jpeg" alt="Guaravita" data-i18n-alt="drink_guaravita">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_guaravita">Guaravita</h4>
+            <span class="price">R$ 4,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="assets/guaraviton.jpeg" alt="Guaraviton" data-i18n-alt="drink_guaraviton">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_guaraviton">Guaraviton</h4>
+            <span class="price">R$ 6,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="assets/lata-guaraná.jpeg" alt="Refrigerante lata" data-i18n-alt="drink_refrigerante_lata">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_refrigerante_lata">Refrigerante Lata</h4>
+            <span class="price">R$ 6,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="assets/h2o.jpeg" alt="H2O" data-i18n-alt="drink_h2o">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_h2o">H2O</h4>
+            <span class="price">R$ 8,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="assets/tônica.jpeg" alt="Tônica" data-i18n-alt="drink_tonica">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_tonica">Tônica</h4>
+            <span class="price">R$ 8,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="assets/matte.jpeg" alt="Matte" data-i18n-alt="drink_matte">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_matte">Matte</h4>
+            <span class="price">R$ 8,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="assets/suco-da-fruta.jpeg" alt="Suco da Fruta" data-i18n-alt="drink_suco_fruta">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_suco_fruta">Suco da Fruta</h4>
+            <span class="price">R$ 12,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="assets/gatorade.jpeg" alt="Gatorade" data-i18n-alt="drink_gatorade">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_gatorade">Gatorade</h4>
+            <span class="price">R$ 12,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="assets/redbull.jpeg" alt="Redbull" data-i18n-alt="drink_redbull">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_redbull">Redbull</h4>
+            <span class="price">R$ 16,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="assets/coca-cola2l.jpeg" alt="Refrigerante 2L" data-i18n-alt="drink_refrigerante_2l">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_refrigerante_2l">Refrigerante 2L</h4>
+            <span class="price">R$ 18,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="assets/guaracamp.jpeg" alt="Guaracamp" data-i18n-alt="drink_guaracamp">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_guaracamp">Guaracamp</h4>
+            <span class="price">R$ 4,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="assets/lata-coca-cola.jpeg" alt="Coca-Cola Lata" data-i18n-alt="drink_cocacola_lata">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_cocacola_lata">Coca-Cola Lata</h4>
+            <span class="price">R$ 6,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="assets/água-1,5l.jpeg" alt="Água 1,5L" data-i18n-alt="drink_agua_15l">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_agua_15l">Água 1,5L</h4>
+            <span class="price">R$ 10,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="assets/guaraná2l.jpeg" alt="Guaraná 2L" data-i18n-alt="drink_guarana_2l">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_guarana_2l">Guaraná 2L</h4>
+            <span class="price">R$ 18,00</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="food-subtitle" data-i18n="subtitle_bebidas_alcoolicas">Bebidas Alcóolicas</div>
+      <div class="drink-cards-grid">
+        <div class="drink-square-card">
+          <img src="assets/gt-beats.jpeg" alt="GT Beats" data-i18n-alt="drink_gt_beats">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_gt_beats">GT Beats</h4>
+            <span class="price">R$ 15,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="assets/ice.jpeg" alt="Smirnoff Ice" data-i18n-alt="drink_smirnoff_ice">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_smirnoff_ice">Smirnoff Ice</h4>
+            <span class="price">R$ 15,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="assets/skol-beats.jpeg" alt="Skol Beats" data-i18n-alt="drink_skol_beats">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_skol_beats">Skol Beats</h4>
+            <span class="price">R$ 15,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="assets/pink-moon.jpeg" alt="Pink Moon" data-i18n-alt="drink_pink_moon">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_pink_moon">Pink Moon</h4>
+            <span class="price">R$ 15,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="assets/taça-vinho.jpeg" alt="Taça de Vinho" data-i18n-alt="drink_taca_vinho">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_taca_vinho">Taça de Vinho</h4>
+            <span class="price">R$ 20,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="assets/garrafa-pergola.jpeg" alt="Vinho Pérgola" data-i18n-alt="drink_vinho_pergola">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_vinho_pergola">Vinho Pérgola</h4>
+            <span class="price">R$ 50,00</span>
+          </div>
+        </div>
+        <div class="drink-square-card">
+          <img src="assets/vinho-750ml.jpeg" alt="Vinho Garrafa 750ml" data-i18n-alt="drink_vinho_garrafa">
+          <div class="drink-card-body">
+            <h4 data-i18n="drink_vinho_garrafa">Vinho Garrafa 750ml</h4>
+            <span class="price" data-i18n="preco_consulte">Consulte</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="cervejas-section">
+        <h3 data-i18n="cervejas_title">Cervejas</h3>
+
+        <div class="cervejas-group">
+          <div class="cervejas-group-label" data-i18n="cervejas_latão">Latão</div>
+          <div class="drink-cards-grid">
+            <div class="drink-square-card">
+              <img src="assets/lata-antarctica.jpeg" alt="Antarctica Latão" data-i18n-alt="cerveja_latao_antarctica">
+              <div class="drink-card-body">
+                <h4 data-i18n="cerveja_latao_antarctica">Latão Antarctica</h4>
+                <span class="price">R$ 8,00</span>
+              </div>
+            </div>
+            <div class="drink-square-card">
+              <img src="assets/lata-brahma.jpeg" alt="Brahma Latão" data-i18n-alt="cerveja_latao_brahma">
+              <div class="drink-card-body">
+                <h4 data-i18n="cerveja_latao_brahma">Latão Brahma</h4>
+                <span class="price">R$ 8,00</span>
+              </div>
+            </div>
+            <div class="drink-square-card">
+              <img src="assets/lata-heineken.jpeg" alt="Heineken Latão" data-i18n-alt="cerveja_latao_heineken">
+              <div class="drink-card-body">
+                <h4 data-i18n="cerveja_latao_heineken">Latão Heineken</h4>
+                <span class="price">R$ 8,00</span>
+              </div>
+            </div>
+            <div class="drink-square-card">
+              <img src="assets/lata-imperio.jpeg" alt="Império Latão" data-i18n-alt="cerveja_latao_imperio">
+              <div class="drink-card-body">
+                <h4 data-i18n="cerveja_latao_imperio">Latão Império</h4>
+                <span class="price">R$ 8,00</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cervejas-group">
+          <div class="cervejas-group-label" data-i18n="grupo_longneck">Long Neck</div>
+          <div class="drink-cards-grid">
+            <div class="drink-square-card">
+              <img src="assets/corona.jpeg" alt="Corona Long Neck" data-i18n-alt="cerveja_corona">
+              <div class="drink-card-body">
+                <h4 data-i18n="cerveja_corona">Corona</h4>
+                <span class="price">R$ 12,00</span>
+              </div>
+            </div>
+            <div class="drink-square-card">
+              <img src="assets/long-heineken.jpeg" alt="Heineken Long Neck" data-i18n-alt="cerveja_heineken_ln">
+              <div class="drink-card-body">
+                <h4 data-i18n="cerveja_heineken_ln">Heineken</h4>
+                <span class="price">R$ 12,00</span>
+              </div>
+            </div>
+            <div class="drink-square-card">
+              <img src="assets/long-heineken-zero.jpeg" alt="Heineken Zero Long Neck" data-i18n-alt="cerveja_heineken_zero">
+              <div class="drink-card-body">
+                <h4 data-i18n="cerveja_heineken_zero">Heineken Zero</h4>
+                <span class="price">R$ 12,00</span>
+              </div>
+            </div>
+            <div class="drink-square-card">
+              <img src="assets/long-stella.jpeg" alt="Stella Long Neck" data-i18n-alt="cerveja_stella_ln">
+              <div class="drink-card-body">
+                <h4 data-i18n="cerveja_stella_ln">Stella</h4>
+                <span class="price">R$ 12,00</span>
+              </div>
+            </div>
+            <div class="drink-square-card">
+              <img src="assets/imperio-gold.jpeg" alt="Império Gold Long Neck" data-i18n-alt="cerveja_imperio_gold">
+              <div class="drink-card-body">
+                <h4 data-i18n="cerveja_imperio_gold">Império Gold</h4>
+                <span class="price">R$ 9,00</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cervejas-group">
+          <div class="cervejas-group-label" data-i18n="grupo_600ml">600ml</div>
+          <div class="drink-cards-grid">
+            <div class="drink-square-card">
+              <img src="assets/brahma-600ml.jpeg" alt="Brahma 600ml" data-i18n-alt="cerveja_brahma_600">
+              <div class="drink-card-body">
+                <h4 data-i18n="cerveja_brahma_600">Brahma 600ml</h4>
+                <span class="price">R$ 16,00</span>
+              </div>
+            </div>
+            <div class="drink-square-card">
+              <img src="assets/heineken-600ml.jpeg" alt="Heineken 600ml" data-i18n-alt="cerveja_heineken_600">
+              <div class="drink-card-body">
+                <h4 data-i18n="cerveja_heineken_600">Heineken 600ml</h4>
+                <span class="price">R$ 18,00</span>
+              </div>
+            </div>
+            <div class="drink-square-card">
+              <img src="assets/original-600ml.jpeg" alt="Original 600ml" data-i18n-alt="cerveja_original_600">
+              <div class="drink-card-body">
+                <h4 data-i18n="cerveja_original_600">Original 600ml</h4>
+                <span class="price">R$ 17,00</span>
+              </div>
+            </div>
+            <div class="drink-square-card">
+              <img src="assets/stella-600ml.jpeg" alt="Stella 600ml" data-i18n-alt="cerveja_stella_600">
+              <div class="drink-card-body">
+                <h4 data-i18n="cerveja_stella_600">Stella 600ml</h4>
+                <span class="price">R$ 18,00</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cervejas-group">
+          <div class="cervejas-group-label" data-i18n="doses_label">Doses</div>
+          <div class="drink-cards-grid">
+            <div class="drink-square-card">
+              <img src="assets/dose-vodka.jpeg" alt="Vodka">
+              <div class="drink-card-body">
+                <h4 data-i18n="dose_vodka">Vodka</h4>
+                <span class="price">R$ 18,00</span>
+              </div>
+            </div>
+            <div class="drink-square-card">
+              <img src="assets/dose-absolute.jpeg" alt="Absolut">
+              <div class="drink-card-body">
+                <h4 data-i18n="dose_absolut">Absolut</h4>
+                <span class="price">R$ 22,00</span>
+              </div>
+            </div>
+            <div class="drink-square-card">
+              <img src="assets/dose-red-label.jpeg" alt="Red Label">
+              <div class="drink-card-body">
+                <h4 data-i18n="dose_red_label">Red Label</h4>
+                <span class="price">R$ 25,00</span>
+              </div>
+            </div>
+            <div class="drink-square-card">
+              <img src="assets/dose-black-label.jpeg" alt="Black Label">
+              <div class="drink-card-body">
+                <h4 data-i18n="dose_black_label">Black Label</h4>
+                <span class="price">R$ 40,00</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <div class="footer-wave"></div>
+
+  <section class="contato" id="contato">
+    <h2 data-i18n="contato_title">Contato</h2>
+    <p data-i18n="contato_sub">Segue a gente e fica por dentro das novidades do quiosque.</p>
+
+    <!-- troque o href pelo link real do seu Instagram -->
+    <a href="https://www.instagram.com/sobreasondas__?igsh=d2E1YmZiZmtndHh3" class="link-social" data-confirm-link>
+        <svg class="instagram-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+          <rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/>
+          <circle cx="12" cy="12" r="4.4"/>
+          <circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/>
+        </svg>
+       @sobreasondas__
+    </a>
+  </section>
+
+  <footer>
+    <p data-i18n="footer_texto">Sobre As Ondas - O melhor quiosque do recreio</p>
+  </footer>
+
+  <!-- MODAL DE CONFIRMAÇÃO DE LINK EXTERNO -->
+  <div class="modal-overlay" id="modalLink">
+      <div class="modal-box">
+          <p class="modal-texto" data-i18n="modal_texto">Você vai sair do nosso site e ir para o Instagram. Deseja continuar?</p>
+          <div class="modal-botoes">
+              <button class="modal-btn modal-btn--cancelar" id="modalCancelar" data-i18n="modal_cancelar">Cancelar</button>
+              <button class="modal-btn modal-btn--confirmar" id="modalConfirmar" data-i18n="modal_confirmar">Sim, continuar</button>
+          </div>
+      </div>
+  </div>
+
+  <!-- MODAL DE DETALHES DO PRATO (foto + texto completo ao clicar no card) -->
+  <div class="modal-overlay" id="modalPrato">
+      <div class="modal-prato-box">
+          <button class="modal-prato-fechar" id="modalPratoFechar" aria-label="Fechar" data-i18n-aria="aria_fechar">&times;</button>
+          <img id="modalPratoImg" src="" alt="">
+          <div class="modal-prato-conteudo">
+              <h3 id="modalPratoTitulo"></h3>
+              <p id="modalPratoDesc"></p>
+              <span class="price" id="modalPratoPreco"></span>
+          </div>
+      </div>
+  </div>
+
+  <script>
+    // ===== MODAL DE LINK EXTERNO =====
+    const modal = document.getElementById('modalLink');
+    const btnCancelar = document.getElementById('modalCancelar');
+    const btnConfirmar = document.getElementById('modalConfirmar');
+    let linkAlvo = null;
+
+    document.querySelectorAll('[data-confirm-link]').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            linkAlvo = link.getAttribute('href');
+            modal.classList.add('aberto');
+        });
+    });
+
+    btnCancelar.addEventListener('click', () => {
+        modal.classList.remove('aberto');
+        linkAlvo = null;
+    });
+
+    btnConfirmar.addEventListener('click', () => {
+        if (linkAlvo) {
+            window.open(linkAlvo, '_blank');
+        }
+        modal.classList.remove('aberto');
+    });
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.classList.remove('aberto');
+        }
+    });
+
+    // ===== MODAL DE DETALHES DO PRATO =====
+    const modalPrato = document.getElementById('modalPrato');
+    const modalPratoImg = document.getElementById('modalPratoImg');
+    const modalPratoTitulo = document.getElementById('modalPratoTitulo');
+    const modalPratoDesc = document.getElementById('modalPratoDesc');
+    const modalPratoPreco = document.getElementById('modalPratoPreco');
+    const modalPratoFechar = document.getElementById('modalPratoFechar');
+
+    document.querySelectorAll('.menu-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const img = card.querySelector('img');
+        const titulo = card.querySelector('h3');
+        const desc = card.querySelector('.menu-card-desc');
+        const preco = card.querySelector('.price');
+
+        modalPratoImg.src = img.getAttribute('src');
+        modalPratoImg.alt = img.getAttribute('alt') || '';
+        modalPratoTitulo.textContent = titulo ? titulo.textContent : '';
+        modalPratoDesc.textContent = desc ? desc.textContent : '';
+        modalPratoPreco.textContent = preco ? preco.textContent : '';
+
+        modalPrato.classList.add('aberto');
+      });
+    });
+
+    function fecharModalPrato(){
+      modalPrato.classList.remove('aberto');
+    }
+    modalPratoFechar.addEventListener('click', fecharModalPrato);
+    modalPrato.addEventListener('click', (e) => {
+      if (e.target === modalPrato) fecharModalPrato();
+    });
+
+    // ===== NAVBAR "GRUDA" NO SCROLL + MENU MOBILE =====
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 20) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    const navLinks = document.getElementById('navLinks');
+
+    // abre/fecha o menu hamburguer no celular (mesmo comportamento de pedidos.html)
+    function toggleNavMenu(){
+      navLinks.classList.toggle('open');
+    }
+
+    // ===== ABAS DO CARDÁPIO (PETISCOS / BEBIDAS) =====
+    const menuTabs = document.querySelectorAll('.menu-tab');
+    const menuPanels = document.querySelectorAll('.menu-panel');
+    menuTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        menuTabs.forEach(t => {
+          t.classList.remove('active');
+          t.setAttribute('aria-selected', 'false');
+        });
+        menuPanels.forEach(p => p.classList.remove('active'));
+
+        tab.classList.add('active');
+        tab.setAttribute('aria-selected', 'true');
+        document.getElementById(tab.dataset.panel).classList.add('active');
+      });
+    });
+
+    // ===== DROPDOWN DE IDIOMAS =====
+    const langDropdown = document.getElementById('langDropdown');
+    const langToggle = document.getElementById('langToggle');
+    langToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      langDropdown.classList.toggle('open');
+    });
+    document.addEventListener('click', (e) => {
+      if (!langDropdown.contains(e.target)) {
+        langDropdown.classList.remove('open');
+      }
+    });
+
+    // ===== TRADUÇÃO (PT / ES / EN) =====
+    const traducoes = {
+      pt: {
+        nav_inicio: "INÍCIO",
+        nav_cardapio: "CARDÁPIO",
+        nav_contato: "CONTATO",
+        nav_idiomas: 'IDIOMAS <span class="chevron">▾</span>',
+        hero_eyebrow: "QUIOSQUE SOBRE AS ONDAS",
+        hero_title: "Onde o sabor<br>encontra o mar!!",
+        hero_sub: "O Sobre As Ondas é o lugar perfeito para aproveitar a praia com boa comida, bebidas refrescantes e momentos especiais. Tudo isso em um ambiente leve e acolhedor, feito para você curtir cada segundo com a gente.",
+        hero_cta: 'CONHEÇA NOSSO CARDÁPIO <span class="wave">〰</span>',
+        menu_title: "Cardápio",
+        menu_sub: "Sabores preparados com carinho para o seu melhor momento.",
+        tab_petiscos: "Petiscos",
+        tab_bebidas: "Bebidas",
+        subtitle_petiscos: "Petiscos",
+        subtitle_pasteis: "Pastéis",
+        subtitle_pasteis_nota: "(Porção 5 unidades)",
+        subtitle_porcoes: "Porções Extras",
+        item_isca_frango: "Isca de frango",
+        item_isca_frango_desc: "Pedaços suculentos de frango empanados e fritos até dourar, crocantes por fora e macios por dentro. Acompanha porção de fritas ou aipim frito, à sua escolha.",
+        item_batata_frita: "Batata Frita",
+        item_batata_frita_desc: "Batatas fritas na hora, douradas e crocantes por fora, macias por dentro. Simples, do jeito que tem que ser.",
+        item_aipim_frito: "Aipim Frito",
+        item_aipim_frito_desc: "Aipim selecionado, frito até ficar crocante por fora e macio por dentro. Um clássico de praia que não pode faltar na mesa.",
+        item_batata_maluca: "Batata Maluca",
+        item_batata_maluca_desc: "Batata frita coberta com um mix generoso de temperos e acompanhamentos que dão um toque especial a cada garfada.",
+        item_bolinho_bacalhau: "Bolinho de Bacalhau",
+        item_bolinho_bacalhau_desc: "Bolinhos artesanais feitos com bacalhau desfiado, temperados na medida certa e fritos até a casquinha dourada perfeita.",
+        item_camarao_alho_oleo: "Camarão Alho e Óleo",
+        item_camarao_alho_oleo_desc: "Camarões salteados no alho e azeite, com aquele aroma que já entrega o sabor antes da primeira garfada.",
+        item_carne_de_sol: "Carne de Sol",
+        item_carne_de_sol_desc: "Carne de sol desfiada, temperada e grelhada no ponto, com aquele sabor defumado típico do sertão nordestino.",
+        item_isca_peixe: "Isca de Peixe",
+        item_isca_peixe_desc: "Tiras de peixe fresco empanadas e fritas na hora, crocantes por fora e macias por dentro. Acompanha porção de fritas ou aipim frito, à sua escolha.",
+        item_churrasco_misto: "Churrasco misto",
+        item_churrasco_misto_desc: "Seleção de carnes grelhadas na brasa, temperadas do jeito certo para compartilhar com quem você ama.",
+        item_frango_passarinho: "Frango à passarinho",
+        item_frango_passarinho_desc: "Frango temperado e frito em pedaços pequenos, crocante por fora e suculento por dentro. Acompanha porção de fritas ou aipim frito, à sua escolha.",
+        item_manjubinha: "Manjubinha",
+        item_manjubinha_desc: "Peixinhos fritos e crocantes, temperados na medida certa. Perfeitos para petiscar com uma cerveja bem gelada.",
+        item_sardinha: "Sardinha",
+        item_sardinha_desc: "Sardinhas fritas até a casquinha crocante, com aquele sabor de mar que só a praia entrega.",
+        item_corvina: "Corvina",
+        item_corvina_desc: "Filé de corvina fresco, no ponto certo, com textura macia e sabor suave que agrada todo mundo.",
+        item_lula_dore: "Lula à dore",
+        item_lula_dore_desc: "Anéis de lula empanados e fritos na hora, crocantes por fora e macios por dentro. Serve com limão para realçar o sabor.",
+        item_pastel_camarao: "Pastel de Camarão",
+        item_pastel_camarao_desc: "Massa fininha e crocante recheada com camarão temperado. Sai da fritadeira na hora do seu pedido.",
+        item_pastel_queijo: "Pastel de Queijo",
+        item_pastel_queijo_desc: "Clássico que nunca falha: massa crocante com recheio de queijo derretido em cada mordida.",
+        item_pastel_calabresa: "Pastel de Calabresa",
+        item_pastel_calabresa_desc: "Recheio generoso de calabresa temperada dentro de uma massa fina e crocante.",
+        item_pastel_frango_catupiry: "Pastel de Frango c/Catupiry",
+        item_pastel_frango_catupiry_desc: "Frango desfiado com catupiry cremoso, envolto numa massa crocante e douradinha.",
+        item_azeitona: "Azeitona",
+        item_azeitona_desc: "Azeitonas selecionadas, perfeitas para acompanhar uma bebida bem gelada.",
+        item_queijo_coalho: "Queijo Coalho",
+        item_queijo_coalho_desc: "Queijo coalho grelhado na hora, com aquela casquinha por fora e macio por dentro.",
+        item_salaminho: "Saláminho",
+        item_salaminho_desc: "Saláminho fatiado, ideal para petiscar enquanto aproveita a vista para o mar.",
+        subtitle_drinks: "Drinks",
+        drink_caipirinha_morango: "Caipirinha de Morango",
+        drink_caipirinha_maracuja: "Caipirinha de Maracujá",
+        drink_caipirinha_abacaxi: "Caipirinha de Abacaxi",
+        drink_caipirinha_limao: "Caipirinha de Limão",
+        drink_agua_coco: "Água de Coco",
+        drink_caipirinha_tropical: "Caipirinha Tropical",
+        drink_caipvodka: "Caipvodka",
+        drink_caipvodka_tropical: "Caipvodka Tropical",
+        drink_caipvodka_absolut: "Caipvodka Absolut",
+        drink_batida: "Batida",
+        drink_aperol: "Aperol",
+        drink_caipsaque: "Caipsaque",
+        drink_gin_tonica: "Gin Tônica",
+        drink_pina_colada: "Piña Colada",
+        drinks_title: "Bebidas",
+        drink_agua_sg: "Água sem gás",
+        drink_agua_cg: "Água com gás",
+        drink_guaravita: "Guaravita",
+        drink_guaraviton: "Guaraviton",
+        drink_refrigerante_lata: "Refrigerante Lata",
+        drink_h2o: "H2O",
+        drink_tonica: "Tônica",
+        drink_matte: "Matte",
+        drink_suco_fruta: "Suco da Fruta",
+        drink_gatorade: "Gatorade",
+        drink_redbull: "Redbull",
+        drink_refrigerante_2l: "Refrigerante 2L",
+        drink_guaracamp: "Guaracamp",
+        drink_cocacola_lata: "Coca-Cola Lata",
+        drink_agua_15l: "Água 1,5L",
+        drink_guarana_2l: "Guaraná 2L",
+        subtitle_bebidas_alcoolicas: "Bebidas Alcóolicas",
+        drink_gt_beats: "GT Beats",
+        drink_smirnoff_ice: "Smirnoff Ice",
+        drink_skol_beats: "Skol Beats",
+        drink_pink_moon: "Pink Moon",
+        drink_taca_vinho: "Taça de Vinho",
+        drink_vinho_pergola: "Vinho Pérgola",
+        drink_vinho_garrafa: "Vinho Garrafa 750ml",
+        preco_consulte: "Consulte",
+        doses_label: "Doses",
+        dose_vodka: "Vodka",
+        dose_absolut: "Absolut",
+        dose_red_label: "Red Label",
+        dose_black_label: "Black Label",
+        cervejas_title: "Cervejas",
+        cervejas_latão: "Latão",
+        grupo_longneck: "Long Neck",
+        grupo_600ml: "600ml",
+        cerveja_latao_antarctica: "Latão Antarctica",
+        cerveja_latao_brahma: "Latão Brahma",
+        cerveja_latao_heineken: "Latão Heineken",
+        cerveja_latao_imperio: "Latão Império",
+        cerveja_corona: "Corona",
+        cerveja_heineken_ln: "Heineken",
+        cerveja_heineken_zero: "Heineken Zero",
+        cerveja_stella_ln: "Stella",
+        cerveja_imperio_gold: "Império Gold",
+        cerveja_brahma_600: "Brahma 600ml",
+        cerveja_heineken_600: "Heineken 600ml",
+        cerveja_original_600: "Original 600ml",
+        cerveja_stella_600: "Stella 600ml",
+        aria_voltar_inicio: "Voltar para a página inicial",
+        aria_abrir_menu: "Abrir menu",
+        aria_fechar: "Fechar",
+        aria_promocoes: "Promoções Sobre As Ondas",
+        aria_selecionar_slide: "Selecionar slide",
+        aria_slide_anterior: "Slide anterior",
+        aria_proximo_slide: "Próximo slide",
+        promo_luar_alt: "Quiosque Sobre As Ondas ao luar, Praia do Recreio",
+        promo_isca_peixe_alt: "Isca de peixe com batata frita, R$ 100,00",
+        promo_heineken_alt: "Heineken: unidade R$ 8,00, balde com 5 por R$ 40,00",
+        promo_caipirinhas_alt: "Caipirinhas de limão, morango, maracujá e abacaxi, R$ 18,00 cada",
+        contato_title: "Contato",
+        contato_sub: "Segue a gente e fica por dentro das novidades do quiosque.",
+        footer_texto: "Sobre As Ondas - O melhor quiosque do recreio",
+        modal_texto: "Você vai sair do nosso site e ir para o Instagram. Deseja continuar?",
+        modal_cancelar: "Cancelar",
+        modal_confirmar: "Sim, continuar"
+      },
+      es: {
+        nav_inicio: "INICIO",
+        nav_cardapio: "MENÚ",
+        nav_contato: "CONTACTO",
+        nav_idiomas: 'IDIOMAS <span class="chevron">▾</span>',
+        hero_eyebrow: "QUIOSCO SOBRE AS ONDAS",
+        hero_title: "Donde el sabor<br>encuentra el mar!!",
+        hero_sub: "Sobre As Ondas es el lugar perfecto para disfrutar de la playa con buena comida, bebidas refrescantes y momentos especiales. Todo en un ambiente ligero y acogedor, hecho para que disfrutes cada segundo con nosotros.",
+        hero_cta: 'CONOCE NUESTRO MENÚ <span class="wave">〰</span>',
+        menu_title: "Menú",
+        menu_sub: "Sabores preparados con cariño para tu mejor momento.",
+        tab_petiscos: "Bocadillos",
+        tab_bebidas: "Bebidas",
+        subtitle_petiscos: "Bocadillos",
+        subtitle_pasteis: "Empanadas",
+        subtitle_pasteis_nota: "(Porción de 5 unidades)",
+        subtitle_porcoes: "Porciones Extra",
+        item_isca_frango: "Tiras de Pollo",
+        item_isca_frango_desc: "Trozos jugosos de pollo empanizados y fritos hasta dorar, crujientes por fuera y tiernos por dentro. Se sirve con papas fritas o yuca frita, a tu elección.",
+        item_batata_frita: "Papas Fritas",
+        item_batata_frita_desc: "Papas fritas al momento, doradas y crujientes por fuera, suaves por dentro.",
+        item_aipim_frito: "Yuca Frita",
+        item_aipim_frito_desc: "Yuca seleccionada, frita hasta quedar crujiente por fuera y suave por dentro. Un clásico de playa infaltable.",
+        item_batata_maluca: "Papas Especiales",
+        item_batata_maluca_desc: "Papas fritas cubiertas con una generosa mezcla de condimentos que le dan un toque especial a cada bocado.",
+        item_bolinho_bacalhau: "Buñuelos de Bacalao",
+        item_bolinho_bacalhau_desc: "Buñuelos artesanales de bacalao desmenuzado, bien sazonados y fritos hasta quedar dorados y crujientes.",
+        item_camarao_alho_oleo: "Camarones al Ajillo",
+        item_camarao_alho_oleo_desc: "Camarones salteados en ajo y aceite de oliva, con un aroma que anticipa el sabor desde el primer bocado.",
+        item_carne_de_sol: "Carne de Sol",
+        item_carne_de_sol_desc: "Carne de sol desmenuzada, sazonada y asada en su punto, con el sabor ahumado típico del sertón nordestino.",
+        item_isca_peixe: "Tiras de Pescado",
+        item_isca_peixe_desc: "Tiras de pescado fresco empanizadas y fritas al momento, crujientes por fuera y suaves por dentro. Se sirve con papas fritas o yuca frita, a tu elección.",
+        item_churrasco_misto: "Parrilla Mixta",
+        item_churrasco_misto_desc: "Selección de carnes a la brasa, sazonadas para compartir con quien más quieres.",
+        item_frango_passarinho: "Pollo Frito Brasileño",
+        item_frango_passarinho_desc: "Pollo sazonado y frito en trozos pequeños, crujiente por fuera y jugoso por dentro. Se sirve con papas fritas o yuca frita, a tu elección.",
+        item_manjubinha: "Pescaditos Fritos",
+        item_manjubinha_desc: "Pescaditos fritos y crujientes, bien sazonados. Perfectos para picar con una cerveza bien fría.",
+        item_sardinha: "Sardinas",
+        item_sardinha_desc: "Sardinas fritas hasta quedar bien crujientes, con ese sabor a mar que solo la playa da.",
+        item_corvina: "Corvina",
+        item_corvina_desc: "Filete de corvina fresco, en su punto justo, con textura suave y sabor delicado que gusta a todos.",
+        item_lula_dore: "Calamar Frito a la Dore",
+        item_lula_dore_desc: "Anillos de calamar empanizados y fritos al momento, crujientes por fuera y suaves por dentro. Se sirve con limón.",
+        item_pastel_camarao: "Empanada de Camarón",
+        item_pastel_camarao_desc: "Masa finita y crocante rellena de camarón sazonado. Sale de la freidora al momento de tu pedido.",
+        item_pastel_queijo: "Empanada de Queso",
+        item_pastel_queijo_desc: "Un clásico infalible: masa crocante con relleno de queso derretido en cada bocado.",
+        item_pastel_calabresa: "Empanada de Chorizo",
+        item_pastel_calabresa_desc: "Relleno generoso de chorizo sazonado dentro de una masa fina y crocante.",
+        item_pastel_frango_catupiry: "Empanada de Pollo con Catupiry",
+        item_pastel_frango_catupiry_desc: "Pollo desmenuzado con catupiry cremoso, envuelto en una masa crocante y dorada.",
+        item_azeitona: "Aceitunas",
+        item_azeitona_desc: "Aceitunas seleccionadas, perfectas para acompañar una bebida bien fría.",
+        item_queijo_coalho: "Queso Coalho a la Parrilla",
+        item_queijo_coalho_desc: "Queso coalho a la parrilla al momento, con una costra dorada por fuera y suave por dentro.",
+        item_salaminho: "Salamín",
+        item_salaminho_desc: "Salamín en finas rodajas, ideal para picar mientras disfrutas la vista al mar.",
+        subtitle_drinks: "Tragos",
+        drink_caipirinha_morango: "Caipiriña de Fresa",
+        drink_caipirinha_maracuja: "Caipiriña de Maracuyá",
+        drink_caipirinha_abacaxi: "Caipiriña de Piña",
+        drink_caipirinha_limao: "Caipiriña de Limón",
+        drink_agua_coco: "Agua de Coco",
+        drink_caipirinha_tropical: "Caipiriña Tropical",
+        drink_caipvodka: "Caipivodka",
+        drink_caipvodka_tropical: "Caipivodka Tropical",
+        drink_caipvodka_absolut: "Caipivodka Absolut",
+        drink_batida: "Batida",
+        drink_aperol: "Aperol",
+        drink_caipsaque: "Caipisake",
+        drink_gin_tonica: "Gin Tónica",
+        drink_pina_colada: "Piña Colada",
+        coco_gelado: "🥥 ¡Tenemos Coco Helado!",
+        drinks_title: "Bebidas",
+        drink_agua_sg: "Agua sin gas",
+        drink_agua_cg: "Agua con gas",
+        drink_guaravita: "Guaravita",
+        drink_guaraviton: "Guaraviton",
+        drink_refrigerante_lata: "Refresco Lata",
+        drink_h2o: "H2O",
+        drink_tonica: "Tónica",
+        drink_matte: "Mate",
+        drink_suco_fruta: "Jugo de Fruta",
+        drink_gatorade: "Gatorade",
+        drink_redbull: "Redbull",
+        drink_refrigerante_2l: "Refresco 2L",
+        drink_guaracamp: "Guaracamp",
+        drink_cocacola_lata: "Coca-Cola Lata",
+        drink_agua_15l: "Agua 1,5L",
+        drink_guarana_2l: "Guaraná 2L",
+        subtitle_bebidas_alcoolicas: "Bebidas Alcohólicas",
+        drink_gt_beats: "GT Beats",
+        drink_smirnoff_ice: "Smirnoff Ice",
+        drink_skol_beats: "Skol Beats",
+        drink_pink_moon: "Pink Moon",
+        drink_taca_vinho: "Copa de Vino",
+        drink_vinho_pergola: "Vino Pérgola",
+        drink_vinho_garrafa: "Botella de Vino 750ml",
+        preco_consulte: "Consultar",
+        doses_label: "Tragos Dobles",
+        dose_vodka: "Vodka",
+        dose_absolut: "Absolut",
+        dose_red_label: "Red Label",
+        dose_black_label: "Black Label",
+        cervejas_title: "Cervezas",
+        cervejas_latão: "Lata",
+        grupo_longneck: "Long Neck",
+        grupo_600ml: "600ml",
+        cerveja_latao_antarctica: "Lata Antarctica",
+        cerveja_latao_brahma: "Lata Brahma",
+        cerveja_latao_heineken: "Lata Heineken",
+        cerveja_latao_imperio: "Lata Império",
+        cerveja_corona: "Corona",
+        cerveja_heineken_ln: "Heineken",
+        cerveja_heineken_zero: "Heineken Zero",
+        cerveja_stella_ln: "Stella",
+        cerveja_imperio_gold: "Império Gold",
+        cerveja_brahma_600: "Brahma 600ml",
+        cerveja_heineken_600: "Heineken 600ml",
+        cerveja_original_600: "Original 600ml",
+        cerveja_stella_600: "Stella 600ml",
+        aria_voltar_inicio: "Volver a la página de inicio",
+        aria_abrir_menu: "Abrir menú",
+        aria_fechar: "Cerrar",
+        aria_promocoes: "Promociones Sobre As Ondas",
+        aria_selecionar_slide: "Seleccionar diapositiva",
+        aria_slide_anterior: "Diapositiva anterior",
+        aria_proximo_slide: "Siguiente diapositiva",
+        promo_luar_alt: "Quiosco Sobre As Ondas a la luz de la luna, Playa de Recreio",
+        promo_isca_peixe_alt: "Tiras de pescado con papas fritas, R$ 100,00",
+        promo_heineken_alt: "Heineken: unidad R$ 8,00, balde con 5 por R$ 40,00",
+        promo_caipirinhas_alt: "Caipiriñas de limón, fresa, maracuyá y piña, R$ 18,00 cada una",
+        contato_title: "Contacto",
+        contato_sub: "Síguenos y entérate de las novedades del quiosco.",
+        footer_texto: "Sobre As Ondas - El mejor quiosco de Recreio",
+        modal_texto: "Vas a salir de nuestro sitio hacia Instagram. ¿Deseas continuar?",
+        modal_cancelar: "Cancelar",
+        modal_confirmar: "Sí, continuar"
+      },
+      en: {
+        nav_inicio: "HOME",
+        nav_cardapio: "MENU",
+        nav_contato: "CONTACT",
+        nav_idiomas: 'LANGUAGES <span class="chevron">▾</span>',
+        hero_eyebrow: "SOBRE AS ONDAS KIOSK",
+        hero_title: "Where flavor<br>meets the sea!!",
+        hero_sub: "Sobre As Ondas is the perfect spot to enjoy the beach with great food, refreshing drinks and special moments. All in a light, welcoming setting made for you to enjoy every second with us.",
+        hero_cta: 'SEE OUR MENU <span class="wave">〰</span>',
+        menu_title: "Menu",
+        menu_sub: "Flavors prepared with care for your best moment.",
+        tab_petiscos: "Snacks",
+        tab_bebidas: "Drinks",
+        subtitle_petiscos: "Snacks",
+        subtitle_pasteis: "Pastries",
+        subtitle_pasteis_nota: "(Portion of 5 units)",
+        subtitle_porcoes: "Extra Sides",
+        item_isca_frango: "Chicken Strips",
+        item_isca_frango_desc: "Juicy chicken pieces breaded and fried until golden, crispy outside and tender inside. Served with a side of fries or fried cassava, your choice.",
+        item_batata_frita: "French Fries",
+        item_batata_frita_desc: "Freshly fried potatoes, golden and crispy outside, soft inside. Simple, just the way it should be.",
+        item_aipim_frito: "Fried Cassava",
+        item_aipim_frito_desc: "Handpicked cassava, fried until crispy outside and soft inside. A beach classic that can't be missed.",
+        item_batata_maluca: "Loaded Fries",
+        item_batata_maluca_desc: "Fries topped with a generous mix of seasonings and toppings that add a special touch to every bite.",
+        item_bolinho_bacalhau: "Codfish Fritters",
+        item_bolinho_bacalhau_desc: "Handmade fritters with shredded codfish, perfectly seasoned and fried to a golden crisp.",
+        item_camarao_alho_oleo: "Garlic Butter Shrimp",
+        item_camarao_alho_oleo_desc: "Shrimp sautéed in garlic and olive oil, with an aroma that delivers the flavor before the first bite.",
+        item_carne_de_sol: "Sun-Dried Beef",
+        item_carne_de_sol_desc: "Shredded sun-dried beef, seasoned and grilled just right, with the smoky flavor typical of Brazil's northeastern backlands.",
+        item_isca_peixe: "Fish Strips",
+        item_isca_peixe_desc: "Fresh fish strips breaded and fried to order, crispy outside and tender inside. Served with a side of fries or fried cassava, your choice.",
+        item_churrasco_misto: "Mixed Grill",
+        item_churrasco_misto_desc: "A selection of grilled meats, seasoned just right to share with the ones you love.",
+        item_frango_passarinho: "Brazilian Fried Chicken",
+        item_frango_passarinho_desc: "Seasoned chicken fried in bite-sized pieces, crispy outside and juicy inside. Served with a side of fries or fried cassava, your choice.",
+        item_manjubinha: "Fried Silverside Fish",
+        item_manjubinha_desc: "Small crispy fried fish, perfectly seasoned. Great for snacking with an ice-cold beer.",
+        item_sardinha: "Sardines",
+        item_sardinha_desc: "Sardines fried to a crispy finish, with that oceanfront flavor only the beach can deliver.",
+        item_corvina: "Corvina Fish",
+        item_corvina_desc: "Fresh corvina fillet, cooked just right, with a soft texture and mild flavor that pleases everyone.",
+        item_lula_dore: "Golden Fried Squid",
+        item_lula_dore_desc: "Breaded squid rings fried to order, crispy outside and tender inside. Served with lime to bring out the flavor.",
+        item_pastel_camarao: "Shrimp Pastry",
+        item_pastel_camarao_desc: "Thin, crispy pastry filled with seasoned shrimp, fried fresh as soon as you order.",
+        item_pastel_queijo: "Cheese Pastry",
+        item_pastel_queijo_desc: "A classic that never fails: crispy pastry with melted cheese in every bite.",
+        item_pastel_calabresa: "Sausage Pastry",
+        item_pastel_calabresa_desc: "A generous filling of seasoned sausage inside a thin, crispy pastry shell.",
+        item_pastel_frango_catupiry: "Chicken & Catupiry Pastry",
+        item_pastel_frango_catupiry_desc: "Shredded chicken with creamy catupiry cheese, wrapped in a crispy golden pastry.",
+        item_azeitona: "Olives",
+        item_azeitona_desc: "Handpicked olives, perfect to pair with an ice-cold drink.",
+        item_queijo_coalho: "Grilled Cheese (Queijo Coalho)",
+        item_queijo_coalho_desc: "Grilled queijo coalho fresh off the grill, with a golden crust outside and soft inside.",
+        item_salaminho: "Salami",
+        item_salaminho_desc: "Sliced salami, great for snacking while enjoying the ocean view.",
+        subtitle_drinks: "Cocktails",
+        drink_caipirinha_morango: "Strawberry Caipirinha",
+        drink_caipirinha_maracuja: "Passion Fruit Caipirinha",
+        drink_caipirinha_abacaxi: "Pineapple Caipirinha",
+        drink_caipirinha_limao: "Lime Caipirinha",
+        drink_agua_coco: "Coconut Water",
+        drink_caipirinha_tropical: "Tropical Caipirinha",
+        drink_caipvodka: "Vodka Caipirinha",
+        drink_caipvodka_tropical: "Tropical Vodka Caipirinha",
+        drink_caipvodka_absolut: "Absolut Vodka Caipirinha",
+        drink_batida: "Batida",
+        drink_aperol: "Aperol Spritz",
+        drink_caipsaque: "Sake Caipirinha",
+        drink_gin_tonica: "Gin & Tonic",
+        drink_pina_colada: "Piña Colada",
+        coco_gelado: "🥥 We have chilled coconut water!",
+        drinks_title: "Drinks",
+        drink_agua_sg: "Still water",
+        drink_agua_cg: "Sparkling water",
+        drink_guaravita: "Guaravita",
+        drink_guaraviton: "Guaraviton",
+        drink_refrigerante_lata: "Soda Can",
+        drink_h2o: "H2O",
+        drink_tonica: "Tonic Water",
+        drink_matte: "Iced Tea",
+        drink_suco_fruta: "Fruit Juice",
+        drink_gatorade: "Gatorade",
+        drink_redbull: "Redbull",
+        drink_refrigerante_2l: "Soda 2L",
+        drink_guaracamp: "Guaracamp",
+        drink_cocacola_lata: "Coca-Cola Can",
+        drink_agua_15l: "Water 1.5L",
+        drink_guarana_2l: "Guaraná 2L",
+        subtitle_bebidas_alcoolicas: "Alcoholic Drinks",
+        drink_gt_beats: "GT Beats",
+        drink_smirnoff_ice: "Smirnoff Ice",
+        drink_skol_beats: "Skol Beats",
+        drink_pink_moon: "Pink Moon",
+        drink_taca_vinho: "Glass of Wine",
+        drink_vinho_pergola: "Pérgola Wine",
+        drink_vinho_garrafa: "Wine Bottle 750ml",
+        preco_consulte: "Ask staff",
+        doses_label: "Shots",
+        dose_vodka: "Vodka",
+        dose_absolut: "Absolut",
+        dose_red_label: "Red Label",
+        dose_black_label: "Black Label",
+        cervejas_title: "Beers",
+        cervejas_latão: "Tall Can",
+        grupo_longneck: "Long Neck",
+        grupo_600ml: "600ml",
+        cerveja_latao_antarctica: "Tall Can Antarctica",
+        cerveja_latao_brahma: "Tall Can Brahma",
+        cerveja_latao_heineken: "Tall Can Heineken",
+        cerveja_latao_imperio: "Tall Can Império",
+        cerveja_corona: "Corona",
+        cerveja_heineken_ln: "Heineken",
+        cerveja_heineken_zero: "Heineken Zero",
+        cerveja_stella_ln: "Stella",
+        cerveja_imperio_gold: "Império Gold",
+        cerveja_brahma_600: "Brahma 600ml",
+        cerveja_heineken_600: "Heineken 600ml",
+        cerveja_original_600: "Original 600ml",
+        cerveja_stella_600: "Stella 600ml",
+        aria_voltar_inicio: "Back to homepage",
+        aria_abrir_menu: "Open menu",
+        aria_fechar: "Close",
+        aria_promocoes: "Sobre As Ondas promotions",
+        aria_selecionar_slide: "Select slide",
+        aria_slide_anterior: "Previous slide",
+        aria_proximo_slide: "Next slide",
+        promo_luar_alt: "Sobre As Ondas kiosk by moonlight, Recreio Beach",
+        promo_isca_peixe_alt: "Fish strips with french fries, R$ 100.00",
+        promo_heineken_alt: "Heineken: single can R$ 8.00, bucket of 5 for R$ 40.00",
+        promo_caipirinhas_alt: "Lime, strawberry, passion fruit and pineapple caipirinhas, R$ 18.00 each",
+        contato_title: "Contact",
+        contato_sub: "Follow us and stay up to date with the kiosk's news.",
+        footer_texto: "Sobre As Ondas - The best kiosk in Recreio",
+        modal_texto: "You're about to leave our site for Instagram. Continue?",
+        modal_cancelar: "Cancel",
+        modal_confirmar: "Yes, continue"
+      }
+    };
+
+    function aplicarIdioma(lang) {
+      const dict = traducoes[lang];
+      if (!dict) return;
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const chave = el.getAttribute('data-i18n');
+        if (dict[chave] !== undefined) {
+          el.innerHTML = dict[chave];
+        }
+      });
+      // atributos também precisam traduzir, não só o texto visível:
+      // alt de imagem (leitor de tela / SEO) e aria-label/title de botões
+      document.querySelectorAll('[data-i18n-alt]').forEach(el => {
+        const chave = el.getAttribute('data-i18n-alt');
+        if (dict[chave] !== undefined) {
+          el.setAttribute('alt', dict[chave]);
+        }
+      });
+      document.querySelectorAll('[data-i18n-aria]').forEach(el => {
+        const chave = el.getAttribute('data-i18n-aria');
+        if (dict[chave] !== undefined) {
+          el.setAttribute('aria-label', dict[chave]);
+          if (el.hasAttribute('title')) el.setAttribute('title', dict[chave]);
+        }
+      });
+      document.documentElement.lang = lang === 'pt' ? 'pt-BR' : lang;
+      document.querySelectorAll('.lang-option').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+      });
+      localStorage.setItem('idioma', lang);
+    }
+
+    document.querySelectorAll('.lang-option').forEach(btn => {
+      btn.addEventListener('click', () => {
+        aplicarIdioma(btn.getAttribute('data-lang'));
+        langDropdown.classList.remove('open');
+      });
+    });
+
+    const idiomaSalvo = localStorage.getItem('idioma');
+    if (idiomaSalvo && traducoes[idiomaSalvo]) {
+      aplicarIdioma(idiomaSalvo);
+    }
+  </script>
+
+  <!-- CARROSSEL DE PROMOÇÕES: lógica -->
+  <script>
+    (function(){
+      const track = document.getElementById('promoTrack');
+      const dotsWrap = document.getElementById('promoDots');
+      const prevBtn = document.getElementById('promoPrev');
+      const nextBtn = document.getElementById('promoNext');
+      const slides = track.querySelectorAll('.promo-slide');
+      const total = slides.length;
+      let current = 0;
+      let autoplayTimer = null;
+      let hovering = false;
+      const AUTOPLAY_MS = 5000;
+
+      // Fundo espelhado/desfocado: gerado a partir da própria foto de cada slide,
+      // então nunca precisa duplicar o caminho da imagem no HTML.
+      slides.forEach(slide => {
+        const photo = slide.querySelector('.promo-slide-photo');
+        if (!photo) return;
+        const bg = document.createElement('img');
+        bg.src = photo.getAttribute('src');
+        bg.alt = '';
+        bg.setAttribute('aria-hidden', 'true');
+        bg.className = 'promo-slide-bg';
+        slide.insertBefore(bg, photo);
+      });
+
+      slides.forEach((_, i) => {
+        const dot = document.createElement('button');
+        dot.className = 'promo-dot' + (i === 0 ? ' active' : '');
+        dot.setAttribute('role', 'tab');
+        dot.setAttribute('aria-label', 'Ir para o slide ' + (i + 1));
+        dot.addEventListener('click', () => goTo(i, true));
+        dotsWrap.appendChild(dot);
+      });
+      const dots = dotsWrap.querySelectorAll('.promo-dot');
+
+      function render(){
+        track.style.transform = 'translateX(-' + (current * 100) + '%)';
+        dots.forEach((d, i) => d.classList.toggle('active', i === current));
+      }
+
+      function goTo(index, userAction){
+        current = (index + total) % total;
+        render();
+        if (userAction) restartAutoplay();
+      }
+
+      function next(){ goTo(current + 1); }
+      function prev(){ goTo(current - 1); }
+
+      function startAutoplay(){
+        clearInterval(autoplayTimer);
+        if (!hovering) autoplayTimer = setInterval(next, AUTOPLAY_MS);
+      }
+      function restartAutoplay(){
+        clearInterval(autoplayTimer);
+        startAutoplay();
+      }
+
+      nextBtn.addEventListener('click', () => goTo(current + 1, true));
+      prevBtn.addEventListener('click', () => goTo(current - 1, true));
+
+      // Swipe (touch) support
+      let touchStartX = 0;
+      let touchDeltaX = 0;
+      track.addEventListener('touchstart', (e) => {
+        touchStartX = e.touches[0].clientX;
+        clearInterval(autoplayTimer);
+      }, { passive: true });
+      track.addEventListener('touchmove', (e) => {
+        touchDeltaX = e.touches[0].clientX - touchStartX;
+      }, { passive: true });
+      track.addEventListener('touchend', () => {
+        if (touchDeltaX > 40) goTo(current - 1, true);
+        else if (touchDeltaX < -40) goTo(current + 1, true);
+        else restartAutoplay();
+        touchDeltaX = 0;
+      });
+
+      // Pausa o autoplay enquanto o mouse está sobre o carrossel (desktop).
+      // Só conta mouse de verdade: toque no celular continua tratado pelos eventos touch acima.
+      const carousel = track.closest('.promo-carousel');
+      carousel.addEventListener('pointerenter', (e) => {
+        if (e.pointerType === 'mouse'){ hovering = true; clearInterval(autoplayTimer); }
+      });
+      carousel.addEventListener('pointerleave', (e) => {
+        if (e.pointerType === 'mouse'){ hovering = false; startAutoplay(); }
+      });
+
+      // Desktop: carrossel com a MESMA largura da navbar. Mede a largura real da
+      // .nav-container, então bate certinho independente de box-sizing/padding.
+      const navBox = document.querySelector('.nav-container');
+      function syncWidth(){
+        if (navBox) carousel.style.setProperty('--nav-w', navBox.getBoundingClientRect().width + 'px');
+      }
+      syncWidth();
+      if (navBox && 'ResizeObserver' in window) new ResizeObserver(syncWidth).observe(navBox);
+      else window.addEventListener('resize', syncWidth);
+
+      render();
+      startAutoplay();
+    })();
+  </script>
+</body>
+</html>

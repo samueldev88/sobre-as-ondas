@@ -1,11 +1,18 @@
 /* ===== TOKENS ===== */
 :root {
-  --azul-escuro: #1B4B57;
+  /* --azul-profundo é a cor de verdade (o azul-marinho da navbar).
+     --azul-escuro aponta pra ela em vez de repetir o hex, então
+     títulos, botões, rodapé e navbar nunca mais saem do mesmo tom
+     — muda um, muda todo mundo junto. */
+  --azul-profundo: #0E2138;
+  --azul-escuro: var(--azul-profundo);
   --azul-texto: #16404A;
   --terracota: #E8734A;
   --terracota-escuro: #D9622F;
   --areia: #F6E8CB;
   --areia-clara: #FBF3E1;
+  --areia-media: #E7DCC2;
+  --terracota-profundo: #C2432F;
   --branco: #FFFFFF;
   --texto-suave: #5A6B6E;
   --font-display: 'Playfair Display', serif;
@@ -13,6 +20,8 @@
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
 
 body {
   font-family: var(--font-body);
@@ -224,20 +233,19 @@ img { max-width: 100%; display: block; }
   width: 190px;
   height: 190px;
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #C88A4E, #8B5A2B);
-  border: 8px solid #6E4223;
+  background: var(--areia-clara);
+  border: 6px solid var(--branco);
   display: flex;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  font-family: var(--font-display);
-  font-style: italic;
-  font-weight: 700;
-  font-size: 22px;
-  color: var(--branco);
+  overflow: hidden;
   box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-  flex-direction: column;
-  gap: 6px;
+}
+.sign-logo-img {
+  width: 80%;
+  height: 80%;
+  object-fit: contain;
+  display: block;
 }
 .sign-wave { color: var(--branco); font-size: 20px; }
 
@@ -299,12 +307,21 @@ img { max-width: 100%; display: block; }
   font-size: 20px;
   color: var(--azul-escuro);
   margin-bottom: 8px;
+  min-height: 2.6em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 .menu-card-body p {
   font-size: 14px;
   color: var(--texto-suave);
   margin-bottom: 14px;
-  min-height: 60px;
+  min-height: calc(1.5em * 3);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 .price {
   font-weight: 700;
@@ -578,3 +595,714 @@ footer {
   .logo { font-size: 17px; }
   .nav-container { padding: 12px 16px; }
 }
+/* ============================================================
+   PÁGINA: CARDÁPIO — variante de navbar e componentes próprios
+   (antes viviam soltos num <style> gigante dentro do cardapio2.html,
+   sobrescrevendo o CSS base com !important; agora moram aqui,
+   isolados por body.pagina-cardapio para não vazar pra outras páginas)
+   ============================================================ */
+
+/* ===== VARIANTE DE NAVBAR: PÍLULA ESCURA FLUTUANTE =====
+   Usada em páginas com hero de foto (cardápio, endereço), onde a navbar
+   clara padrão não teria contraste suficiente. Em vez de sobrescrever
+   .navbar/.nav-container com !important (como estava antes), a variante
+   fica isolada sob a classe da página (body.pagina-cardapio), com
+   especificidade suficiente pra vencer o estado .scrolled sem precisar
+   de !important em lugar nenhum. */
+body.pagina-cardapio .navbar,
+body.pagina-cardapio .navbar.scrolled {
+  top: 16px;
+  background: transparent;
+  box-shadow: none;
+  border-bottom: none;
+}
+body.pagina-cardapio .nav-container,
+body.pagina-cardapio .navbar.scrolled .nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  border-radius: 999px;
+  padding: 12px 20px;
+  background: var(--azul-profundo);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  flex-wrap: wrap;
+  row-gap: 8px;
+}
+body.pagina-cardapio .nav-container .logo,
+body.pagina-cardapio .navbar.scrolled .nav-container .logo {
+  font-size: 18px;
+  color: var(--branco);
+}
+body.pagina-cardapio .nav-container .logo .wave { color: var(--terracota); }
+
+body.pagina-cardapio .nav-links {
+  gap: 8px;
+}
+/* Este estilo (pílula translúcida) é só pro layout horizontal de desktop,
+   dentro da navbar. Sem esse min-width, ele também valia no mobile e
+   brigava com a pílula navy do painel dropdown (rule vs rule, mesma
+   especificidade) — foi isso que deixou o texto "quase invisível": fundo
+   quase transparente sobre o painel claro do menu. */
+@media (min-width: 701px) {
+  body.pagina-cardapio .nav-links a,
+  body.pagina-cardapio .navbar.scrolled .nav-links a {
+    background: rgba(255,255,255,0.15);
+    color: var(--branco);
+    padding: 7px 14px;
+    font-size: 11px;
+    letter-spacing: .4px;
+  }
+}
+
+body.pagina-cardapio .nav-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  order: 3;
+}
+body.pagina-cardapio .nav-home-btn,
+body.pagina-cardapio .navbar.scrolled .nav-home-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  color: var(--branco);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+body.pagina-cardapio .nav-home-btn svg { width: 16px; height: 16px; }
+body.pagina-cardapio .nav-home-btn:hover { background: rgba(255,255,255,0.28); }
+
+body.pagina-cardapio .nav-dropdown-toggle,
+body.pagina-cardapio .navbar.scrolled .nav-dropdown-toggle {
+  background: rgba(255,255,255,0.15);
+  color: var(--branco);
+  padding: 7px 14px;
+  font-size: 11px;
+  letter-spacing: .4px;
+}
+body.pagina-cardapio .dropdown-menu {
+  top: calc(100% + 8px);
+  min-width: 170px;
+}
+body.pagina-cardapio .lang-option { color: var(--azul-escuro); }
+body.pagina-cardapio .lang-option:hover,
+body.pagina-cardapio .lang-option.active { background: rgba(22,48,79,0.08); }
+
+/* botão hamburguer — só aparece em telas estreitas (celular) */
+body.pagina-cardapio .nav-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 34px;
+  height: 34px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+body.pagina-cardapio .nav-toggle span {
+  display: block;
+  width: 100%;
+  height: 3px;
+  border-radius: 3px;
+  background: var(--branco);
+}
+
+@media (max-width: 700px) {
+  /* breakpoint alinhado com o do carrossel de promoções, pra navbar nunca
+     quebrar em duas linhas bem na faixa em que o hero ainda está no modo
+     "largura de tela estreita". */
+  body.pagina-cardapio .nav-toggle { display: flex; }
+
+  /* Painel do menu mobile: em vez de um cartão claro (que na prática lia
+     como "branco cru", já que as duas areias do gradiente quase não se
+     diferenciam), agora é vidro fosco na MESMA família de navy da navbar
+     — cartão flutuante escuro, borda de vidro, friso terracota no topo.
+     Os links viraram itens de lista (like um menu de app de verdade),
+     não mais pílulas soltas, com um aceninho de onda decorativo que
+     ecoa o logo. Continua sempre no layout (position:absolute) e some/
+     aparece de verdade via opacity+visibility+pointer-events, que é o
+     que permite animar rápido. */
+  body.pagina-cardapio .nav-links {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0; right: 0;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(165deg, rgba(21,46,74,0.97), rgba(9,20,35,0.97));
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 18px;
+    padding: 8px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-6px) scale(0.98);
+    transform-origin: top center;
+    transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
+  }
+  body.pagina-cardapio .nav-links.open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
+  }
+  body.pagina-cardapio .nav-links a {
+    display: flex;
+    align-items: center;
+    text-align: left;
+    padding: 13px 16px;
+    margin-top: 4px;
+    background: transparent;
+    color: var(--branco);
+    border-radius: 10px;
+    border-left: 3px solid transparent;
+    transition: background 0.12s ease, border-color 0.12s ease, padding-left 0.12s ease;
+  }
+  body.pagina-cardapio .nav-links a:hover,
+  body.pagina-cardapio .nav-links a:focus-visible {
+    background: rgba(255,255,255,0.07);
+    border-left-color: var(--terracota);
+    padding-left: 20px;
+  }
+  body.pagina-cardapio .nav-links a:active {
+    background: rgba(255,255,255,0.12);
+  }
+  body.pagina-cardapio .nav-dropdown-toggle {
+    padding: 7px 10px;
+    font-size: 10px;
+  }
+  body.pagina-cardapio .dropdown-menu { right: 0; left: auto; }
+}
+
+  .menu-tabs{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    margin: 28px auto 34px;
+    max-width: 440px;
+  }
+  .menu-tab{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    flex: 1 1 0;
+    min-width: 0;
+    font-family:'Poppins', sans-serif;
+    font-weight:600;
+    font-size:13px;
+    letter-spacing:0.8px;
+    text-transform:uppercase;
+    padding:12px 14px;
+    border-radius:999px;
+    border:2px solid var(--azul-escuro);
+    background:transparent;
+    color:var(--azul-escuro);
+    cursor:pointer;
+    transition: background .25s ease, color .25s ease, opacity .25s ease;
+  }
+  /* trava o rótulo em uma linha só e corta com "..." se algum idioma vier
+     mais comprido (ex.: "Bocadillos") — assim os dois botões continuam
+     sempre do mesmo tamanho, lado a lado, em qualquer idioma. */
+  .menu-tab > span:not(.tab-icon){
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .menu-tab .tab-icon{
+    display:inline-flex;
+    align-items:center;
+    width:17px;
+    height:17px;
+    flex-shrink:0;
+  }
+  .menu-tab .tab-icon--wide{
+    width:32px;
+  }
+  .menu-tab .tab-icon svg{
+    width:100%;
+    height:100%;
+    color: currentColor;
+  }
+  .menu-tab:hover{ opacity:0.8; }
+  .menu-tab.active{
+    background:var(--azul-escuro);
+    color:var(--areia);
+  }
+  .menu-panel{ display:none; }
+  .menu-panel.active{ display:block; animation: menuFadeIn .3s ease; }
+  @keyframes menuFadeIn{
+    from{ opacity:0; transform:translateY(8px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+
+  /* ---------- Subtítulos de categoria dentro do painel de Petiscos ---------- */
+  .food-subtitle{
+    text-align:center;
+    font-family:'Poppins', sans-serif;
+    font-weight:700;
+    font-size:13px;
+    letter-spacing:1.2px;
+    text-transform:uppercase;
+    color:var(--terracota);
+    margin: 0 0 18px;
+  }
+  .food-subtitle:not(:first-child){
+    margin-top: 40px;
+  }
+  .food-subtitle-note{
+    text-align:center;
+    font-family:'Poppins', sans-serif;
+    font-weight:500;
+    font-size:12px;
+    color:var(--texto-suave);
+    margin: -12px 0 18px;
+  }
+
+  /* ---------- Cards de petiscos com descrição (estilo cardápio) ---------- */
+  body.pagina-cardapio .menu-card{
+    background: linear-gradient(165deg, var(--branco), var(--areia));
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 6px 18px rgba(22,48,79,0.10);
+    display:flex;
+    flex-direction:column;
+    transition: transform .25s ease, box-shadow .25s ease;
+    cursor: pointer;
+  }
+  body.pagina-cardapio .menu-card:hover{
+    transform: translateY(-4px);
+    box-shadow: 0 14px 28px rgba(22,48,79,0.16);
+  }
+  body.pagina-cardapio .menu-card img{
+    width:100%;
+    aspect-ratio: 4 / 3;
+    object-fit:cover;
+    display:block;
+  }
+  body.pagina-cardapio .menu-card-body{
+    padding: 16px 16px 20px;
+    display:flex;
+    flex-direction:column;
+    flex:1;
+  }
+  body.pagina-cardapio .menu-card-body h3{
+    font-family:'Poppins', sans-serif;
+    font-weight:700;
+    font-size:15px;
+    color:var(--azul-escuro);
+    line-height:1.3;
+    margin-bottom:8px;
+    min-height: 2.6em;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  body.pagina-cardapio .menu-card-desc{
+    font-family:'Poppins', sans-serif;
+    font-weight:400;
+    font-size:12.5px;
+    line-height:1.55;
+    color:var(--texto-suave);
+    margin-bottom:14px;
+    flex:1;
+    min-height: calc(1.55em * 3);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  body.pagina-cardapio .menu-card-body .price{
+    font-family:'Poppins', sans-serif;
+    font-weight:700;
+    font-size:15px;
+    color:var(--terracota);
+    margin-top:auto;
+  }
+
+  /* ---------- Cards quadrados de bebidas ---------- */
+  body.pagina-cardapio .drink-cards-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fill, 140px);
+    justify-content:center;
+    gap: 16px;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  body.pagina-cardapio .drink-square-card{
+    background: linear-gradient(160deg, var(--areia), var(--areia-media));
+    border-radius: 18px;
+    padding: 0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    box-shadow: 0 4px 14px rgba(22,48,79,0.08);
+    transition: transform .2s ease, box-shadow .2s ease;
+    overflow:hidden;
+  }
+  body.pagina-cardapio .drink-square-card:hover{
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(22,48,79,0.14);
+  }
+  body.pagina-cardapio .drink-square-card img{
+    width:100%;
+    aspect-ratio: 1 / 1;
+    object-fit:cover;
+    display:block;
+  }
+  body.pagina-cardapio .drink-card-body{
+    padding: 12px 10px 16px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+  body.pagina-cardapio .drink-square-card h4{
+    font-family:'Poppins', sans-serif;
+    font-weight:600;
+    font-size: 13.5px;
+    color:var(--azul-escuro);
+    line-height:1.25;
+    margin-bottom: 4px;
+  }
+  body.pagina-cardapio .drink-square-card .price{
+    font-size: 12px;
+    font-weight:600;
+    color:var(--terracota);
+  }
+
+  /* ---------- Carrossel de promoções (seção própria, abaixo da navbar) ---------- */
+  .promo-carousel{
+    position: relative;
+    width: 100%;
+    margin-top: 84px; /* respiro pra navbar flutuante não tampar a foto */
+    aspect-ratio: 4 / 5;
+    max-height: 620px;
+    overflow: hidden;
+    background: var(--azul-escuro);
+    touch-action: pan-y;
+  }
+  @media (min-width: 700px){
+    .promo-carousel{
+      margin-top: 96px;
+      margin-left: auto;
+      margin-right: auto;
+      /* mesma largura da navbar (o JS mede a .nav-container e preenche --nav-w) */
+      width: min(var(--nav-w, 1200px), 100%);
+      /* altura baseada na LARGURA da tela (vw), nunca na altura (vh/svh/dvh).
+         Altura de viewport muda sozinha quando a barra do navegador
+         esconde/aparece (ou ao arrastar a janela do DevTools) -- e era
+         isso que fazia o carrossel (e a navbar junto, por tabela) mudar
+         de tamanho sozinho ao rolar a página. Largura da tela é estável
+         durante o scroll, então essa dependência não existe mais. */
+      aspect-ratio: auto;
+      height: clamp(460px, 40vw, 680px);
+      max-height: none;
+      border-radius: 24px;
+      isolation: isolate;
+    }
+  }
+  .promo-track{
+    display: flex;
+    height: 100%;
+    transition: transform .55s cubic-bezier(.65,0,.35,1);
+    will-change: transform;
+  }
+  .promo-slide{
+    position: relative;
+    overflow: hidden;
+    flex: 0 0 100%;
+    height: 100%;
+  }
+  .promo-slide-photo{
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    /* mostra a foto inteira sempre, em qualquer largura de tela --
+       nunca recorta o título/texto que está desenhado dentro da imagem.
+       O fundo espelhado/desfocado (.promo-slide-bg) preenche o espaço
+       que sobrar quando a proporção da caixa não bate com a da foto. */
+    object-fit: contain;
+    object-position: center;
+    display: block;
+    -webkit-user-drag: none;
+  }
+  /* Fundo: cópia espelhada e desfocada da própria foto, preenchendo o espaço
+     que sobra quando a proporção da imagem não bate com a do carrossel --
+     no lugar da faixa azul sólida. Gerada via JS a partir da mesma <img>. */
+  .promo-slide-bg{
+    position: absolute;
+    inset: -20px;
+    width: calc(100% + 40px);
+    height: calc(100% + 40px);
+    object-fit: cover;
+    filter: blur(35px) brightness(.55) saturate(1.15);
+    transform: scaleX(-1);
+    z-index: 0;
+    pointer-events: none;
+    -webkit-user-drag: none;
+  }
+  .promo-arrow{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(22,48,79,0.55);
+    color: var(--areia);
+    font-size: 15px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 3;
+    transition: background .2s ease, transform .2s ease;
+  }
+  .promo-arrow:hover{ background: rgba(22,48,79,0.8); }
+  .promo-arrow-prev{ left: 14px; }
+  .promo-arrow-next{ right: 14px; }
+  /* sombra sutil embaixo -- so pra rodape dos pontinhos ficar legivel
+     em cima de qualquer foto, sem escurecer o resto da imagem */
+  .promo-carousel::after{
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 56px;
+    background: linear-gradient(to top, rgba(0,0,0,.38), rgba(0,0,0,0));
+    pointer-events: none;
+    z-index: 2;
+  }
+  .promo-dots{
+    position: absolute;
+    bottom: 16px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    z-index: 3;
+  }
+  .promo-dot{
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    border: none;
+    background: rgba(246,240,226,0.55);
+    cursor: pointer;
+    padding: 0;
+    transition: width .25s ease, background .25s ease;
+  }
+  .promo-dot.active{
+    width: 22px;
+    background: var(--areia);
+  }
+  @media (max-width: 480px){
+    .promo-arrow{ width: 32px; height: 32px; font-size: 13px; }
+  }
+
+  /* ---------- Nota Coco Gelado ---------- */
+  .coco-note{
+    text-align:center;
+    font-family:'Poppins', sans-serif;
+    font-weight:600;
+    font-size:14px;
+    color:var(--azul-escuro);
+    background:var(--branco);
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:10px 22px;
+    border-radius:999px;
+    box-shadow: 0 4px 14px rgba(22,48,79,0.08);
+    margin: 6px auto 0;
+  }
+  .coco-note-wrap{
+    text-align:center;
+    margin-top: 22px;
+  }
+
+  /* ---------- Seção Cervejas ---------- */
+  .cervejas-section{
+    max-width: 1100px;
+    margin: 42px auto 0;
+    text-align:center;
+    padding: 0 20px;
+  }
+  .cervejas-section h3{
+    font-family:'Playfair Display', serif;
+    font-weight:700;
+    font-style:italic;
+    font-size: 26px;
+    color:var(--azul-escuro);
+    margin-bottom: 22px;
+  }
+  .cervejas-group{
+    margin-bottom: 32px;
+  }
+  .cervejas-group:last-child{
+    margin-bottom: 0;
+  }
+  .cervejas-group-label{
+    font-family:'Poppins', sans-serif;
+    font-size: 12px;
+    font-weight:600;
+    letter-spacing: 1px;
+    text-transform:uppercase;
+    color:var(--terracota);
+    margin-bottom: 14px;
+  }
+
+  /* Cards de cerveja reaproveitam o estilo .drink-square-card já existente */
+
+  /* ===== CTA "Conheça nosso cardápio" abaixo do carrossel ===== */
+  .hero-cta-below{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 22px 16px;
+    background: var(--areia);
+  }
+  .hero-cta-small{
+    font-size: 12.5px;
+    padding: 10px 22px;
+    letter-spacing: 0.05em;
+  }
+  @media (min-width: 700px){
+    .hero-cta-below{ padding: 28px 16px; }
+    .hero-cta-small{ font-size: 13.5px; padding: 12px 26px; }
+  }
+
+  /* ===== CONTATO: mesmo bege das seções acima, em vez do branco ===== */
+  body.pagina-cardapio .contato{
+    max-width: 100%;
+    width: 100%;
+  }
+  body.pagina-cardapio .contato .link-social{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+  }
+  body.pagina-cardapio .contato .instagram-icon{
+    flex-shrink:0;
+  }
+
+  /* ===== TEXTURA SUAVE NAS ÁREAS DE AREIA (acaba com o branco/creme cru) ===== */
+  body,
+  .hero-cta-below,
+  .menu,
+  .footer-wave,
+  .contato {
+    background-color: var(--areia);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='70' viewBox='0 0 140 70'%3E%3Cpath d='M0 20 Q17.5 8 35 20 T70 20 T105 20 T140 20' fill='none' stroke='%230E2138' stroke-opacity='0.05' stroke-width='2'/%3E%3Cpath d='M0 50 Q17.5 38 35 50 T70 50 T105 50 T140 50' fill='none' stroke='%23E8734A' stroke-opacity='0.05' stroke-width='2'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+  }
+
+  /* ===== ONDINHA DECORATIVA ENTRE O BOTÃO E O TÍTULO DO CARDÁPIO ===== */
+  .cta-wave-divider{
+    background-color: var(--areia);
+    display:flex;
+    justify-content:center;
+    padding: 12px 0 6px;
+  }
+  .cta-wave-divider svg{
+    width: min(220px, 60%);
+    height: 18px;
+    opacity: 0.6;
+  }
+
+  /* ===== CARDÁPIO NO CELULAR: pratos em duas colunas ===== */
+  @media (max-width: 640px){
+    body.pagina-cardapio .menu-grid{
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    body.pagina-cardapio .menu-card h3{
+      font-size: 13px;
+    }
+    body.pagina-cardapio .drink-cards-grid{
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+  }
+
+  /* ===== MODAL DE PRATO (detalhes ao clicar no card) ===== */
+  .modal-prato-box{
+    background:var(--branco);
+    border-radius:20px;
+    max-width:420px;
+    width:92%;
+    max-height:85vh;
+    overflow-y:auto;
+    position:relative;
+    transform:translateY(10px);
+    transition:transform .2s ease;
+  }
+  .modal-overlay.aberto .modal-prato-box{
+    transform:translateY(0);
+  }
+  .modal-prato-fechar{
+    position:absolute;
+    top:12px;
+    right:12px;
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    border:none;
+    background:rgba(255,255,255,0.92);
+    color:var(--azul-escuro);
+    font-size:20px;
+    line-height:1;
+    cursor:pointer;
+    z-index:2;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 4px 10px rgba(0,0,0,0.18);
+  }
+  .modal-prato-fechar:hover{ opacity:0.85; }
+  .modal-prato-box img{
+    width:100%;
+    aspect-ratio: 4 / 3;
+    object-fit:cover;
+    display:block;
+    border-radius:20px 20px 0 0;
+  }
+  .modal-prato-conteudo{
+    padding: 20px 22px 26px;
+  }
+  .modal-prato-conteudo h3{
+    font-family:'Poppins', sans-serif;
+    font-weight:700;
+    font-size:18px;
+    color:var(--azul-escuro);
+    line-height:1.35;
+    margin-bottom:10px;
+  }
+  .modal-prato-conteudo p{
+    font-family:'Poppins', sans-serif;
+    font-weight:400;
+    font-size:13.5px;
+    line-height:1.6;
+    color:var(--texto-suave);
+    margin-bottom:16px;
+  }
+  body.pagina-cardapio .modal-prato-conteudo .price{
+    font-family:'Poppins', sans-serif;
+    font-weight:700;
+    font-size:16px;
+    color:var(--terracota);
+  }
