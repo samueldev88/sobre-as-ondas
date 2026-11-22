@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+
 </head>
 <body class="pagina-cardapio">
 
@@ -31,7 +32,7 @@
           </div>
         </div>
 
-        <button class="nav-toggle" onclick="toggleNavMenu()" aria-label="Abrir menu" data-i18n-aria="aria_abrir_menu">
+        <button class="nav-toggle" onclick="toggleNavMenu()" aria-label="Abrir menu" aria-expanded="false" aria-controls="navLinks" data-i18n-aria="aria_abrir_menu">
           <span></span><span></span><span></span>
         </button>
       </div>
@@ -43,6 +44,7 @@
       </nav>
     </div>
   </header>
+
 
   <!-- CARROSSEL DE PROMOÇÕES -->
   <section class="promo-carousel" id="inicio" aria-label="Promoções Sobre As Ondas" data-i18n-aria="aria_promocoes">
@@ -250,6 +252,24 @@
           </div>
         </article>
 
+        <article class="menu-card">
+          <img src="assets/trilha.jpeg" alt="Trilha" data-i18n-alt="item_trilha">
+          <div class="menu-card-body">
+            <h3 data-i18n="item_trilha">Trilha</h3>
+            <p class="menu-card-desc" data-i18n="item_trilha_desc">Trilha fresca frita na hora, com casquinha crocante e carne macia e saborosa. Perfeita para compartilhar à beira-mar.</p>
+            <span class="price">R$ 60,00</span>
+          </div>
+        </article>
+
+        <article class="menu-card">
+          <img src="assets/linguica-calabresa.jpeg" alt="Linguiça Calabresa" data-i18n-alt="item_linguica_calabresa">
+          <div class="menu-card-body">
+            <h3 data-i18n="item_linguica_calabresa">Linguiça Calabresa</h3>
+            <p class="menu-card-desc" data-i18n="item_linguica_calabresa_desc">Linguiça calabresa grelhada e fatiada, suculenta e levemente defumada, ótima para petiscar e dividir com a turma.</p>
+            <span class="price">R$ 80,00</span>
+          </div>
+        </article>
+
       </div>
 
       <div class="food-subtitle" data-i18n="subtitle_pasteis">Pastéis</div>
@@ -288,6 +308,15 @@
           <div class="menu-card-body">
             <h3 data-i18n="item_pastel_frango_catupiry">Pastel de Frango c/Catupiry</h3>
             <p class="menu-card-desc" data-i18n="item_pastel_frango_catupiry_desc">Frango desfiado com catupiry cremoso, envolto numa massa crocante e douradinha.</p>
+            <span class="price">R$ 10,00</span>
+          </div>
+        </article>
+
+        <article class="menu-card">
+          <img src="assets/pastel-carne.jpeg" alt="Pastel de Carne" data-i18n-alt="item_pastel_carne">
+          <div class="menu-card-body">
+            <h3 data-i18n="item_pastel_carne">Pastel de Carne</h3>
+            <p class="menu-card-desc" data-i18n="item_pastel_carne_desc">Massa fininha e crocante recheada com carne moída bem temperada. Sai da fritadeira na hora do seu pedido.</p>
             <span class="price">R$ 10,00</span>
           </div>
         </article>
@@ -397,7 +426,7 @@
           <img src="assets/gin-tônica.jpeg" alt="Gin Tônica" data-i18n-alt="drink_gin_tonica">
           <div class="drink-card-body">
             <h4 data-i18n="drink_gin_tonica">Gin Tônica</h4>
-            <span class="price">R$ 40,00</span>
+            <span class="price">R$ 35,00</span>
           </div>
         </div>
         <div class="drink-square-card">
@@ -422,14 +451,14 @@
           <img src="assets/água.jpeg" alt="Água sem gás" data-i18n-alt="drink_agua_sg">
           <div class="drink-card-body">
             <h4 data-i18n="drink_agua_sg">Água sem gás</h4>
-            <span class="price">R$ 4,00</span>
+            <span class="price">R$ 5,00</span>
           </div>
         </div>
         <div class="drink-square-card">
           <img src="assets/água-gás.jpeg" alt="Água com gás" data-i18n-alt="drink_agua_cg">
           <div class="drink-card-body">
             <h4 data-i18n="drink_agua_cg">Água com gás</h4>
-            <span class="price">R$ 5,00</span>
+            <span class="price">R$ 6,00</span>
           </div>
         </div>
         <div class="drink-square-card">
@@ -492,7 +521,7 @@
           <img src="assets/redbull.jpeg" alt="Redbull" data-i18n-alt="drink_redbull">
           <div class="drink-card-body">
             <h4 data-i18n="drink_redbull">Redbull</h4>
-            <span class="price">R$ 18,00</span>
+            <span class="price">R$ 16,00</span>
           </div>
         </div>
         <div class="drink-square-card">
@@ -629,7 +658,7 @@
               <img src="assets/corona.jpeg" alt="Corona Long Neck" data-i18n-alt="cerveja_corona">
               <div class="drink-card-body">
                 <h4 data-i18n="cerveja_corona">Corona</h4>
-                <span class="price">R$ 12,00</span>
+                <span class="price">R$ 15,00</span>
               </div>
             </div>
             <div class="drink-square-card">
@@ -650,7 +679,7 @@
               <img src="assets/long-stella.jpeg" alt="Stella Long Neck" data-i18n-alt="cerveja_stella_ln">
               <div class="drink-card-body">
                 <h4 data-i18n="cerveja_stella_ln">Stella</h4>
-                <span class="price">R$ 15,00</span>
+                <span class="price">R$ 12,00</span>
               </div>
             </div>
             <div class="drink-square-card">
@@ -875,6 +904,7 @@
     // abre/fecha o menu hamburguer no celular (mesmo comportamento de pedidos.html)
     function toggleNavMenu(){
       navLinks.classList.toggle('open');
+      document.querySelector('.nav-toggle').setAttribute('aria-expanded', navLinks.classList.contains('open'));
     }
 
     // ===== ABAS DO CARDÁPIO (PETISCOS / BEBIDAS) =====
@@ -956,6 +986,10 @@
         item_corvina_desc: "Filé de corvina fresco, no ponto certo, com textura macia e sabor suave que agrada todo mundo.",
         item_lula_dore: "Lula à dore",
         item_lula_dore_desc: "Anéis de lula empanados e fritos na hora, crocantes por fora e macios por dentro. Serve com limão para realçar o sabor.",
+        item_trilha: "Trilha",
+        item_trilha_desc: "Trilha fresca frita na hora, com casquinha crocante e carne macia e saborosa. Perfeita para compartilhar à beira-mar.",
+        item_linguica_calabresa: "Linguiça Calabresa",
+        item_linguica_calabresa_desc: "Linguiça calabresa grelhada e fatiada, suculenta e levemente defumada, ótima para petiscar e dividir com a turma.",
         item_pastel_camarao: "Pastel de Camarão",
         item_pastel_camarao_desc: "Massa fininha e crocante recheada com camarão temperado. Sai da fritadeira na hora do seu pedido.",
         item_pastel_queijo: "Pastel de Queijo",
@@ -964,6 +998,8 @@
         item_pastel_calabresa_desc: "Recheio generoso de calabresa temperada dentro de uma massa fina e crocante.",
         item_pastel_frango_catupiry: "Pastel de Frango c/Catupiry",
         item_pastel_frango_catupiry_desc: "Frango desfiado com catupiry cremoso, envolto numa massa crocante e douradinha.",
+        item_pastel_carne: "Pastel de Carne",
+        item_pastel_carne_desc: "Massa fininha e crocante recheada com carne moída bem temperada. Sai da fritadeira na hora do seu pedido.",
         item_queijo_coalho: "Queijo Coalho",
         item_queijo_coalho_desc: "Queijo coalho grelhado na hora, com aquela casquinha por fora e macio por dentro.",
         item_salaminho: "Saláminho",
@@ -1097,6 +1133,10 @@
         item_corvina_desc: "Filete de corvina fresco, en su punto justo, con textura suave y sabor delicado que gusta a todos.",
         item_lula_dore: "Calamar Frito a la Dore",
         item_lula_dore_desc: "Anillos de calamar empanizados y fritos al momento, crujientes por fuera y suaves por dentro. Se sirve con limón.",
+        item_trilha: "Salmonete Frito (Trilha)",
+        item_trilha_desc: "Salmonete fresco frito al momento, con costra crujiente y carne suave y sabrosa. Perfecto para compartir frente al mar.",
+        item_linguica_calabresa: "Chorizo Calabresa a la Parrilla",
+        item_linguica_calabresa_desc: "Chorizo calabresa a la parrilla en rodajas, jugoso y ligeramente ahumado, ideal para picar y compartir.",
         item_pastel_camarao: "Empanada de Camarón",
         item_pastel_camarao_desc: "Masa finita y crocante rellena de camarón sazonado. Sale de la freidora al momento de tu pedido.",
         item_pastel_queijo: "Empanada de Queso",
@@ -1105,6 +1145,8 @@
         item_pastel_calabresa_desc: "Relleno generoso de chorizo sazonado dentro de una masa fina y crocante.",
         item_pastel_frango_catupiry: "Empanada de Pollo con Catupiry",
         item_pastel_frango_catupiry_desc: "Pollo desmenuzado con catupiry cremoso, envuelto en una masa crocante y dorada.",
+        item_pastel_carne: "Empanada de Carne",
+        item_pastel_carne_desc: "Masa finita y crocante rellena de carne molida bien sazonada. Sale de la freidora al momento de tu pedido.",
         item_queijo_coalho: "Queso Coalho a la Parrilla",
         item_queijo_coalho_desc: "Queso coalho a la parrilla al momento, con una costra dorada por fuera y suave por dentro.",
         item_salaminho: "Salamín",
@@ -1239,6 +1281,10 @@
         item_corvina_desc: "Fresh corvina fillet, cooked just right, with a soft texture and mild flavor that pleases everyone.",
         item_lula_dore: "Golden Fried Squid",
         item_lula_dore_desc: "Breaded squid rings fried to order, crispy outside and tender inside. Served with lime to bring out the flavor.",
+        item_trilha: "Fried Goatfish (Trilha)",
+        item_trilha_desc: "Fresh goatfish fried to order, with a crispy crust and tender, flavorful meat. Perfect for sharing by the sea.",
+        item_linguica_calabresa: "Grilled Calabrese Sausage",
+        item_linguica_calabresa_desc: "Grilled, sliced calabrese sausage, juicy and lightly smoked, great for snacking and sharing.",
         item_pastel_camarao: "Shrimp Pastry",
         item_pastel_camarao_desc: "Thin, crispy pastry filled with seasoned shrimp, fried fresh as soon as you order.",
         item_pastel_queijo: "Cheese Pastry",
@@ -1247,6 +1293,8 @@
         item_pastel_calabresa_desc: "A generous filling of seasoned sausage inside a thin, crispy pastry shell.",
         item_pastel_frango_catupiry: "Chicken & Catupiry Pastry",
         item_pastel_frango_catupiry_desc: "Shredded chicken with creamy catupiry cheese, wrapped in a crispy golden pastry.",
+        item_pastel_carne: "Beef Pastry",
+        item_pastel_carne_desc: "Thin, crispy pastry filled with well-seasoned ground beef, fried fresh as soon as you order.",
         item_queijo_coalho: "Grilled Cheese (Queijo Coalho)",
         item_queijo_coalho_desc: "Grilled queijo coalho fresh off the grill, with a golden crust outside and soft inside.",
         item_salaminho: "Salami",
@@ -1482,6 +1530,30 @@
 
       render();
       startAutoplay();
+    })();
+  </script>
+
+  <!-- MENU DO CELULAR: ao clicar numa opção, vai até a seção e o menu fecha -->
+  <script>
+    (function(){
+      const links = document.getElementById('navLinks');
+      const toggle = document.querySelector('.nav-toggle');
+
+      function fechar(){
+        links.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+      }
+
+      // o próprio link já rola até a seção (âncora); aqui só fecha o painel
+      links.querySelectorAll('a').forEach(a => a.addEventListener('click', fechar));
+
+      // clicar fora do menu ou apertar Esc também fecha
+      document.addEventListener('click', (e) => {
+        if (!links.contains(e.target) && !toggle.contains(e.target)) fechar();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') fechar();
+      });
     })();
   </script>
 </body>
